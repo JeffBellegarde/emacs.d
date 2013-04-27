@@ -49,7 +49,7 @@
 ;;;(require 'bundler)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(add-hook 'ibuffer-mode-hook 
+(add-hook 'ibuffer-mode-hook
 	  '(lambda ()
 	     (ibuffer-auto-mode 1)
 	     (ibuffer-switch-to-saved-filter-groups "home")))
@@ -60,8 +60,8 @@
 			     (filename . "emacs")))
 	 ("magit" (name . "\*magit")))))
 
-(add-to-list 'load-path "~/src/perspective-el")
-(require 'perspective)
+;;(add-to-list 'load-path "~/src/perspective-el")
+;;(require 'perspective)
 ;;(persp-mode)
 
 (add-to-list 'load-path "~/src/eproject")
@@ -95,8 +95,35 @@
 ;  (package-initialize))
 
 ;;; Use Marmalizde instead of ELPA
+(setq package-archives
+      '(("melpa" . "http://melpa.milkbox.net/packages/")
+	("marmalade" . "http://marmalade-repo.org/packages/")
+	("gnu" . "http://elpa.gnu.org/packages/")
+	("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
 (require 'package)
 (package-initialize)
+(setq jmb-required-packages
+      (list
+       'ack-and-a-half
+       'auto-complete
+       'dired+
+       'dired-details+
+       'expand-region
+       'git-gutter-fringe
+       'ibuffer-vc
+       'ido
+       'ioccur
+       'key-chord
+       'loccur
+       'magit
+       'rfringe
+       'ruby-end
+       'undo-tree
+	    ))
+(dolist (package jmb-required-packages)
+  (when (not (package-installed-p package))
+    (package-refresh-contents)
+    (package-install package)))
 
 ;;dired
 (require 'dired+)
@@ -158,7 +185,7 @@
 (prefer-coding-system 'utf-8)
 (require 'auto-save-desktop)
 (require 'unit-test)
-(require 'autotest)
+;;(require 'autotest)
 (require 'rcov-overlay)
 (require 'yari)
 (defun ri-bind-key ()
@@ -214,7 +241,7 @@
   (indent-region (point-min) (point-max) nil)
   (untabify (point-min) (point-max)))
 
-(global-set-key  "\C-c\C-a" 'autotest-switch)
+;;(global-set-key  "\C-c\C-a" 'autotest-switch)
 
 (require 'ioccur)
 (require 'loccur)

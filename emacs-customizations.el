@@ -71,7 +71,6 @@
  '(org-replace-disputed-keys t)
  '(org-use-speed-commands t)
  '(outline-occur-by-mode (quote ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
- '(package-archives (quote (("melpa" . "http://melpa.milkbox.net/packages/") ("marmalade" . "http://marmalade-repo.org/packages/") ("gnu" . "http://elpa.gnu.org/packages/") ("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/"))))
  '(pomodoro-work-start-message "Back to work!")
  '(rdebug-short-key-mode t)
  '(rdebug-track-do-tracking-p t)
