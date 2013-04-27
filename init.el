@@ -17,6 +17,7 @@
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
 
+(setq jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
 ;;mode-compile
 (autoload 'mode-compile "mode-compile"
   "Command to compile current buffer file based on the major mode" t)
@@ -28,7 +29,7 @@
 (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
 (auto-compression-mode 1)
 
-(add-to-list 'load-path "~/src/yaml-mode")
+(add-to-list 'load-path (expand-file-name "yaml-mode" jmb-emacs-src-dir))
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
