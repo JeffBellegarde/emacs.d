@@ -307,9 +307,9 @@
 ;(remove-hook 'shell-mode-hook 'turn-on-rdebug-track-mode)
 
 ;;Allow the mouse to work even under an xterm window
-(require 'mouse)
-(xterm-mouse-mode t)
-(defun track-mouse (e))
+;;(require 'mouse)
+;;(xterm-mouse-mode t)
+;;(defun track-mouse (e))
 
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
 ;	  '(lambda ()
