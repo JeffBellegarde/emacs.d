@@ -175,8 +175,7 @@
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
-(require 'undo-tree)
-(global-undo-tree-mode)
+(load "undo-tree-setup")
 
 (require 'auto-complete)
 (global-auto-complete-mode t)
