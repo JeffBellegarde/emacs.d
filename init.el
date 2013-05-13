@@ -311,6 +311,8 @@
 ;;(xterm-mouse-mode t)
 ;;(defun track-mouse (e))
 
+;;(load 'ensime-setup.e')
+
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
 ;	  '(lambda ()
 ;             (local-set-key [home]        ; move to beginning of line, after prompt

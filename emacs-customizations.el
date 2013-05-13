@@ -21,6 +21,7 @@
  '(dired-details-hide-link-targets nil)
  '(ediff-keep-variants nil)
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
+ '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin")))
  '(flymake-run-in-place nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(global-auto-revert-mode t)
@@ -91,6 +92,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#3f3f3f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 125 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(default ((t (:family "Monaco"))))
  '(diredp-dir-priv ((t (:foreground "#7474FFFFFFFF"))))
  '(ido-first-match ((t (:foreground "cyan" :weight bold)))))
