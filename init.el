@@ -203,9 +203,6 @@
 (add-to-list 'auto-mode-alist '("Berksfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("buildfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-hook 'magit-mode-hook
-	  '(lambda ()
-	     (setq show-trailing-whitespace nil)))
 
 (add-hook 'ruby-mode-hook 'ri-bind-key)
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
@@ -338,6 +335,14 @@
 (defun guard-notification (type title message image)
   (message type))
 
+(setq jmb-disabled-whitespace-mode-hooks
+      (list 'magit-mode-hook))
+
+(defun jmb-disable-show-trailing-whitespace ()
+  (setq show-trailing-whitespace nil))
+
+(dolist (hook jmb-disabled-whitespace-mode-hooks)
+  (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 ;; Set up 'custom' system
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
