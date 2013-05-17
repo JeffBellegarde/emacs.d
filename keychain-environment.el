@@ -132,7 +132,7 @@ and GPG_AGENT variables into the environment and returns them as a list."
          ssh-auth-sock
          ssh-auth-pid
          gpg-agent-info)
-    
+
     (unless (string= "" ssh-data)
       (setq ssh-auth-sock
             (progn
@@ -142,20 +142,20 @@ and GPG_AGENT variables into the environment and returns them as a list."
             (progn
               (string-match "SSH_AGENT_PID=\"\\([0-9]*\\)?\"" ssh-data)
               (match-string 1 ssh-data))))
-    
+
     (unless (string= "" gpg-data)
       (setq gpg-agent-info
             (progn
               (string-match "GPG_AGENT_INFO=\"\\(.*?\\)\"" gpg-data)
               (match-string 1 gpg-data))))
-    
+
     (unless (string= "" ssh-auth-sock)
       (setenv "SSH_AUTH_SOCK" ssh-auth-sock))
     (unless (string= "" ssh-auth-pid)
       (setenv "SSH_AUTH_PID" ssh-auth-pid))
     (unless (string= "" gpg-agent-info)
       (setenv "GPG_AGENT_INFO" gpg-agent-info))
-    
+
     (list ssh-auth-sock ssh-auth-pid gpg-agent-info)))
 
 ;; tipper: Only because I named it very badly the first time we alias
