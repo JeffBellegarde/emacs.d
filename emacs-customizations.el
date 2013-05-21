@@ -83,9 +83,11 @@
  '(rspec-spec-command "rspec")
  '(rspec-use-rake-flag nil)
  '(safe-local-variable-values (quote ((encoding . utf-8) (ruby-compilation-executable . "ruby") (ruby-compilation-executable . "ruby1.8") (ruby-compilation-executable . "ruby1.9") (ruby-compilation-executable . "rbx") (ruby-compilation-executable . "jruby"))))
+ '(scroll-bar-mode (quote right))
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
  '(show-trailing-whitespace t)
+ '(tool-bar-mode nil)
  '(undo-tree-visualizer-diff t)
  '(undo-tree-visualizer-timestamps t))
 (custom-set-faces
