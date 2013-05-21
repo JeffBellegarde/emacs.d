@@ -46,7 +46,7 @@
  '(magit-process-connection-type nil)
  '(magit-process-popup-time 5)
  '(magit-remote-ref-format (quote remote-slash-branch))
- '(magit-repo-dirs (quote ("/autohome/jbellegarde/src")))
+ '(magit-repo-dirs (quote ("/Users/jbellegarde/src" "/autohome/jbellegarde/src")))
  '(magit-revert-item-confirm nil)
  '(magit-save-some-buffers (quote dontask))
  '(magit-set-upstream-on-push (quote dontask))
