@@ -206,8 +206,6 @@
 
 (add-hook 'ruby-mode-hook 'ri-bind-key)
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
-(add-hook 'yari-mode-hook '(lambda ()
-	     (setq show-trailing-whitespace nil)))
 
 
 (defun minimap-toggle ()
@@ -221,14 +219,7 @@
 (global-set-key "\C-cm" 'minimap-toggle)
 
 (require 'rubydb)
-(add-hook 'gud-mode-hook
-	  '(lambda ()
-	     (setq show-trailing-whitespace nil)))
-
 (require 'one-key-macro)
-
-(add-hook 'shell-mode-hook '(lambda ()
-	     (setq show-trailing-whitespace nil)))
 
 (defun iwb ()
   "indent whole buffer"
@@ -336,7 +327,7 @@
   (message type))
 
 (setq jmb-disabled-whitespace-mode-hooks
-      (list 'magit-mode-hook))
+      (list 'magit-mode-hook 'undo-tree-visualizer-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook))
 
 (defun jmb-disable-show-trailing-whitespace ()
   (setq show-trailing-whitespace nil))
