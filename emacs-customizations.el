@@ -86,7 +86,8 @@
  '(show-paren-style (quote mixed))
  '(show-trailing-whitespace t)
  '(undo-tree-visualizer-diff nil)
- '(undo-tree-visualizer-timestamps t))
+ '(undo-tree-visualizer-relative-timestamps t)
+ '(undo-tree-visualizer-timestamps nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
