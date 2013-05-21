@@ -335,7 +335,9 @@
 (dolist (hook jmb-disabled-whitespace-mode-hooks)
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
+(require 'keychain-environment)
 ;; Set up 'custom' system
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
 (load custom-file)
+
 
