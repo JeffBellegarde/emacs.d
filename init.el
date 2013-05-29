@@ -108,6 +108,7 @@
        'auto-complete
        'dired+
        'dired-details+
+       'exec-path-from-shell
        'expand-region
        'git-gutter-fringe
        'ibuffer-vc
@@ -152,6 +153,10 @@
 
 (require 'ibuffer-vc)
 (require 'ruby-end)
+
+(require 'exec-path-from-shell)
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 
 (add-hook 'ibuffer-hook
      (lambda ()

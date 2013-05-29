@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(abbrev-mode t t)
  '(ack-and-a-half-arguments (quote ("--ignore-dir bundle" "--ignore-dir vendor")))
+ '(ack-and-a-half-executable ack)
  '(ack-and-a-half-prompt-for-directory t)
  '(ansi-color-for-comint-mode t)
  '(autotest-use-ui t)
@@ -21,6 +22,7 @@
  '(dired-details-hide-link-targets nil)
  '(ediff-keep-variants nil)
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
+ '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin")))
  '(flymake-run-in-place nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(global-auto-revert-mode t)
