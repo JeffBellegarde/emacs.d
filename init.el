@@ -113,6 +113,7 @@
        'git-gutter-fringe
        'ibuffer-vc
        'ido
+       'idle-highlight-mode
        'ioccur
        'key-chord
        'loccur
@@ -144,6 +145,8 @@
 
 ;;ace-jump-mode
 (global-set-key (kbd "C-0") 'ace-jump-mode)
+
+(load "idle-highlight-setup")
 
 ;; key-chord
 (require 'key-chord)
