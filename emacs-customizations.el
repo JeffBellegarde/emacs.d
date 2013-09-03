@@ -45,6 +45,7 @@
  '(keychain-dir "/autohome/jbellegarde/.screen/")
  '(keychain-ssh-file "/autohome/jbellegarde/.screen/session-variables.jbellegarde0")
  '(kill-whole-line t)
+ '(magit-default-tracking-name-function (quote magit-default-tracking-name-branch-only))
  '(magit-diff-refine-hunk t)
  '(magit-process-connection-type nil)
  '(magit-process-popup-time 5)
