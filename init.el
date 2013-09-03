@@ -122,6 +122,7 @@
        'ruby-end
        'smex
        'undo-tree
+       'zenburn-theme
 	    ))
 (dolist (package jmb-required-packages)
   (when (not (package-installed-p package))
