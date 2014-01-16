@@ -228,6 +228,7 @@
 (add-hook 'ruby-mode-hook 'ri-bind-key)
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
+(require `fish-mode)
 
 (defun minimap-toggle ()
   "Toggle the minimap."
