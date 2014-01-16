@@ -8,3 +8,5 @@ elpa
 /.emacs.desktop
 /.emacs.desktop.lock
 /eshell/history
+/eshell/lastdir
+var

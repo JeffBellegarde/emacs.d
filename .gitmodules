@@ -1,3 +1,6 @@
 [submodule "src/yaml-mode"]
 	path = src/yaml-mode
 	url = http://github.com/yoshiki/yaml-mode
+[submodule "emacs-pry"]
+	path = emacs-pry
+	url = git@github.com:jacott/emacs-pry.git

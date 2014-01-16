@@ -148,7 +148,7 @@
 (global-set-key (kbd "C-0") 'ace-jump-mode)
 
 (load "idle-highlight-setup")
-
+(load "emacs-pry-setup")
 ;;smex
 
 (global-set-key (kbd "M-x") 'smex)
@@ -343,7 +343,7 @@
   (message type))
 
 (setq jmb-disabled-whitespace-mode-hooks
-      (list 'magit-mode-hook 'undo-tree-visualizer-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook))
+      (list 'magit-mode-hook 'undo-tree-visualizer-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry))
 
 (defun jmb-disable-show-trailing-whitespace ()
   (setq show-trailing-whitespace nil))
