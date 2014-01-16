@@ -108,9 +108,13 @@
        'auto-complete
        'dired+
        'dired-details+
+       'deft
        'exec-path-from-shell
        'expand-region
        'git-gutter-fringe
+       'gitconfig-mode
+       'gitignore-mode
+       'gist
        'ibuffer-vc
        'ido
        'idle-highlight-mode
@@ -177,6 +181,7 @@
 (global-auto-revert-mode t)
 (require 'magit)
 (global-set-key "\C-ci" 'magit-status)
+
 (require 'rfringe)
 (require 'flymake-cursor)
 (require 'flymake-ruby)
