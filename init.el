@@ -111,12 +111,14 @@
        'deft
        'exec-path-from-shell
        'expand-region
+			 'flx-ido
        'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
        'gist
        'ibuffer-vc
        'ido
+			 'ido-vertical-mode
        'idle-highlight-mode
        'ioccur
        'key-chord
@@ -177,7 +179,14 @@
      (lambda ()
        (ibuffer-vc-set-filter-groups-by-vc-root)
        (ibuffer-do-sort-by-alphabetic)))
+;ido
+
 (require 'ido)
+(require 'ido-vertical-mode)
+(ido-vertical-mode 1)
+(flx-ido-mode 1)
+
+
 (global-auto-revert-mode t)
 (require 'magit)
 (global-set-key "\C-ci" 'magit-status)
