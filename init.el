@@ -116,6 +116,7 @@
        'gitconfig-mode
        'gitignore-mode
        'gist
+			 'guide-key
        'ibuffer-vc
        'ido
 			 'ido-vertical-mode
@@ -150,6 +151,11 @@
 
 ;;git-gutter
 (require 'git-gutter-fringe)
+
+;; guide-key
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p"))
+(guide-key-mode 1)  ; Enable guide-key-mode
 
 ;;ace-jump-mode
 (global-set-key (kbd "C-0") 'ace-jump-mode)
