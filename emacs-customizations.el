@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(abbrev-mode t t)
  '(ack-and-a-half-arguments (quote ("--ignore-dir bundle" "--ignore-dir vendor")))
- '(ack-and-a-half-executable ack)
+ '(ack-and-a-half-executable "ack")
  '(ack-and-a-half-prompt-for-directory t)
  '(ansi-color-for-comint-mode t)
  '(autotest-use-ui t)
@@ -50,6 +50,7 @@
  '(keychain-dir "/autohome/jbellegarde/.screen/")
  '(keychain-ssh-file "/autohome/jbellegarde/.screen/session-variables.jbellegarde0")
  '(kill-whole-line t)
+ '(magit-default-tracking-name-function (quote magit-default-tracking-name-branch-only))
  '(magit-diff-refine-hunk t)
  '(magit-expand-staged-on-commit (quote full))
  '(magit-process-connection-type nil)

@@ -128,6 +128,7 @@
        'ruby-end
        'smex
        'undo-tree
+       'zenburn-theme
 	    ))
 (dolist (package jmb-required-packages)
   (when (not (package-installed-p package))
@@ -371,4 +372,5 @@
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
 (load custom-file)
 
-
+(if (eq system-type "darwin")
+    (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
