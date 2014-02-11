@@ -129,6 +129,7 @@
        'ruby-end
        'smex
        'undo-tree
+			 'visual-regexp
        'zenburn-theme
 	    ))
 (dolist (package jmb-required-packages)
@@ -157,13 +158,10 @@
 (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p"))
 (guide-key-mode 1)  ; Enable guide-key-mode
 
-;;ace-jump-mode
-(global-set-key (kbd "C-0") 'ace-jump-mode)
-
 (load "idle-highlight-setup")
 (load "emacs-pry-setup")
-;;smex
 
+;;smex
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
@@ -303,6 +301,13 @@
 ;;(defun try-to-add-imenu ()
 ;;  (condition-case nil (imenu-add-defs-to-menubar) (error nil)))
 ;; (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
+
+;;visual-regexp
+(require 'visual-regexp)
+(define-key global-map (kbd "C-c C-q") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
+;; if you use multiple-cursors, this is for you:
+;(define-key global-map (kbd "C-c m") 'vr/mc-mark)
 
 (if (file-exists-p abbrev-file-name)
     (quietly-read-abbrev-file))
