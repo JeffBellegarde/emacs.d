@@ -22,7 +22,7 @@
  '(dired-details-hide-link-targets nil)
  '(ediff-keep-variants nil)
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
- '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin")))
+ '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin" "/usr/local/Cellar/go/1.2/libexec/bin" "/Users/jbellegarde/go_src/bin")))
  '(explicit-shell-file-name "/bin/bash")
  '(flymake-gui-warnings-enabled nil)
  '(flymake-run-in-place nil)

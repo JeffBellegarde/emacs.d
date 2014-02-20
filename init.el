@@ -111,15 +111,17 @@
        'deft
        'exec-path-from-shell
        'expand-region
-			 'flx-ido
+       'flx-ido
+       'flycheck
        'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
        'gist
-			 'guide-key
+       'go-mode
+       'guide-key
        'ibuffer-vc
        'ido
-			 'ido-vertical-mode
+       'ido-vertical-mode
        'idle-highlight-mode
        'ioccur
        'key-chord
@@ -129,7 +131,7 @@
        'ruby-end
        'smex
        'undo-tree
-			 'visual-regexp
+       'visual-regexp
        'zenburn-theme
 	    ))
 (dolist (package jmb-required-packages)
@@ -149,6 +151,22 @@
 (global-set-key (kbd "C-*") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-(") 'shrink-window)
 (global-set-key (kbd "C-)") 'enlarge-window)
+
+
+;; gomode
+(setenv "GOPATH" "~/go_src")
+(require 'go-mode)
+(defun jmb/go-mode-hook ()
+	(add-hook 'before-save-hook 'gofmt-before-save))
+;;(remove-hook 'before-save-hook 'jmb/gofmt-before-save)
+(add-hook 'go-mode-hook 'jmb/go-mode-hook)
+(add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
+(require 'go-flymake)
+;(require 'go-flycheck)
+(add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
+
+(require 'auto-complete-config)
+(require 'go-autocomplete)
 
 ;;git-gutter
 (require 'git-gutter-fringe)
@@ -243,6 +261,19 @@
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
 (require `fish-mode)
+
+(setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
+(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
+
+(defun jmb/empty-string (str)
+	(string= "" str))
+(defun jmb/update-env-vars-from-fish ()
+	 (let ((lines (split-string (shell-command-to-string "fish -c \"set -xUL\"") "\n")))
+		 (dolist (line lines)
+			 (let* ((parts (split-string line " "))
+							(name (elt parts 0))
+							(value (mapconcat 'identity (remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
+				 (if (not (string= "" name)) (setenv name value))))))
 
 (defun minimap-toggle ()
   "Toggle the minimap."
