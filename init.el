@@ -114,6 +114,7 @@
        'dired+
        'dired-details+
        'deft
+			 'dockerfile-mode
        'exec-path-from-shell
        'expand-region
        'flx-ido
@@ -224,7 +225,7 @@
 (require 'flymake-ruby)
 (require 'linum)
 (global-linum-mode)
-(require 'window-numbering)
+(window-numbering-mode)
 (require 'imenu+)
 ;;(require 'ack)
 (require 'ack-and-a-half)
@@ -421,3 +422,7 @@
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
+;;docker
+
+(require 'dockerfile-mode)
+
