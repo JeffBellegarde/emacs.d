@@ -33,8 +33,13 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
-;;org-mode
 
+;;text scaling
+(global-set-key [67108907] 'text-scale-increase)
+(global-set-key [67108909] 'text-scale-decrease)
+
+
+;;org-mode
 (require 'org)
 ;;
 ;; Standard key bindings
