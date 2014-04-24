@@ -266,7 +266,7 @@
 (add-hook 'ruby-mode-hook 'ri-bind-key)
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
-(require `fish-mode)
+;;(require `fish-mode)
 
 (setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
 (setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
