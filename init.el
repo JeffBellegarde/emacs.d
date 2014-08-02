@@ -13,7 +13,6 @@
 (add-to-list 'load-path "~/src/markdown-mode")
 
 (tool-bar-mode -1)
-(require 'mode-compile)
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
 
@@ -102,7 +101,8 @@
 ;;; Use Marmalizde instead of ELPA
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
-	("marmalade" . "http://marmalade-repo.org/packages/")
+				;;Marmalade is not updated don't use it.
+	;;("marmalade" . "http://marmalade-repo.org/packages/")
 	("gnu" . "http://elpa.gnu.org/packages/")
 	("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
 (require 'package)
@@ -129,10 +129,12 @@
        'ido
        'ido-vertical-mode
        'idle-highlight-mode
+       'impatient-mode
        'ioccur
        'key-chord
        'loccur
        'magit
+       'mode-compile
        'rfringe
        'ruby-end
        'smex
@@ -172,7 +174,7 @@
 (add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
 
 (require 'auto-complete-config)
-(require 'go-autocomplete)
+;;(require 'go-autocomplete)
 
 ;;git-gutter
 (require 'git-gutter-fringe)
@@ -225,7 +227,7 @@
 (require 'flymake-ruby)
 (require 'linum)
 (global-linum-mode)
-(window-numbering-mode)
+;;(window-numbering-mode)
 (require 'imenu+)
 ;;(require 'ack)
 (require 'ack-and-a-half)
