@@ -134,6 +134,7 @@
        'key-chord
        'loccur
        'magit
+			 'minimap
        'mode-compile
        'rfringe
        'ruby-end
