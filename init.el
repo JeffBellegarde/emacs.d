@@ -125,6 +125,7 @@
        'gist
        'go-mode
        'guide-key
+       'hungry-delete
        'ibuffer-vc
        'ido
        'ido-vertical-mode
@@ -212,12 +213,13 @@
        (ibuffer-vc-set-filter-groups-by-vc-root)
        (ibuffer-do-sort-by-alphabetic)))
 ;ido
-
 (require 'ido)
 (require 'ido-vertical-mode)
 (ido-vertical-mode 1)
 (flx-ido-mode 1)
 
+(require 'hungry-delete)
+(global-hungry-delete-mode)
 
 (global-auto-revert-mode t)
 (require 'magit)
@@ -311,7 +313,7 @@
 ;; defines shortcut for loccur of the current word
 (define-key global-map [(control o)] 'loccur-current)
 ;; defines shortcut for the interactive loccur command
-;;(define-key global-map [(control meta o)] 'loccur)
+(define-key global-map [(control meta o)] 'loccur)
 ;; defines shortcut for the loccur of the previously found word
 (define-key global-map [(control shift o)] 'loccur-previous-match)
 
@@ -331,8 +333,8 @@
   (interactive)
   (loccur (cdr (assoc 'ruby-mode outline-occur-by-mode))))
 
-(define-key global-map [(control meta o)] 'rspec-outline-occur)
-;(define-key global-map [(control meta o)] 'outline-occur)
+;;(define-key global-map [(control meta o)] 'rspec-outline-occur)
+(define-key global-map [(control meta o)] 'outline-occur)
 
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
 (setq auto-mode-alist (cons '("\\.text" . markdown-mode) auto-mode-alist))
