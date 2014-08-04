@@ -115,6 +115,7 @@
        'dired-details+
        'deft
 			 'dockerfile-mode
+			 'ensime
        'exec-path-from-shell
        'expand-region
        'flx-ido
@@ -162,6 +163,9 @@
 (global-set-key (kbd "C-(") 'shrink-window)
 (global-set-key (kbd "C-)") 'enlarge-window)
 
+;;ensime
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; gomode
 (setenv "GOPATH" "~/go_src")
