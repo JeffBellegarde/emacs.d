@@ -1,3 +1,6 @@
+;;; * Config
+;;; * Next
+
 (setq jmb-emacs-init-file load-file-name)
 (setq jmb-emacs-config-dir
       (file-name-directory jmb-emacs-init-file))
@@ -136,8 +139,9 @@
        'key-chord
        'loccur
        'magit
+       'markdown-mode
 			 'minimap
-       'mode-compile
+;;       'mode-compile
        'rfringe
        'ruby-end
        'smex
@@ -340,9 +344,11 @@
 ;;(define-key global-map [(control meta o)] 'rspec-outline-occur)
 (define-key global-map [(control meta o)] 'outline-occur)
 
+;;markdown
 (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
-(setq auto-mode-alist (cons '("\\.text" . markdown-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.md" . gfm-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ;;(defun try-to-add-imenu ()
 ;;  (condition-case nil (imenu-add-defs-to-menubar) (error nil)))
@@ -434,4 +440,9 @@
 ;;docker
 
 (require 'dockerfile-mode)
+
+;;; Local variables:
+;;; eval: (orgstruct-mode 1)
+;;; orgstruct-heading-prefix-regexp: "^;;; +"
+;;; End:
 
