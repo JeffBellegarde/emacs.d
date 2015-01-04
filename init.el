@@ -1,6 +1,3 @@
-;;; * Config
-;;; * Next
-
 (setq jmb-emacs-init-file load-file-name)
 (setq jmb-emacs-config-dir
       (file-name-directory jmb-emacs-init-file))
@@ -16,6 +13,95 @@
 (add-to-list 'load-path "~/src/markdown-mode")
 
 (tool-bar-mode -1)
+;;(add-to-list 'load-path "~/src/perspective-el")
+;;(require 'perspective)
+;;(persp-mode)
+
+;;(add-to-list 'load-path "~/src/eproject")
+;;(require 'eproject)
+;;(require 'eproject-extras)
+
+;(define-project-type gem (generic)
+;  (look-for "Gemfile")
+;  :relevant-files ("\.rb$"
+;                   "Gemfile$"
+;		   "Rakefile"
+;                   "\.ru$"
+;		   "bin/.*"
+;                   "README\..*$")
+;  :irrelevant-files ("bundle/.*"
+;		     "coverage/.*"
+;		     ".git/.*"
+;		     "pkg/.*"
+;                     ".bin/.*")
+;  :main-file "Gemfile")
+
+
+;;; This was installed by package-install.el.
+;;; This provides support for the package system and
+;;; interfacing with ELPA, the package archive.
+;;; Move this code earlier if you want to reference
+;;; packages in your .emacs.
+;(when
+;    (load
+;     (expand-file-name "~/.emacs.d/elpa/package.el"))
+;  (package-initialize))
+
+;;; Use Marmalizde instead of ELPA
+(setq package-archives
+      '(("melpa" . "http://melpa.milkbox.net/packages/")
+				;;Marmalade is not updated don't use it.
+				;;("marmalade" . "http://marmalade-repo.org/packages/")
+				("gnu" . "http://elpa.gnu.org/packages/")
+				("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
+(require 'package)
+(package-initialize)
+(setq jmb-required-packages
+      (list
+       'ack-and-a-half
+       'apples-mode
+       'auto-complete
+       'dired+
+       'dired-details+
+       'deft
+			 'dockerfile-mode
+			 'ensime
+       'exec-path-from-shell
+       'expand-region
+       'flx-ido
+       'flycheck
+       'git-gutter-fringe
+       'gitconfig-mode
+       'gitignore-mode
+       'gist
+       'go-mode
+       'guide-key
+       'hungry-delete
+       'ibuffer-vc
+       'ido
+       'ido-vertical-mode
+       'idle-highlight-mode
+       'impatient-mode
+       'ioccur
+       'key-chord
+       'loccur
+       'magit
+       'markdown-mode
+			 'minimap
+;;       'mode-compile
+       'rfringe
+       'ruby-end
+       'smex
+       'undo-tree
+       'visual-regexp
+       'zenburn-theme
+	    ))
+(dolist (package jmb-required-packages)
+  (when (not (package-installed-p package))
+    (package-refresh-contents)
+    (package-install package)))
+
+
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
 
@@ -66,93 +152,6 @@
 	 ("emacs-config" (or (filename . ".emacs.d")
 			     (filename . "emacs")))
 	 ("magit" (name . "\*magit")))))
-
-;;(add-to-list 'load-path "~/src/perspective-el")
-;;(require 'perspective)
-;;(persp-mode)
-
-(add-to-list 'load-path "~/src/eproject")
-;;(require 'eproject)
-;;(require 'eproject-extras)
-
-;(define-project-type gem (generic)
-;  (look-for "Gemfile")
-;  :relevant-files ("\.rb$"
-;                   "Gemfile$"
-;		   "Rakefile"
-;                   "\.ru$"
-;		   "bin/.*"
-;                   "README\..*$")
-;  :irrelevant-files ("bundle/.*"
-;		     "coverage/.*"
-;		     ".git/.*"
-;		     "pkg/.*"
-;                     ".bin/.*")
-;  :main-file "Gemfile")
-
-
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-;(when
-;    (load
-;     (expand-file-name "~/.emacs.d/elpa/package.el"))
-;  (package-initialize))
-
-;;; Use Marmalizde instead of ELPA
-(setq package-archives
-      '(("melpa" . "http://melpa.milkbox.net/packages/")
-				;;Marmalade is not updated don't use it.
-	;;("marmalade" . "http://marmalade-repo.org/packages/")
-	("gnu" . "http://elpa.gnu.org/packages/")
-	("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
-(require 'package)
-(package-initialize)
-(setq jmb-required-packages
-      (list
-       'ack-and-a-half
-       'auto-complete
-       'dired+
-       'dired-details+
-       'deft
-			 'dockerfile-mode
-			 'ensime
-       'exec-path-from-shell
-       'expand-region
-       'flx-ido
-       'flycheck
-       'git-gutter-fringe
-       'gitconfig-mode
-       'gitignore-mode
-       'gist
-       'go-mode
-       'guide-key
-       'hungry-delete
-       'ibuffer-vc
-       'ido
-       'ido-vertical-mode
-       'idle-highlight-mode
-       'impatient-mode
-       'ioccur
-       'key-chord
-       'loccur
-       'magit
-       'markdown-mode
-			 'minimap
-;;       'mode-compile
-       'rfringe
-       'ruby-end
-       'smex
-       'undo-tree
-       'visual-regexp
-       'zenburn-theme
-	    ))
-(dolist (package jmb-required-packages)
-  (when (not (package-installed-p package))
-    (package-refresh-contents)
-    (package-install package)))
 
 ;;dired
 (require 'dired+)
@@ -441,8 +440,21 @@
 
 (require 'dockerfile-mode)
 
-;;; Local variables:
-;;; eval: (orgstruct-mode 1)
-;;; orgstruct-heading-prefix-regexp: "^;;; +"
-;;; End:
+(require 'uniquify)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-dialog-box nil)
+
+(setq ring-bell-function (lambda () (message "*beep*")))
+
+(defun yank-chrome-url ()
+ "Yank current URL from Chrome"
+  (interactive)
+  (require 'apples-mode)
+  (apples-do-applescript "tell application \"Google Chrome\"
+ get URL of active tab of first window
+end tell"
+    #'(lambda (url status script)
+        ;; comes back with quotes which we strip off
+        (insert (subseq url 1 (1- (length url)))))))
 

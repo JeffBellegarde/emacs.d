@@ -69,6 +69,7 @@
  '(org-agenda-dim-blocked-tasks t)
  '(org-agenda-files (quote ("~/.deft/tasks.org" "~/.deft/cleanup.org" "~/.deft/maintenance.org" "~/.deft/support.org" "~/.deft/notes.org")))
  '(org-agenda-todo-list-sublevels nil)
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (sh . t))))
  '(org-capture-templates (quote (("s" "Support" entry (file+headline "~/.deft/support.org" "Support") "** TODO %?
 %U %a
 %i
@@ -79,6 +80,7 @@
 %i") ("t" "Tasks" entry (file+headline "~/.deft/tasks.org" "Tasks") "** TODO %?
 %U %a
 %i"))))
+ '(org-confirm-babel-evaluate nil)
  '(org-default-notes-file "~/.deft/notes.org")
  '(org-fontify-done-headline t)
  '(org-modules (quote (org-bbdb org-bibtex org-docview org-gnus org-info org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-mouse)))
@@ -105,7 +107,10 @@
  '(tramp-auto-save-directory "~/.tramp_tmp_dir")
  '(undo-tree-visualizer-diff nil)
  '(undo-tree-visualizer-relative-timestamps t)
- '(undo-tree-visualizer-timestamps nil))
+ '(undo-tree-visualizer-timestamps nil)
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
+ '(uniquify-ignore-buffers-re "^\\\\*")
+ '(uniquify-separator "/"))
  '(tool-bar-mode nil)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
