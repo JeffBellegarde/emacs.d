@@ -1,0 +1,144 @@
+#+TITLE: Jeff Bellegarde's Emacs configuration
+#+OPTIONS: toc:4 h:4
+
+
+* Configuration
+** Personal information
+
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Jeff Bellegarde"
+        user-mail-address "bellegar@gmail.com")
+#+END_SRC
+
+
+* Helm
+
+** Basic
+
+#+BEGIN_SRC emacs-lisp
+  (require 'helm-config)
+  (helm-mode 1)
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+  (setq helm-M-x-fuzzy-match t)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+  (global-set-key (kbd "C-c h g") 'helm-google-suggest)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-c h o") 'helm-occur)
+  (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+  (global-set-key (kbd "C-c h x") 'helm-register)
+  (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
+  (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+#+END_SRC
+
+** Grep
+Use ack and use resursive by default. C-u to be non-recursive.
+#+begin_src emacs-lisp
+  (when (executable-find "ack")
+    (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
+          helm-grep-default-recurse-command "ack -Hn --no-group --no-color %p %f"))
+#+end_src
+
+** Descbinds
+#+begin_src emacs-lisp
+  (require 'helm-descbinds)
+  (helm-descbinds-mode)
+#+end_src
+
+** swoop
+
+#+begin_src emacs-lisp
+  (require 'helm-swoop)
+  (global-set-key (kbd "M-i") 'helm-swoop)
+  (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+  (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+  (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+#+end_src
+
+* Hydra
+
+** Zoom
+
+#+begin_src emacs-lisp
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("g" text-scale-increase "in")
+    ("l" text-scale-decrease "out")))
+#+end_src
+
+** Windmove
+#+begin_src emacs-lisp
+  (defun hydra-move-splitter-left (arg)
+    "Move window splitter left."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (shrink-window-horizontally arg)
+      (enlarge-window-horizontally arg)))
+
+  (defun hydra-move-splitter-right (arg)
+    "Move window splitter right."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (enlarge-window-horizontally arg)
+      (shrink-window-horizontally arg)))
+
+  (defun hydra-move-splitter-up (arg)
+    "Move window splitter up."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (enlarge-window arg)
+      (shrink-window arg)))
+
+  (defun hydra-move-splitter-down (arg)
+    "Move window splitter down."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (shrink-window arg)
+      (enlarge-window arg)))
+
+  (global-set-key
+   (kbd "C-M-o")
+   (defhydra hydra-window (:color amaranth)
+     "window"
+     ("h" windmove-left)
+     ("j" windmove-down)
+     ("k" windmove-up)
+     ("l" windmove-right)
+     ("H" hydra-move-splitter-left)
+     ("J" hydra-move-splitter-down)
+     ("K" hydra-move-splitter-up)
+     ("L" hydra-move-splitter-right)
+
+     ("3" (lambda ()
+            (interactive)
+            (split-window-right)
+            (windmove-right))
+          "vert")
+     ("2" (lambda ()
+            (interactive)
+            (split-window-below)
+            (windmove-down))
+          "horz")
+     ("t" transpose-frame "'")
+     ("1" delete-other-windows "one" :color blue)
+     ("a" ace-window "ace")
+     ("s" ace-swap-window "swap")
+     ("d" ace-delete-window "del")
+     ("i" ace-maximize-window "ace-one" :color blue)
+     ("b" helm-mini "buf")
+     ("m" headlong-bookmark-jump "bmk")
+     ("q" nil "cancel")))
+#+end_src
+
+#+RESULTS:
+: hydra-window/body
+
+

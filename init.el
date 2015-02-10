@@ -3,12 +3,9 @@
       (file-name-directory jmb-emacs-init-file))
 (setq user-emacs-directory jmb-emacs-config-dir)
 
-(setq backup-directory-alist
-      (list (cons "." (expand-file-name "backup" user-emacs-directory))))
-
-(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
-(add-to-list 'load-path "~/src/emacs-flymake")
+(add-to-list 'load-path "~/src/emacs-Flymake")
 (add-to-list 'load-path "~/src/autotest.el")
 (add-to-list 'load-path "~/src/markdown-mode")
 
@@ -58,6 +55,7 @@
 (package-initialize)
 (setq jmb-required-packages
       (list
+       'ace-window
        'ack-and-a-half
        'apples-mode
        'auto-complete
@@ -68,15 +66,23 @@
 			 'ensime
        'exec-path-from-shell
        'expand-region
+       'fish-mode
        'flx-ido
        'flycheck
        'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
        'gist
+       'go-autocomplete
+       'go-eldoc
+       'go-errcheck
        'go-mode
        'guide-key
+       'helm
+       'helm-descbinds
+       'helm-swoop
        'hungry-delete
+       'hydra
        'ibuffer-vc
        'ido
        'ido-vertical-mode
@@ -88,7 +94,8 @@
        'magit
        'markdown-mode
 			 'minimap
-;;       'mode-compile
+       ;;       'mode-compile
+       'paradox
        'rfringe
        'ruby-end
        'smex
@@ -100,7 +107,6 @@
   (when (not (package-installed-p package))
     (package-refresh-contents)
     (package-install package)))
-
 
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
@@ -171,34 +177,49 @@
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; gomode
-(setenv "GOPATH" "~/go_src")
+(setenv "GOPATH" "/Users/Bellegarde/go_src")
+(setq exec-path (append exec-path '("/Users/Bellegarde/go_src/bin")))
 (require 'go-mode)
 (defun jmb/go-mode-hook ()
-	(add-hook 'before-save-hook 'gofmt-before-save))
+  (setq gofmt-command "goimports")
+	(add-hook 'before-save-hook 'gofmt-before-save)
+  ;; Customize compile command to run go build
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (local-set-key (kbd "C-c i") 'go-goto-imports)
+  (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v; and go test -v -coverprofile coverage.out; and go vet"))
+  (go-oracle-mode))
+(add-hook 'go-mode-hook 'go-eldoc-setup)
 ;;(remove-hook 'before-save-hook 'jmb/gofmt-before-save)
 (add-hook 'go-mode-hook 'jmb/go-mode-hook)
 (add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
 (require 'go-flymake)
 ;(require 'go-flycheck)
 (add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
+(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
+(load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
+
+(require 'golint)
 
 (require 'auto-complete-config)
-;;(require 'go-autocomplete)
+(require 'go-autocomplete)
 
 ;;git-gutter
 (require 'git-gutter-fringe)
 
 ;; guide-key
 (require 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p"))
+(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c C-o" "C-c h"))
 (guide-key-mode 1)  ; Enable guide-key-mode
 
 (load "idle-highlight-setup")
 (load "emacs-pry-setup")
 
 ;;smex
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;(global-set-key (kbd "M-x") 'smex)
+;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
@@ -213,17 +234,19 @@
 
 (require 'exec-path-from-shell)
 (when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
 
 (add-hook 'ibuffer-hook
      (lambda ()
        (ibuffer-vc-set-filter-groups-by-vc-root)
        (ibuffer-do-sort-by-alphabetic)))
 ;ido
-(require 'ido)
-(require 'ido-vertical-mode)
-(ido-vertical-mode 1)
-(flx-ido-mode 1)
+;;(require 'ido)
+;;(require 'ido-vertical-mode)
+;;(ido-vertical-mode 1)
+;;(flx-ido-mode 1)
+
 
 (require 'hungry-delete)
 (global-hungry-delete-mode)
@@ -261,9 +284,13 @@
 (defun ri-bind-key ()
   (local-set-key [f1] 'yari))
 
+(defun turn-on-show-trailing-whitespace ()
+  (setq show-trailing-whitespace t))
+
 ;;(autoload 'ruby-mode "~/,emacs.d/ruby/ruby-mode" "Major mode for ruby files" t)
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
+(add-hook 'ruby-mode-hook 'turn-on-show-trailing-whitespace)
 
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.thor$" . ruby-mode))
@@ -280,8 +307,8 @@
 
 ;;(require `fish-mode)
 
-(setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
-(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
+;;(setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
+;;(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
 
 (defun jmb/empty-string (str)
 	(string= "" str))
@@ -363,6 +390,9 @@
 (if (file-exists-p abbrev-file-name)
     (quietly-read-abbrev-file))
 
+(require 'ansi-color)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
 (defun my-standard-comint-mode-hooks ()
   (add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
   (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)
@@ -430,9 +460,6 @@
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 (require 'keychain-environment)
-;; Set up 'custom' system
-(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
-(load custom-file)
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
@@ -457,4 +484,15 @@ end tell"
     #'(lambda (url status script)
         ;; comes back with quotes which we strip off
         (insert (subseq url 1 (1- (length url)))))))
+
+(remove-hook 'text-mode-hook #'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
+(global-set-key (kbd "<f9>") 'compile)
+
+;; Set up 'custom' system
+(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
+(load custom-file)
+
+(org-babel-load-file "~/.emacs.d/setup.org")
 
