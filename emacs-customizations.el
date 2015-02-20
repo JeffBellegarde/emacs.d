@@ -153,6 +153,9 @@
  '(paradox-github-token t)
  '(pomodoro-work-start-message "Back to work!")
  '(projectile-completion-system (quote helm))
+ '(projectile-enable-idle-timer t)
+ '(projectile-global-mode t)
+ '(projectile-mode-line nil)
  '(rdebug-short-key-mode t)
  '(rdebug-track-do-tracking-p t)
  '(remember-annotation-functions (quote (org-remember-annotation)))
@@ -163,7 +166,7 @@
     (flyspell-mode turn-on-auto-fill org-remember-apply-template)))
  '(rm-blacklist
    (quote
-    (" hl-p" " Undo-Tree" " Helm" " Guide" " Abbrev" " MRev" " GitGutter" " Projectile")))
+    (" hl-p" " Undo-Tree" " Helm" " Guide" " Abbrev" " MRev" " GitGutter" " Projectile" " AC")))
  '(rspec-spec-command "rspec")
  '(rspec-use-rake-flag nil)
  '(safe-local-variable-values
@@ -179,6 +182,16 @@
  '(shell-file-name "/usr/local/bin/fish")
  '(show-paren-style (quote mixed))
  '(show-trailing-whitespace nil)
+ '(sml/replacer-regexp-list
+   (quote
+    (("^~/org" ":Org:")
+     ("^/sudo:.*:" ":SU:")
+     ("^~/Documents/" ":Doc:")
+     ("^~/Dropbox/" ":DB:")
+     ("^:\\([^:]*\\):Documento?s/" ":\\1/Doc:")
+     ("^~/[Gg]it/" ":Git:")
+     ("^~/[Gg]it[Hh]ub/" ":Git:")
+     ("^~/[Gg]it\\([Hh]ub\\|\\)-?[Pp]rojects/" ":Git:"))))
  '(tab-width 2)
  '(tramp-auto-save-directory "~/.tramp_tmp_dir")
  '(undo-tree-visualizer-diff nil)
