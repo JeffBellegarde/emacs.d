@@ -17,11 +17,12 @@
  '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "146d24de1bb61ddfa64062c29b5ff57065552a7c4019bee5d869e938782dfc2a" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" "4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" "2c728316cf424224af84ecfaacaa70cf8532cf15ed9d31c915ac65913cd7df83" "bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" "14bb0cc73f3ddd0509a7c0bb610b057aef0c0eedb098100f1049e4e5ea108150" default)))
+    ("e56f1b1c1daec5dbddc50abd00fcd00f6ce4079f4a7f66052cf16d96412a09a9" "cbef37d6304f12fb789f5d80c2b75ea01465e41073c30341dc84c6c0d1eb611d" "c5a044ba03d43a725bd79700087dea813abcb6beb6be08c7eb3303ed90782482" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "146d24de1bb61ddfa64062c29b5ff57065552a7c4019bee5d869e938782dfc2a" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" "4dacec7215677e4a258e4529fac06e0231f7cdd54e981d013d0d0ae0af63b0c8" "36a309985a0f9ed1a0c3a69625802f87dee940767c9e200b89cdebdb737e5b29" "2c728316cf424224af84ecfaacaa70cf8532cf15ed9d31c915ac65913cd7df83" "bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" "14bb0cc73f3ddd0509a7c0bb610b057aef0c0eedb098100f1049e4e5ea108150" default)))
  '(deft-extension "org")
  '(deft-text-mode (quote org-mode))
  '(desktop-load-locked-desktop t)
  '(desktop-restore-eager 10)
+ '(dired-auto-revert-buffer t)
  '(dired-details-hide-link-targets nil)
  '(ediff-keep-variants nil)
  '(ensime-graphical-tooltips t)
@@ -148,8 +149,10 @@
  '(outline-occur-by-mode
    (quote
     ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
+ '(paradox-execute-asynchronously t)
  '(paradox-github-token t)
  '(pomodoro-work-start-message "Back to work!")
+ '(projectile-completion-system (quote helm))
  '(rdebug-short-key-mode t)
  '(rdebug-track-do-tracking-p t)
  '(remember-annotation-functions (quote (org-remember-annotation)))
@@ -158,6 +161,9 @@
  '(remember-mode-hook
    (quote
     (flyspell-mode turn-on-auto-fill org-remember-apply-template)))
+ '(rm-blacklist
+   (quote
+    (" hl-p" " Undo-Tree" " Helm" " Guide" " Abbrev" " MRev" " GitGutter" " Projectile")))
  '(rspec-spec-command "rspec")
  '(rspec-use-rake-flag nil)
  '(safe-local-variable-values
@@ -190,6 +196,6 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Monaco"))))
  '(diredp-dir-priv ((t (:foreground "#7474FFFFFFFF"))))
- '(hydra-face-amaranth ((t (:foreground "dark magenta" :weight bold))))
- '(hydra-face-red ((t (:foreground "dark red" :weight bold))))
+ '(hydra-face-amaranth ((t (:foreground "magenta1" :weight bold))))
+ '(hydra-face-red ((t (:foreground "brown3" :weight bold))))
  '(ido-first-match ((t (:foreground "cyan" :weight bold)))))

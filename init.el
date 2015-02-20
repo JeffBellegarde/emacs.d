@@ -95,9 +95,12 @@
        'markdown-mode
 			 'minimap
        ;;       'mode-compile
+       'ox-reveal
        'paradox
+       'projectile
        'rfringe
        'ruby-end
+       'smart-mode-line
        'smex
        'undo-tree
        'visual-regexp

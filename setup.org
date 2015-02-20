@@ -1,21 +1,31 @@
 #+TITLE: Jeff Bellegarde's Emacs configuration
 #+OPTIONS: toc:4 h:4
+#+PROPERTY: header-args    :results silent
 
+* To be done
 
-* Configuration
+* Emacs Basics
 ** Personal information
 
-#+BEGIN_SRC emacs-lisp
+Who I am.
+#+BEGIN_SRC emacs-lisp results:silent
   (setq user-full-name "Jeff Bellegarde"
         user-mail-address "bellegar@gmail.com")
 #+END_SRC
 
+** Column number mode
+#+begin_src emacs-lisp
+(column-number-mode)
+#+end_src
 
-* Helm
 
-** Basic
 
-#+BEGIN_SRC emacs-lisp
+* Global Minor Modes
+** Helm
+
+*** Basic
+
+#+BEGIN_SRC emacs-lisp  :results silent
   (require 'helm-config)
   (helm-mode 1)
   (global-set-key (kbd "C-c h") 'helm-command-prefix)
@@ -35,7 +45,8 @@
   (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 #+END_SRC
 
-** Grep
+
+*** Grep
 Use ack and use resursive by default. C-u to be non-recursive.
 #+begin_src emacs-lisp
   (when (executable-find "ack")
@@ -43,13 +54,13 @@ Use ack and use resursive by default. C-u to be non-recursive.
           helm-grep-default-recurse-command "ack -Hn --no-group --no-color %p %f"))
 #+end_src
 
-** Descbinds
+*** Descbinds
 #+begin_src emacs-lisp
   (require 'helm-descbinds)
   (helm-descbinds-mode)
 #+end_src
 
-** swoop
+*** swoop
 
 #+begin_src emacs-lisp
   (require 'helm-swoop)
@@ -59,18 +70,29 @@ Use ack and use resursive by default. C-u to be non-recursive.
   (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 #+end_src
 
-* Hydra
+#+RESULTS:
+: helm-multi-swoop-all
+   
+** Hydra
 
-** Zoom
+*** Config
+#+begin_src emacs-lisp
+(require 'hydra)
+(hydra-add-font-lock)
+#+end_src
+
+*** Zoom
 
 #+begin_src emacs-lisp
   (defhydra hydra-zoom (global-map "<f2>")
     "zoom"
     ("g" text-scale-increase "in")
-    ("l" text-scale-decrease "out")))
+    ("l" text-scale-decrease "out")
+    ("0" (text-scale-set 0) "reset"))
 #+end_src
-
-** Windmove
+   
+   
+*** Windmove
 #+begin_src emacs-lisp
   (defun hydra-move-splitter-left (arg)
     "Move window splitter left."
@@ -104,41 +126,51 @@ Use ack and use resursive by default. C-u to be non-recursive.
         (shrink-window arg)
       (enlarge-window arg)))
 
-  (global-set-key
-   (kbd "C-M-o")
-   (defhydra hydra-window (:color amaranth)
-     "window"
-     ("h" windmove-left)
-     ("j" windmove-down)
-     ("k" windmove-up)
-     ("l" windmove-right)
-     ("H" hydra-move-splitter-left)
-     ("J" hydra-move-splitter-down)
-     ("K" hydra-move-splitter-up)
-     ("L" hydra-move-splitter-right)
+  (defhydra hydra-window (:color amaranth)
+    "window"
+    ("h" windmove-left)
+    ("j" windmove-down)
+    ("k" windmove-up)
+    ("l" windmove-right)
+    ("H" hydra-move-splitter-left)
+    ("J" hydra-move-splitter-down)
+    ("K" hydra-move-splitter-up)
+    ("L" hydra-move-splitter-right)
+    
+    ("3" (lambda ()
+           (interactive)
+           (split-window-right)
+           (windmove-right))
+     "vert")
+    ("2" (lambda ()
+           (interactive)
+           (split-window-below)
+           (windmove-down))
+     "horz")
+    ("t" transpose-frame "'")
+    ("1" delete-other-windows "one" :color blue)
+    ("a" ace-window "ace")
+    ("s" ace-swap-window "swap")
+    ("d" ace-delete-window "del")
+    ("i" ace-maximize-window "ace-one" :color blue)
+    ("b" helm-mini "buf")
+    ;;("m" headlong-bookmark-jump "bmk")
+    ("q" nil "cancel"))
+  (global-set-key (kbd "C-M-o") 'hydra-window/body)
+  (key-chord-define-global "jk" 'hydra-window/body)
 
-     ("3" (lambda ()
-            (interactive)
-            (split-window-right)
-            (windmove-right))
-          "vert")
-     ("2" (lambda ()
-            (interactive)
-            (split-window-below)
-            (windmove-down))
-          "horz")
-     ("t" transpose-frame "'")
-     ("1" delete-other-windows "one" :color blue)
-     ("a" ace-window "ace")
-     ("s" ace-swap-window "swap")
-     ("d" ace-delete-window "del")
-     ("i" ace-maximize-window "ace-one" :color blue)
-     ("b" helm-mini "buf")
-     ("m" headlong-bookmark-jump "bmk")
-     ("q" nil "cancel")))
+#+end_src
+   
+** KeyChord
+
+I try to hit the keys at the same time so I want a really short delay.
+#+begin_src emacs-lisp
+(setq key-chord-two-keys-delay 0.05)
 #+end_src
 
-#+RESULTS:
-: hydra-window/body
+** Smart Mode line
 
+#+begin_src emacs-lisp
+  (sml/setup)
+#+end_src
 
