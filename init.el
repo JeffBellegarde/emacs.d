@@ -188,7 +188,7 @@
 	(add-hook 'before-save-hook 'gofmt-before-save)
   ;; Customize compile command to run go build
   (local-set-key (kbd "M-.") 'godef-jump)
-  (local-set-key (kbd "C-c i") 'go-goto-imports)
+  (local-set-key (kbd "C-c C-i") 'go-goto-imports)
   (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
   (if (not (string-match "go" compile-command))
       (set (make-local-variable 'compile-command)
