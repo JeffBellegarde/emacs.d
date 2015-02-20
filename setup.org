@@ -70,8 +70,6 @@ Use ack and use resursive by default. C-u to be non-recursive.
   (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 #+end_src
 
-#+RESULTS:
-: helm-multi-swoop-all
    
 ** Hydra
 
