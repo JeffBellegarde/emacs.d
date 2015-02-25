@@ -164,6 +164,24 @@ Use ack and use resursive by default. C-u to be non-recursive.
 
 #+end_src
    
+
+*** Navigate in buffer
+#+begin_src emacs-lisp
+  (defhydra hydra-navigate (:color amaranth)
+   "navigate"
+   ("k" beginning-of-defun "beginning-of-defun")
+   ("j" end-of-defun "end-of-defun")
+   ("h" er/expand-region "expand-region")
+   ("l" er/contract-region "contract-region")
+   ("a" move-beginning-of-line "line start")
+   ("e" move-end-of-line "line end")
+   ("SPC" set-mark-command :color red)
+   ("n" narrow-to-region "narrow")
+   ("q" nil "cancel"))
+  (key-chord-define-global "jl" 'hydra-navigate/body)
+
+#+end_src
+    
 ** KeyChord
 
 I try to hit the keys at the same time so I want a really short delay.
