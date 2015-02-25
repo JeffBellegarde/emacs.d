@@ -18,9 +18,14 @@ Who I am.
 (column-number-mode)
 #+end_src
 
-
-
 * Global Minor Modes
+** Winner (window layouts)
+Binds C-c <left> and C-c <right>
+#+begin_src emacs-lisp
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
+#+end_src
+
 ** Helm
 
 *** Basic
