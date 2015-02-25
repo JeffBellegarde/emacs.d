@@ -24,6 +24,7 @@
  '(desktop-restore-eager 10)
  '(dired-auto-revert-buffer t)
  '(dired-details-hide-link-targets nil)
+ '(dired-use-ls-dired nil)
  '(ediff-keep-variants nil)
  '(ensime-graphical-tooltips t)
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
@@ -33,6 +34,8 @@
  '(explicit-shell-file-name "/bin/bash")
  '(flymake-gui-warnings-enabled nil)
  '(flymake-run-in-place nil)
+ '(flymake-start-syntax-check-on-find-file nil)
+ '(flymake-start-syntax-check-on-newline nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(gh-profile-alist
    (quote
@@ -153,7 +156,6 @@
  '(paradox-github-token t)
  '(pomodoro-work-start-message "Back to work!")
  '(projectile-completion-system (quote helm))
- '(projectile-enable-idle-timer t)
  '(projectile-global-mode t)
  '(projectile-mode-line nil)
  '(rdebug-short-key-mode t)
@@ -180,6 +182,7 @@
      (ruby-compilation-executable . "jruby"))))
  '(scroll-bar-mode (quote right))
  '(shell-file-name "/usr/local/bin/fish")
+ '(show-paren-mode t)
  '(show-paren-style (quote mixed))
  '(show-trailing-whitespace nil)
  '(sml/replacer-regexp-list

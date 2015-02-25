@@ -1,11 +1,11 @@
-(setq jmb-emacs-init-file load-file-name)
-(setq jmb-emacs-config-dir
+(defvar jmb-emacs-init-file load-file-name)
+(defvar jmb-emacs-config-dir
       (file-name-directory jmb-emacs-init-file))
-(setq user-emacs-directory jmb-emacs-config-dir)
+(defvar user-emacs-directory jmb-emacs-config-dir)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
-(add-to-list 'load-path "~/src/emacs-Flymake")
+;;(add-to-list 'load-path "~/src/emacs-Flymake")
 (add-to-list 'load-path "~/src/autotest.el")
 (add-to-list 'load-path "~/src/markdown-mode")
 
@@ -53,7 +53,7 @@
 				("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
 (require 'package)
 (package-initialize)
-(setq jmb-required-packages
+(defvar jmb-required-packages
       (list
        'ace-window
        'ack-and-a-half
@@ -104,17 +104,17 @@
        'smex
        'undo-tree
        'visual-regexp
+       'yasnippet
        'zenburn-theme
 	    ))
 (dolist (package jmb-required-packages)
   (when (not (package-installed-p package))
     (package-refresh-contents)
     (package-install package)))
-
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
 
-(setq jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
+(defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
 ;;mode-compile
 (autoload 'mode-compile "mode-compile"
   "Command to compile current buffer file based on the major mode" t)
@@ -126,14 +126,14 @@
 (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
 (auto-compression-mode 1)
 
-(add-to-list 'load-path (expand-file-name "yaml-mode" jmb-emacs-src-dir))
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+;;(add-to-list 'load-path (expand-file-name "yaml-mode" jmb-emacs-src-dir))
+;;(require 'yaml-mode)
+;;(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 
-;;text scaling
-(global-set-key [67108907] 'text-scale-increase)
-(global-set-key [67108909] 'text-scale-decrease)
+;;text scaling Use f2 instead
+;;(global-set-key [67108907] 'text-scale-increase)
+;;(global-set-key [67108909] 'text-scale-decrease)
 
 
 ;;org-mode
@@ -150,6 +150,7 @@
 ;;;(add-to-list 'load-path "~/src/bundler.el")
 ;;;(require 'bundler)
 
+(require 'ibuf-ext)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (add-hook 'ibuffer-mode-hook
 	  '(lambda ()
@@ -197,14 +198,14 @@
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 ;;(remove-hook 'before-save-hook 'jmb/gofmt-before-save)
 (add-hook 'go-mode-hook 'jmb/go-mode-hook)
-(add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
-(require 'go-flymake)
-;(require 'go-flycheck)
+;;(add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
+;;(require 'go-flymake)
+;;(require 'go-flycheck)
 (add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
 (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
 (load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
 
-(require 'golint)
+;;(require 'golint)
 
 (require 'auto-complete-config)
 (require 'go-autocomplete)
@@ -224,7 +225,7 @@
 ;(global-set-key (kbd "M-x") 'smex)
 ;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; key-chord
 (require 'key-chord)
@@ -258,13 +259,13 @@
 (require 'magit)
 (global-set-key "\C-ci" 'magit-status)
 
-(require 'rfringe)
-(require 'flymake-cursor)
-(require 'flymake-ruby)
+;(require 'rfringe)
+;;(require 'flymake-cursor)
+;;(require 'flymake-ruby)
 (require 'linum)
 (global-linum-mode)
 ;;(window-numbering-mode)
-(require 'imenu+)
+;;(require 'imenu+)
 ;;(require 'ack)
 (require 'ack-and-a-half)
 (defalias 'ack 'ack-and-a-half)
@@ -279,11 +280,11 @@
 
 ;;(require 'desktop-recover)
 (prefer-coding-system 'utf-8)
-(require 'auto-save-desktop)
-(require 'unit-test)
+;;(require 'auto-save-desktop)
+;;(require 'unit-test)
 ;;(require 'autotest)
-(require 'rcov-overlay)
-(require 'yari)
+;;(require 'rcov-overlay)
+;;(require 'yari)
 (defun ri-bind-key ()
   (local-set-key [f1] 'yari))
 
@@ -320,21 +321,11 @@
 		 (dolist (line lines)
 			 (let* ((parts (split-string line " "))
 							(name (elt parts 0))
-							(value (mapconcat 'identity (remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
+							(value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
 				 (if (not (string= "" name)) (setenv name value))))))
 
-(defun minimap-toggle ()
-  "Toggle the minimap."
-  (interactive)
-  (if (and minimap-window
-           (window-live-p minimap-window))
-      (minimap-kill)
-    (minimap-create)))
-
-(global-set-key "\C-cm" 'minimap-toggle)
-
-(require 'rubydb)
-(require 'one-key-macro)
+;;(require 'rubydb)
+;;(require 'one-key-macro)
 
 (defun iwb ()
   "indent whole buffer"
@@ -444,16 +435,16 @@
 ;             ))
 
 ;;Disable flymake in rspec
-(defun flymake-rspec-init ()
-  ())
+;(defun flymake-rspec-init ()
+;  ())
 
-(push '(".+_spec\\.rb$" flymake-rspec-init) flymake-allowed-file-name-masks)
+;(push '(".+_spec\\.rb$" flymake-rspec-init) flymake-allowed-file-name-masks)
 
 ;;;Guard notifications
 (defun guard-notification (type title message image)
   (message type))
 
-(setq jmb-disabled-whitespace-mode-hooks
+(defvar jmb-disabled-whitespace-mode-hooks
       (list 'magit-mode-hook 'undo-tree-visualizer-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry))
 
 (defun jmb-disable-show-trailing-whitespace ()
@@ -462,7 +453,7 @@
 (dolist (hook jmb-disabled-whitespace-mode-hooks)
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
-(require 'keychain-environment)
+;;(require 'keychain-environment)
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
@@ -486,7 +477,7 @@
 end tell"
     #'(lambda (url status script)
         ;; comes back with quotes which we strip off
-        (insert (subseq url 1 (1- (length url)))))))
+        (insert (cl-subseq url 1 (1- (length url)))))))
 
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
