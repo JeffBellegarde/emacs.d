@@ -195,3 +195,8 @@ I try to hit the keys at the same time so I want a really short delay.
   (sml/setup)
 #+end_src
 
+** Flymake
+
+#+begin_src emacs-lisp
+(add-to-list 'guide-key/guide-key-sequence "C-c !")
+#+end_src
