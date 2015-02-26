@@ -91,6 +91,8 @@
  '(indent-tabs-mode nil)
  '(indicate-buffer-boundaries nil)
  '(indicate-empty-lines nil)
+ '(inhibit-startup-echo-area-message "Bellegarde")
+ '(inhibit-startup-screen t)
  '(kill-whole-line t)
  '(magit-default-tracking-name-function (quote magit-default-tracking-name-branch-only))
  '(magit-diff-refine-hunk t)
@@ -203,6 +205,7 @@
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(uniquify-ignore-buffers-re "^\\\\*")
  '(uniquify-separator "/")
+ '(use-package-verbose t)
  '(visual-line-mode nil t))
  '(tool-bar-mode nil)
 (custom-set-faces

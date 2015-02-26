@@ -6,10 +6,9 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
 ;;(add-to-list 'load-path "~/src/emacs-Flymake")
-(add-to-list 'load-path "~/src/autotest.el")
-(add-to-list 'load-path "~/src/markdown-mode")
+;(add-to-list 'load-path "~/src/autotest.el")
+;(add-to-list 'load-path "~/src/markdown-mode")
 
-(tool-bar-mode -1)
 ;;(add-to-list 'load-path "~/src/perspective-el")
 ;;(require 'perspective)
 ;;(persp-mode)
@@ -34,24 +33,13 @@
 ;  :main-file "Gemfile")
 
 
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-;(when
-;    (load
-;     (expand-file-name "~/.emacs.d/elpa/package.el"))
-;  (package-initialize))
-
-;;; Use Marmalizde instead of ELPA
+(require 'package)
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
 				;;Marmalade is not updated don't use it.
 				;;("marmalade" . "http://marmalade-repo.org/packages/")
 				("gnu" . "http://elpa.gnu.org/packages/")
 				("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
-(require 'package)
 (package-initialize)
 (defvar jmb-required-packages
       (list
@@ -78,11 +66,8 @@
        'go-errcheck
        'go-mode
        'guide-key
-       'helm
-       'helm-descbinds
-       'helm-swoop
        'hungry-delete
-       'hydra
+;;       'hydra
        'ibuffer-vc
        'ido
        'ido-vertical-mode
@@ -100,9 +85,10 @@
        'projectile
        'rfringe
        'ruby-end
-       'smart-mode-line
+;;       'smart-mode-line
        'smex
        'undo-tree
+       'use-package
        'visual-regexp
        'yasnippet
        'zenburn-theme
@@ -111,20 +97,19 @@
   (when (not (package-installed-p package))
     (package-refresh-contents)
     (package-install package)))
-(line-number-mode 1)
-(add-hook 'after-init-hook 'server-start)
+(require 'use-package)
 
 (defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
-;;mode-compile
-(autoload 'mode-compile "mode-compile"
-  "Command to compile current buffer file based on the major mode" t)
-(global-set-key "\C-cc" 'mode-compile)
-(autoload 'mode-compile-kill "mode-compile"
-  "Command to kill a compilation launched by `mode-compile'" t)
-(global-set-key "\C-ck" 'mode-compile-kill)
-(global-set-key "\C-z" 'undo)
-(autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
-(auto-compression-mode 1)
+;; ;;mode-compile
+;; (autoload 'mode-compile "mode-compile"
+;;   "Command to compile current buffer file based on the major mode" t)
+;; (global-set-key "\C-cc" 'mode-compile)
+;; (autoload 'mode-compile-kill "mode-compile"
+;;   "Command to kill a compilation launched by `mode-compile'" t)
+;; (global-set-key "\C-ck" 'mode-compile-kill)
+;; (global-set-key "\C-z" 'undo)
+;; (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
+;; (auto-compression-mode 1)
 
 ;;(add-to-list 'load-path (expand-file-name "yaml-mode" jmb-emacs-src-dir))
 ;;(require 'yaml-mode)
@@ -150,18 +135,18 @@
 ;;;(add-to-list 'load-path "~/src/bundler.el")
 ;;;(require 'bundler)
 
-(require 'ibuf-ext)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(add-hook 'ibuffer-mode-hook
-	  '(lambda ()
-	     (ibuffer-auto-mode 1)
-	     (ibuffer-switch-to-saved-filter-groups "home")))
+;; (require 'ibuf-ext)
+;; (global-set-key (kbd "C-x C-b") 'ibuffer)
+;; (add-hook 'ibuffer-mode-hook
+;; 	  '(lambda ()
+;; 	     (ibuffer-auto-mode 1)
+;; 	     (ibuffer-switch-to-saved-filter-groups "home")))
 
-(setq ibuffer-saved-filter-groups
-      '(("home"
-	 ("emacs-config" (or (filename . ".emacs.d")
-			     (filename . "emacs")))
-	 ("magit" (name . "\*magit")))))
+;; (setq ibuffer-saved-filter-groups
+;;       '(("home"
+;; 	 ("emacs-config" (or (filename . ".emacs.d")
+;; 			     (filename . "emacs")))
+;; 	 ("magit" (name . "\*magit")))))
 
 ;;dired
 (require 'dired+)
@@ -483,10 +468,6 @@ end tell"
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 (global-set-key (kbd "<f9>") 'compile)
-
-;; Set up 'custom' system
-(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
-(load custom-file)
 
 (org-babel-load-file "~/.emacs.d/setup.org")
 

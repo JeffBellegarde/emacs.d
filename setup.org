@@ -13,9 +13,31 @@ Who I am.
         user-mail-address "bellegar@gmail.com")
 #+END_SRC
 
-** Column number mode
+** Basic config
 #+begin_src emacs-lisp
+(require 'use-package)
 (column-number-mode)
+(tool-bar-mode -1)
+(line-number-mode 1)
+(add-hook 'after-init-hook 'server-start)
+
+;;mode-compile
+(autoload 'mode-compile "mode-compile"
+  "Command to compile current buffer file based on the major mode" t)
+(global-set-key "\C-cc" 'mode-compile)
+(autoload 'mode-compile-kill "mode-compile"
+  "Command to kill a compilation launched by `mode-compile'" t)
+(global-set-key "\C-ck" 'mode-compile-kill)
+(global-set-key "\C-z" 'undo)
+(autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
+(auto-compression-mode 1)
+
+#+end_src
+
+** Customization   
+#+begin_src emacs-lisp
+(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
+(load custom-file)
 #+end_src
 
 * Global Minor Modes
@@ -31,25 +53,29 @@ Binds C-c <left> and C-c <right>
 *** Basic
 
 #+BEGIN_SRC emacs-lisp  :results silent
-  (require 'helm-config)
-  (helm-mode 1)
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (global-unset-key (kbd "C-x c"))
-  (setq helm-M-x-fuzzy-match t)
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-  (global-set-key (kbd "C-c h g") 'helm-google-suggest)
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-c h o") 'helm-occur)
-  (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-  (global-set-key (kbd "C-c h x") 'helm-register)
-  (global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
-  (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+    (use-package helm
+      :ensure t
+      :bind (
+             ("C-c h" . helm-command-prefix)
+             ("M-x" . helm-M-x)
+             ("C-x b" . helm-mini)
+             ("C-h SPC" . helm-all-mark-rings)
+             ("C-x C-f" . helm-find-files))
+      :config (progn
+                (require 'helm-config)
+                (helm-mode 1)
+                (global-unset-key (kbd "C-x c"))
+                ;;rebind the keys
+                (bind-key "C-c h g" 'helm-google-suggest)
+                (bind-key "C-c h o" 'helm-occur)
+                (bind-key "C-c h x" 'helm-register)
+                (bind-key "C-c h M-:" 'helm-eval-expression-with-eldoc)
+                (setq helm-M-x-fuzzy-match t)
+                (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+                (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+                (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+                (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)))
 #+END_SRC
-
 
 *** Grep
 Use ack and use resursive by default. C-u to be non-recursive.
@@ -61,26 +87,35 @@ Use ack and use resursive by default. C-u to be non-recursive.
 
 *** Descbinds
 #+begin_src emacs-lisp
-  (require 'helm-descbinds)
-  (helm-descbinds-mode)
+  (use-package helm-descbinds
+    :ensure t
+    :defer t
+    :bind ("C-h b" . helm-descbinds)
+    :config
+    (progn
+      (helm-descbinds-mode)))
 #+end_src
 
 *** swoop
 
 #+begin_src emacs-lisp
-  (require 'helm-swoop)
-  (global-set-key (kbd "M-i") 'helm-swoop)
-  (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-  (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-  (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+  (use-package helm-descbinds
+    :ensure t
+    :defer t
+    :bind
+    (("M-i" . helm-swoop)
+     ("M-I" . helm-swoop-back-to-last-point)
+     ("C-c M-i" . helm-multi-swoop)
+     ("C-x M-i" . helm-multi-swoop-all)))
 #+end_src
-
    
 ** Hydra
+#+begin_src emacs-lisp
+(use-package hydra)
+#+end_src
 
 *** Config
 #+begin_src emacs-lisp
-(require 'hydra)
 (hydra-add-font-lock)
 #+end_src
 
@@ -181,7 +216,42 @@ Use ack and use resursive by default. C-u to be non-recursive.
   (key-chord-define-global "jl" 'hydra-navigate/body)
 
 #+end_src
-    
+*** Rectangle
+#+begin_src emacs-lisp
+  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                             :color pink
+                             :post (deactivate-mark))
+    "
+    _k_     _d_elete    _s_tring
+  _h_ _l_   _o_k        _y_ank
+    _j_     _n_ew-copy  _r_eset
+            _e_xchange  _u_ndo
+                        _p_aste
+  "
+    ("h" backward-char nil)
+    ("l" forward-char nil)
+    ("k" previous-line nil)
+    ("j" next-line nil)
+    ("<left>" backward-char nil)
+    ("<right>" forward-char nil)
+    ("<up>" previous-line nil)
+    ("<down>" next-line nil)
+    ("e" exchange-point-and-mark nil)
+    ("n" copy-rectangle-as-kill nil)
+    ("d" delete-rectangle nil)
+    ("r" (if (region-active-p)
+             (deactivate-mark)
+           (rectangle-mark-mode 1)) nil)
+    ("y" yank-rectangle nil)
+    ("u" undo nil)
+    ("s" string-rectangle nil)
+    ("p" kill-rectangle nil)
+    ("o" nil nil)
+    ("q" nil nil)
+  )
+  (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+#+end_src
+
 ** KeyChord
 
 I try to hit the keys at the same time so I want a really short delay.
@@ -192,6 +262,8 @@ I try to hit the keys at the same time so I want a really short delay.
 ** Smart Mode line
 
 #+begin_src emacs-lisp
+  (use-package smart-mode-line
+               :ensure t)
   (sml/setup)
 #+end_src
 
@@ -199,4 +271,13 @@ I try to hit the keys at the same time so I want a really short delay.
 
 #+begin_src emacs-lisp
 (add-to-list 'guide-key/guide-key-sequence "C-c !")
+#+end_src
+
+* Major modes
+
+** IBuffer
+#+begin_src emacs-lisp
+  (use-package ibuf-ext
+    :defer t
+    :bind ("C-x C-b" . ibuffer))
 #+end_src
