@@ -49,16 +49,12 @@
 (defvar jmb-required-packages
       (list
        'ace-window
-       'ack-and-a-half
        'apples-mode
        'auto-complete
        'dired+
        'dired-details+
-;;       'deft
-;;       'dockerfile-mode
        'ensime
        'exec-path-from-shell
-;;       'expand-region
        'fish-mode
        'flx-ido
        'flycheck
@@ -72,27 +68,18 @@
        'go-mode
        'guide-key
        'hungry-delete
-;;       'hydra
        'ibuffer-vc
        'ido
        'ido-vertical-mode
-       'idle-highlight-mode
        'impatient-mode
        'key-chord
-;;       'magit
-;;       'markdown-mode
-;;       'minimap
-       ;;       'mode-compile
        'ox-reveal
        'paradox
        'projectile
        'rfringe
        'ruby-end
-;;       'smart-mode-line
        'smex
-;;       'undo-tree
        'use-package
-;;       'visual-regexp
        'yasnippet
        'zenburn-theme
       ))
@@ -212,7 +199,10 @@
 (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c C-o" "C-c h"))
 (guide-key-mode 1)  ; Enable guide-key-mode
 
-(load "idle-highlight-setup")
+;;(load "idle-highlight-setup")
+(use-package idle-highlight-mode
+  :commands (idle-highlight-mode))
+
 (load "emacs-pry-setup")
 
 ;;smex
@@ -264,15 +254,18 @@
 ;;(window-numbering-mode)
 ;;(require 'imenu+)
 ;;(require 'ack)
-(require 'ack-and-a-half)
-(defalias 'ack 'ack-and-a-half)
-(defalias 'ack-same 'ack-and-a-half-same)
-(defalias 'ack-find-file 'ack-and-a-half-find-file)
-(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+(use-package ack-and-a-half
+  :ensure t
+  :commands (ack-and-a-half ack-and-a-half-same ack-and-a-half-find-file ack-and-a-half-find-file-same)
+  :pre-init
+  (progn
+    (defalias 'ack 'ack-and-a-half)
+    (defalias 'ack-same 'ack-and-a-half-same)
+    (defalias 'ack-find-file 'ack-and-a-half-find-file)
+    (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
 
 (use-package undo-tree
-;  :bind (("C-x u" . undo-tree-vizualize)
-;         ("C-z" . undo-tree-undo))
+  :ensure t
   :init (global-undo-tree-mode)
   :config (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace))
 
@@ -282,21 +275,33 @@
 
 ;;(require 'desktop-recover)
 (prefer-coding-system 'utf-8)
-;;(require 'auto-save-desktop)
-;;(require 'unit-test)
+
+(use-package desktop
+  :ensure t
+  :init
+  (progn
+    (desktop-save-mode 1)
+    (defun my-desktop-save ()
+      (interactive)
+      ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
+      (if (eq (desktop-owner) (emacs-pid))
+          (desktop-save desktop-dirname)))
+    (add-hook 'auto-save-hook 'jmb-desktop-save)))
+
+(require 'unit-test)
 ;;(require 'autotest)
-;;(require 'rcov-overlay)
-;;(require 'yari)
+(require 'rcov-overlay)
+(require 'yari)
 (defun ri-bind-key ()
   (local-set-key [f1] 'yari))
 
-(defun turn-on-show-trailing-whitespace ()
-  (setq show-trailing-whitespace t))
+;;(defun turn-on-show-trailing-whitespace ()
+;;  (setq show-trailing-whitespace t))
 
 ;;(autoload 'ruby-mode "~/,emacs.d/ruby/ruby-mode" "Major mode for ruby files" t)
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
-(add-hook 'ruby-mode-hook 'turn-on-show-trailing-whitespace)
+;;(add-hook 'ruby-mode-hook 'turn-on-show-trailing-whitespace)
 
 (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.thor$" . ruby-mode))
@@ -308,6 +313,7 @@
 (add-to-list 'auto-mode-alist '("buildfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
 
+(add-hook 'ruby-mode-hook 'idle-highlight-mode)
 (add-hook 'ruby-mode-hook 'ri-bind-key)
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
@@ -412,7 +418,7 @@
 
 
 
-;;(require 'keychain-environment)
+(require 'keychain-environment)
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
