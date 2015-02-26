@@ -2,6 +2,13 @@
 (defvar jmb-emacs-config-dir
       (file-name-directory jmb-emacs-init-file))
 (defvar user-emacs-directory jmb-emacs-config-dir)
+(defvar jmb-disabled-whitespace-mode-hooks
+      (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry))
+(defun jmb-disable-show-trailing-whitespace ()
+  (setq show-trailing-whitespace nil))
+
+(dolist (hook jmb-disabled-whitespace-mode-hooks)
+  (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
@@ -21,14 +28,14 @@
 ;  (look-for "Gemfile")
 ;  :relevant-files ("\.rb$"
 ;                   "Gemfile$"
-;		   "Rakefile"
+;        "Rakefile"
 ;                   "\.ru$"
-;		   "bin/.*"
+;        "bin/.*"
 ;                   "README\..*$")
 ;  :irrelevant-files ("bundle/.*"
-;		     "coverage/.*"
-;		     ".git/.*"
-;		     "pkg/.*"
+;          "coverage/.*"
+;          ".git/.*"
+;          "pkg/.*"
 ;                     ".bin/.*")
 ;  :main-file "Gemfile")
 
@@ -36,10 +43,8 @@
 (require 'package)
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
-				;;Marmalade is not updated don't use it.
-				;;("marmalade" . "http://marmalade-repo.org/packages/")
-				("gnu" . "http://elpa.gnu.org/packages/")
-				("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
+        ("gnu" . "http://elpa.gnu.org/packages/")
+        ("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
 (defvar jmb-required-packages
       (list
@@ -49,11 +54,11 @@
        'auto-complete
        'dired+
        'dired-details+
-       'deft
-			 'dockerfile-mode
-			 'ensime
+;;       'deft
+;;       'dockerfile-mode
+       'ensime
        'exec-path-from-shell
-       'expand-region
+;;       'expand-region
        'fish-mode
        'flx-ido
        'flycheck
@@ -73,12 +78,10 @@
        'ido-vertical-mode
        'idle-highlight-mode
        'impatient-mode
-       'ioccur
        'key-chord
-       'loccur
-       'magit
-       'markdown-mode
-			 'minimap
+;;       'magit
+;;       'markdown-mode
+;;       'minimap
        ;;       'mode-compile
        'ox-reveal
        'paradox
@@ -87,12 +90,12 @@
        'ruby-end
 ;;       'smart-mode-line
        'smex
-       'undo-tree
+;;       'undo-tree
        'use-package
-       'visual-regexp
+;;       'visual-regexp
        'yasnippet
        'zenburn-theme
-	    ))
+      ))
 (dolist (package jmb-required-packages)
   (when (not (package-installed-p package))
     (package-refresh-contents)
@@ -129,7 +132,10 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cr" 'org-capture)
-(global-set-key "\C-cd" 'deft)
+
+(use-package deft
+  :ensure t
+  :bind ("C-c d" . deft))
 
 ;;;Requires async-shell-command which is only in emacs 23.2.
 ;;;(add-to-list 'load-path "~/src/bundler.el")
@@ -138,28 +144,31 @@
 ;; (require 'ibuf-ext)
 ;; (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; (add-hook 'ibuffer-mode-hook
-;; 	  '(lambda ()
-;; 	     (ibuffer-auto-mode 1)
-;; 	     (ibuffer-switch-to-saved-filter-groups "home")))
+;;      '(lambda ()
+;;         (ibuffer-auto-mode 1)
+;;         (ibuffer-switch-to-saved-filter-groups "home")))
 
 ;; (setq ibuffer-saved-filter-groups
 ;;       '(("home"
-;; 	 ("emacs-config" (or (filename . ".emacs.d")
-;; 			     (filename . "emacs")))
-;; 	 ("magit" (name . "\*magit")))))
+;;     ("emacs-config" (or (filename . ".emacs.d")
+;;             (filename . "emacs")))
+;;     ("magit" (name . "\*magit")))))
 
 ;;dired
 (require 'dired+)
 (require 'dired-details+)
 
 ;;expand-region
-(require 'expand-region)
-(global-set-key (kbd "C-@") 'er/expand-region)
-(global-set-key (kbd "C-#") 'er/contract-region)
-(global-set-key (kbd "C-&") 'shrink-window-horizontally)
-(global-set-key (kbd "C-*") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-(") 'shrink-window)
-(global-set-key (kbd "C-)") 'enlarge-window)
+(use-package expand-region
+  :ensure t
+  :commands (er/expand-region er/contract-region))
+;; (require 'expand-region)
+;; (global-set-key (kbd "C-@") 'er/expand-region)
+;; (global-set-key (kbd "C-#") 'er/contract-region)
+;; (global-set-key (kbd "C-&") 'shrink-window-horizontally)
+;; (global-set-key (kbd "C-*") 'enlarge-window-horizontally)
+;; (global-set-key (kbd "C-(") 'shrink-window)
+;; (global-set-key (kbd "C-)") 'enlarge-window)
 
 ;;ensime
 (require 'ensime)
@@ -171,7 +180,7 @@
 (require 'go-mode)
 (defun jmb/go-mode-hook ()
   (setq gofmt-command "goimports")
-	(add-hook 'before-save-hook 'gofmt-before-save)
+  (add-hook 'before-save-hook 'gofmt-before-save)
   ;; Customize compile command to run go build
   (local-set-key (kbd "M-.") 'godef-jump)
   (local-set-key (kbd "C-c C-i") 'go-goto-imports)
@@ -241,8 +250,11 @@
 (global-hungry-delete-mode)
 
 (global-auto-revert-mode t)
-(require 'magit)
-(global-set-key "\C-ci" 'magit-status)
+(use-package magit
+  :ensure t
+  :bind ("C-c i" . magit-status))
+;(require 'magit)
+;(global-set-key "\C-ci" 'magit-status)
 
 ;(require 'rfringe)
 ;;(require 'flymake-cursor)
@@ -258,7 +270,12 @@
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
-(load "undo-tree-setup")
+(use-package undo-tree
+;  :bind (("C-x u" . undo-tree-vizualize)
+;         ("C-z" . undo-tree-undo))
+  :init (global-undo-tree-mode)
+  :config (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace))
+
 
 (require 'auto-complete)
 (global-auto-complete-mode t)
@@ -300,14 +317,14 @@
 ;;(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
 
 (defun jmb/empty-string (str)
-	(string= "" str))
+  (string= "" str))
 (defun jmb/update-env-vars-from-fish ()
-	 (let ((lines (split-string (shell-command-to-string "fish -c \"set -xUL\"") "\n")))
-		 (dolist (line lines)
-			 (let* ((parts (split-string line " "))
-							(name (elt parts 0))
-							(value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
-				 (if (not (string= "" name)) (setenv name value))))))
+   (let ((lines (split-string (shell-command-to-string "fish -c \"set -xUL\"") "\n")))
+     (dolist (line lines)
+       (let* ((parts (split-string line " "))
+              (name (elt parts 0))
+              (value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
+         (if (not (string= "" name)) (setenv name value))))))
 
 ;;(require 'rubydb)
 ;;(require 'one-key-macro)
@@ -321,53 +338,17 @@
 
 ;;(global-set-key  "\C-c\C-a" 'autotest-switch)
 
-(require 'ioccur)
-(require 'loccur)
-;; defines shortcut for loccur of the current word
-(define-key global-map [(control o)] 'loccur-current)
-;; defines shortcut for the interactive loccur command
-(define-key global-map [(control meta o)] 'loccur)
-;; defines shortcut for the loccur of the previously found word
-(define-key global-map [(control shift o)] 'loccur-previous-match)
-
-(defun rspec-outline-occur ()
-  (interactive)
-  (loccur "^[[:space:]]*it[[:space:]].*do\\|{$\\|^[[:space:]]*describe[[:space:]].*do$\\|^[[:space:]]*context.*do$"))
-
-(defcustom outline-occur-by-mode nil
-  ""
-  :group 'outline-loccur
-  :type
-  '(repeat
-    (cons :tag "Outline rule" (symbol :tag "Major mode") (string :tag "Regexp")
-    )))
-
-(defun outline-occur ()
-  (interactive)
-  (loccur (cdr (assoc 'ruby-mode outline-occur-by-mode))))
-
-;;(define-key global-map [(control meta o)] 'rspec-outline-occur)
-(define-key global-map [(control meta o)] 'outline-occur)
-
-;;markdown
-(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ;;(defun try-to-add-imenu ()
 ;;  (condition-case nil (imenu-add-defs-to-menubar) (error nil)))
 ;; (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
 ;;visual-regexp
-(require 'visual-regexp)
-(define-key global-map (kbd "C-c C-q") 'vr/replace)
-(define-key global-map (kbd "C-c q") 'vr/query-replace)
-;; if you use multiple-cursors, this is for you:
-;(define-key global-map (kbd "C-c m") 'vr/mc-mark)
-
-(if (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
+(use-package visual-regexp
+  :ensure t
+  :bind (("C-c C-q" . vr/replace)
+         ("C-c q" . vr/query-replace)
+         ("C-c m" . vr/mc-mark)))
 
 (require 'ansi-color)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -378,17 +359,17 @@
   (add-hook 'comint-output-filter-functions 'ansi-color-process-output)
   (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)
   (local-set-key [home]        ; move to beginning of line, after prompt
-		 'comint-bol)
+     'comint-bol)
   (local-set-key [up]          ; cycle backward through command history
-		 '(lambda () (interactive)
-		    (if (comint-after-pmark-p)
-			(comint-previous-input 1)
-		      (previous-line 1))))
+     '(lambda () (interactive)
+        (if (comint-after-pmark-p)
+      (comint-previous-input 1)
+          (previous-line 1))))
   (local-set-key [down]        ; cycle forward through command history
-		 '(lambda () (interactive)
-		    (if (comint-after-pmark-p)
-			(comint-next-input 1)
-		      (forward-line 1)))))
+     '(lambda () (interactive)
+        (if (comint-after-pmark-p)
+      (comint-next-input 1)
+          (forward-line 1)))))
 
 (add-hook 'shell-mode-hook 'my-standard-comint-mode-hooks)
 
@@ -404,15 +385,15 @@
 ;;(load 'ensime-setup.e')
 
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
-;	  '(lambda ()
+;     '(lambda ()
 ;             (local-set-key [home]        ; move to beginning of line, after prompt
 ;                            'comint-bol)
-;	     (local-set-key [up]          ; cycle backward through command history
+;        (local-set-key [up]          ; cycle backward through command history
 ;                            '(lambda () (interactive)
 ;                               (if (comint-after-pmark-p)
 ;                                   (comint-previous-input 1)
 ;                                 (previous-line 1))))
-;	     (local-set-key [down]        ; cycle forward through command history
+;        (local-set-key [down]        ; cycle forward through command history
 ;                            '(lambda () (interactive)
 ;                               (if (comint-after-pmark-p)
 ;                                   (comint-next-input 1)
@@ -426,32 +407,22 @@
 ;(push '(".+_spec\\.rb$" flymake-rspec-init) flymake-allowed-file-name-masks)
 
 ;;;Guard notifications
-(defun guard-notification (type title message image)
-  (message type))
+;(defun guard-notification (type title message image)
+;  (message type))
 
-(defvar jmb-disabled-whitespace-mode-hooks
-      (list 'magit-mode-hook 'undo-tree-visualizer-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry))
 
-(defun jmb-disable-show-trailing-whitespace ()
-  (setq show-trailing-whitespace nil))
-
-(dolist (hook jmb-disabled-whitespace-mode-hooks)
-  (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 ;;(require 'keychain-environment)
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
-;;docker
 
-(require 'dockerfile-mode)
+;;docker
+(use-package dockerfile-mode
+  :ensure t)
 
 (require 'uniquify)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
-(setq use-dialog-box nil)
-
-(setq ring-bell-function (lambda () (message "*beep*")))
 
 (defun yank-chrome-url ()
  "Yank current URL from Chrome"
@@ -470,4 +441,3 @@ end tell"
 (global-set-key (kbd "<f9>") 'compile)
 
 (org-babel-load-file "~/.emacs.d/setup.org")
-

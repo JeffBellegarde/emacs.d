@@ -46,7 +46,6 @@
  '(global-auto-revert-mode t)
  '(global-git-gutter-mode t)
  '(global-linum-mode t)
- '(global-whitespace-mode nil)
  '(global-whitespace-newline-mode nil)
  '(go-oracle-command "/Users/Bellegarde/go_src/bin/oracle")
  '(helm-time-zone-home-location "Seattle")
@@ -186,7 +185,7 @@
  '(shell-file-name "/usr/local/bin/fish")
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
- '(show-trailing-whitespace nil)
+ '(show-trailing-whitespace t)
  '(sml/replacer-regexp-list
    (quote
     (("^~/org" ":Org:")

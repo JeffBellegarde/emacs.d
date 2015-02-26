@@ -31,7 +31,10 @@ Who I am.
 (global-set-key "\C-z" 'undo)
 (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
 (auto-compression-mode 1)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-dialog-box nil)
 
+(setq ring-bell-function (lambda () (message "*beep*")))
 #+end_src
 
 ** Customization   
