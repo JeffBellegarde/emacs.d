@@ -3,14 +3,15 @@
       (file-name-directory jmb-emacs-init-file))
 (defvar user-emacs-directory jmb-emacs-config-dir)
 (defvar jmb-disabled-whitespace-mode-hooks
-      (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry))
+      (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
 (defun jmb-disable-show-trailing-whitespace ()
   (setq show-trailing-whitespace nil))
 
 (dolist (hook jmb-disabled-whitespace-mode-hooks)
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
+(add-to-list 'load-path jmb-lisp-dir)
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
 ;;(add-to-list 'load-path "~/src/emacs-Flymake")
 ;(add-to-list 'load-path "~/src/autotest.el")
@@ -49,12 +50,6 @@
 (defvar jmb-required-packages
       (list
        'ace-window
-       'apples-mode
-       'auto-complete
-       'dired+
-       'dired-details+
-       'ensime
-       'exec-path-from-shell
        'fish-mode
        'flx-ido
        'flycheck
@@ -62,18 +57,11 @@
        'gitconfig-mode
        'gitignore-mode
        'gist
-       'go-autocomplete
        'go-eldoc
        'go-errcheck
-       'go-mode
-       'guide-key
-       'hungry-delete
        'ibuffer-vc
        'ido
        'ido-vertical-mode
-       'impatient-mode
-       'key-chord
-       'ox-reveal
        'paradox
        'projectile
        'rfringe
@@ -90,6 +78,9 @@
 (require 'use-package)
 
 (defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
+(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
+(load custom-file)
+
 ;; ;;mode-compile
 ;; (autoload 'mode-compile "mode-compile"
 ;;   "Command to compile current buffer file based on the major mode" t)
@@ -111,14 +102,13 @@
 ;;(global-set-key [67108909] 'text-scale-decrease)
 
 
-;;org-mode
-(require 'org)
-;;
-;; Standard key bindings
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-set-key "\C-cr" 'org-capture)
+ (use-package org
+   :bind (
+          ("C-c l" . org-store-link)
+          ("C-c a" . org-agenda)
+          ("C-c b" . org-iswitchb)
+          ("C-c r" . org-capture))
+   :ensure t)
 
 (use-package deft
   :ensure t
@@ -141,9 +131,14 @@
 ;;             (filename . "emacs")))
 ;;     ("magit" (name . "\*magit")))))
 
+(use-package dired+
+  :ensure t)
+
 ;;dired
-(require 'dired+)
-(require 'dired-details+)
+;(use-package dired+
+;  :ensure t)
+;(use-package dired-details+
+;  :ensure t)
 
 ;;expand-region
 (use-package expand-region
@@ -158,49 +153,63 @@
 ;; (global-set-key (kbd "C-)") 'enlarge-window)
 
 ;;ensime
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(use-package ensime
+  :commands (ensime-scala-mode-hook)
+  :ensure t
+  :init (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
 
 ;; gomode
 (setenv "GOPATH" "/Users/Bellegarde/go_src")
 (setq exec-path (append exec-path '("/Users/Bellegarde/go_src/bin")))
-(require 'go-mode)
-(defun jmb/go-mode-hook ()
-  (setq gofmt-command "goimports")
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  ;; Customize compile command to run go build
-  (local-set-key (kbd "M-.") 'godef-jump)
-  (local-set-key (kbd "C-c C-i") 'go-goto-imports)
-  (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
-  (if (not (string-match "go" compile-command))
-      (set (make-local-variable 'compile-command)
-           "go build -v; and go test -v -coverprofile coverage.out; and go vet"))
-  (go-oracle-mode))
-(add-hook 'go-mode-hook 'go-eldoc-setup)
-;;(remove-hook 'before-save-hook 'jmb/gofmt-before-save)
-(add-hook 'go-mode-hook 'jmb/go-mode-hook)
-;;(add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
-;;(require 'go-flymake)
-;;(require 'go-flycheck)
-(add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
-(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
-(load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
+(use-package go-mode
+  :ensure t
+  :mode "\\.go\\'"
+  :config
+  (progn
+    (defun jmb/go-mode-hook ()
+      (setq gofmt-command "goimports")
+      (add-hook 'before-save-hook 'gofmt-before-save)
+      ;; Customize compile command to run go build
+      (local-set-key (kbd "M-.") 'godef-jump)
+      (local-set-key (kbd "C-c C-i") 'go-goto-imports)
+      (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+      (if (not (string-match "go" compile-command))
+          (set (make-local-variable 'compile-command)
+               "go build -v; and go test -v -coverprofile coverage.out; and go vet"))
+      (go-oracle-mode))
+    (add-hook 'go-mode-hook 'go-eldoc-setup)
+    ;;(remove-hook 'before-save-hook 'jmb/gofmt-before-save)
+    (add-hook 'go-mode-hook 'jmb/go-mode-hook)
+    ;;(add-to-list 'load-path "~/go_src/src/github.com/dougm/goflymake")
+    ;;(require 'go-flymake)
+    ;;(require 'go-flycheck)
+    (add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
+    (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
+    (load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
+    ))
 
 ;;(require 'golint)
 
-(require 'auto-complete-config)
-(require 'go-autocomplete)
+(use-package auto-complete
+  :ensure t)
+
+;;(require 'auto-complete-config) ;don't seem to need this
+(use-package go-autocomplete
+  :ensure t)
 
 ;;git-gutter
 (require 'git-gutter-fringe)
 
-;; guide-key
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c p" "C-c C-o" "C-c h"))
-(guide-key-mode 1)  ; Enable guide-key-mode
+(use-package guide-key
+  :ensure t
+  :idle (guide-key-mode 1)
+  :config
+  (progn
+    (setq guide-key/guide-key-sequence t)))
 
 ;;(load "idle-highlight-setup")
 (use-package idle-highlight-mode
+  :ensure t
   :commands (idle-highlight-mode))
 
 (load "emacs-pry-setup")
@@ -212,15 +221,21 @@
 ;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; key-chord
-(require 'key-chord)
-(key-chord-mode 1)
+(use-package key-chord
+  :ensure t
+  :config (key-chord-mode 1))
+;;(require 'key-chord)
+;;(key-chord-mode 1)
 ;;(key-chord-define-global "q["     "\C-u5\C-x{")
 ;;(key-chord-define-global "q]"     "\C-u5\C-x}")
 
 (require 'ibuffer-vc)
 (require 'ruby-end)
 
-(require 'exec-path-from-shell)
+(use-package exec-path-from-shell
+  :commands (exec-path-from-shell-initialize)
+  :ensure t)
+
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "GOPATH"))
@@ -236,8 +251,10 @@
 ;;(flx-ido-mode 1)
 
 
-(require 'hungry-delete)
-(global-hungry-delete-mode)
+(use-package hungry-delete
+  :ensure t
+  :config
+  (global-hungry-delete-mode))
 
 (global-auto-revert-mode t)
 (use-package magit
@@ -269,9 +286,10 @@
   :init (global-undo-tree-mode)
   :config (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace))
 
-
-(require 'auto-complete)
-(global-auto-complete-mode t)
+(use-package auto-complete
+  :ensure t
+  :config
+  (global-auto-complete-mode t))
 
 ;;(require 'desktop-recover)
 (prefer-coding-system 'utf-8)
@@ -281,17 +299,16 @@
   :init
   (progn
     (desktop-save-mode 1)
-    (defun my-desktop-save ()
+    (defun jmb-desktop-save ()
       (interactive)
       ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
       (if (eq (desktop-owner) (emacs-pid))
           (desktop-save desktop-dirname)))
     (add-hook 'auto-save-hook 'jmb-desktop-save)))
 
-(require 'unit-test)
-;;(require 'autotest)
-(require 'rcov-overlay)
-(require 'yari)
+(use-package rcov-overlay)
+(use-package yari)
+;;(require 'yari)
 (defun ri-bind-key ()
   (local-set-key [f1] 'yari))
 
@@ -418,7 +435,7 @@
 
 
 
-(require 'keychain-environment)
+(use-package keychain-environment)
 
 (if (eq system-type "darwin")
     (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
@@ -429,21 +446,26 @@
 
 (require 'uniquify)
 
+(use-package apples-mode
+  :commands (apples-do-applescript))
 
 (defun yank-chrome-url ()
- "Yank current URL from Chrome"
+  "Yank current URL from Chrome"
   (interactive)
   (require 'apples-mode)
   (apples-do-applescript "tell application \"Google Chrome\"
  get URL of active tab of first window
 end tell"
-    #'(lambda (url status script)
-        ;; comes back with quotes which we strip off
-        (insert (cl-subseq url 1 (1- (length url)))))))
+                         #'(lambda (url status script)
+                             ;; comes back with quotes which we strip off
+                             (insert (cl-subseq url 1 (1- (length url)))))))
 
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 (global-set-key (kbd "<f9>") 'compile)
+
+(use-package impatient-mode
+  :commands (impatient-mode))
 
 (org-babel-load-file "~/.emacs.d/setup.org")

@@ -111,7 +111,7 @@ Use ack and use resursive by default. C-u to be non-recursive.
      ("C-c M-i" . helm-multi-swoop)
      ("C-x M-i" . helm-multi-swoop-all)))
 #+end_src
-   
+
 ** Hydra
 #+begin_src emacs-lisp
 (use-package hydra)
@@ -131,8 +131,8 @@ Use ack and use resursive by default. C-u to be non-recursive.
     ("l" text-scale-decrease "out")
     ("0" (text-scale-set 0) "reset"))
 #+end_src
-   
-   
+
+
 *** Windmove
 #+begin_src emacs-lisp
   (defun hydra-move-splitter-left (arg)
@@ -177,7 +177,7 @@ Use ack and use resursive by default. C-u to be non-recursive.
     ("J" hydra-move-splitter-down)
     ("K" hydra-move-splitter-up)
     ("L" hydra-move-splitter-right)
-    
+
     ("3" (lambda ()
            (interactive)
            (split-window-right)
@@ -201,7 +201,7 @@ Use ack and use resursive by default. C-u to be non-recursive.
   (key-chord-define-global "jk" 'hydra-window/body)
 
 #+end_src
-   
+
 
 *** Navigate in buffer
 #+begin_src emacs-lisp
@@ -270,10 +270,10 @@ I try to hit the keys at the same time so I want a really short delay.
   (sml/setup)
 #+end_src
 
-** Flymake
+** Flycheck
 
 #+begin_src emacs-lisp
-(add-to-list 'guide-key/guide-key-sequence "C-c !")
+;;(add-to-list 'guide-key/guide-key-sequence "C-c !")
 #+end_src
 
 * Major modes

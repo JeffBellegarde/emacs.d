@@ -32,6 +32,7 @@
    (quote
     ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin" "/usr/local/Cellar/go/1.2/libexec/bin" "/Users/Bellegarde/go_src/bin")))
  '(explicit-shell-file-name "/bin/bash")
+ '(flycheck-disabled-checkers (quote (emacs-lisp-checkdoc)))
  '(flymake-gui-warnings-enabled nil)
  '(flymake-run-in-place nil)
  '(flymake-start-syntax-check-on-find-file nil)
@@ -144,11 +145,12 @@
  '(org-fontify-done-headline t)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-info org-jsinfo org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-mouse)))
+    (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-mouse)))
  '(org-pretty-entities t)
  '(org-pretty-entities-include-sub-superscripts nil)
  '(org-replace-disputed-keys t)
  '(org-src-fontify-natively t)
+ '(org-src-window-setup (quote current-window))
  '(org-use-speed-commands t)
  '(outline-occur-by-mode
    (quote
