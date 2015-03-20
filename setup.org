@@ -15,34 +15,82 @@ Who I am.
 
 ** Basic config
 #+begin_src emacs-lisp
-(require 'use-package)
-(column-number-mode)
-(tool-bar-mode -1)
-(line-number-mode 1)
-(add-hook 'after-init-hook 'server-start)
+  (require 'use-package)
+  (column-number-mode)
+  (tool-bar-mode -1)
+  (line-number-mode 1)
+  (add-hook 'after-init-hook 'server-start)
 
-;;mode-compile
-(autoload 'mode-compile "mode-compile"
-  "Command to compile current buffer file based on the major mode" t)
-(global-set-key "\C-cc" 'mode-compile)
-(autoload 'mode-compile-kill "mode-compile"
-  "Command to kill a compilation launched by `mode-compile'" t)
-(global-set-key "\C-ck" 'mode-compile-kill)
-(global-set-key "\C-z" 'undo)
-(autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
-(auto-compression-mode 1)
-(defalias 'yes-or-no-p 'y-or-n-p)
-(setq use-dialog-box nil)
+  ;;mode-compile
+  (autoload 'mode-compile "mode-compile"
+    "Command to compile current buffer file based on the major mode" t)
+  (global-set-key "\C-cc" 'mode-compile)
+  (autoload 'mode-compile-kill "mode-compile"
+    "Command to kill a compilation launched by `mode-compile'" t)
+  (global-set-key "\C-ck" 'mode-compile-kill)
+  (global-set-key "\C-z" 'undo)
+  (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
+  (auto-compression-mode 1)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq use-dialog-box nil)
 
-(setq ring-bell-function (lambda () (message "*beep*")))
+  (setq ring-bell-function (lambda () (message "*beep*")))
+  (transient-mark-mode 1)
 #+end_src
-
 ** Customization   
 #+begin_src emacs-lisp
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
 (load custom-file)
 #+end_src
 
+** Startup test
+This will verify that emacs startup is working correctly.
+From http://oremacs.com/2015/03/05/testing-init-sanity/
+
+#+begin_src emacs-lisp
+(defun ora-test-emacs ()
+  (interactive)
+  (require 'async)
+  (async-start
+   (lambda () (shell-command-to-string
+          "emacs --batch --eval \"
+(condition-case e
+    (progn
+      (load \\\"~/.emacs.d/init.el\\\")
+      (message \\\"-OK-\\\"))
+  (error
+   (message \\\"ERROR!\\\")
+   (signal (car e) (cdr e))))\""))
+   `(lambda (output)
+      (if (string-match "-OK-" output)
+          (when ,(called-interactively-p 'any)
+            (message "All is well"))
+        (switch-to-buffer-other-window "*startup error*")
+        (delete-region (point-min) (point-max))
+        (insert output)
+        (search-backward "ERROR!")))))
+#+end_src
+
+* Launcher
+
+The launcher map is defined at the top so other things can add to it.
+
+#+begin_src emacs-lisp
+(define-prefix-command 'launcher-map)
+(define-key ctl-x-map "l" 'launcher-map)
+(global-set-key (kbd "s-l") 'launcher-map)
+(define-key launcher-map "c" #'calc)
+(define-key launcher-map "d" #'ediff-buffers)
+;;(define-key launcher-map "f" #'find-dired)
+(define-key launcher-map "a" #'ack)
+(define-key launcher-map "h" #'man) ; Help
+(define-key launcher-map "i" #'package-install-from-buffer)
+;;(define-key launcher-map "n" #'nethack)
+(define-key launcher-map "l" #'count-lines-page)
+(define-key launcher-map "p" #'paradox-list-packages)
+(define-key launcher-map "s" #'shell)
+(define-key launcher-map "t" #'proced) ; top
+#+end_src
 * Global Minor Modes
 ** Winner (window layouts)
 Binds C-c <left> and C-c <right>
@@ -225,11 +273,11 @@ Use ack and use resursive by default. C-u to be non-recursive.
                              :color pink
                              :post (deactivate-mark))
     "
-    _k_     _d_elete    _s_tring
-  _h_ _l_   _o_k        _y_ank
-    _j_     _n_ew-copy  _r_eset
-            _e_xchange  _u_ndo
-                        _p_aste
+    _k_   ^^_d_elete    _s_tring
+  _h_ _l_   _o_k        _w_kill
+    _j_   ^^_n_ew-copy  _r_eset
+^^        ^^_e_xchange  _u_ndo
+^^^^      ^^            _y_ank
   "
     ("h" backward-char nil)
     ("l" forward-char nil)
@@ -248,13 +296,12 @@ Use ack and use resursive by default. C-u to be non-recursive.
     ("y" yank-rectangle nil)
     ("u" undo nil)
     ("s" string-rectangle nil)
-    ("p" kill-rectangle nil)
+    ("w" kill-rectangle nil)
     ("o" nil nil)
     ("q" nil nil)
   )
   (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
 #+end_src
-
 ** KeyChord
 
 I try to hit the keys at the same time so I want a really short delay.
@@ -276,11 +323,50 @@ I try to hit the keys at the same time so I want a really short delay.
 ;;(add-to-list 'guide-key/guide-key-sequence "C-c !")
 #+end_src
 
+
+** ISpell
+#+begin_src emacs-lisp
+  (use-package ispell
+    :ensure t
+    :bind ("M-." . ispell-word)
+    :commands (ispell-word))
+#+end_src
+
+** Auto complete ISpell
+#+begin_src emacs-lisp
+  (use-package ac-ispell
+    :ensure t
+    :commands (ac-ispell-ac-setup)
+    :init (add-hook 'text-mode-hook 'ac-ispell-ac-setup)
+    :config (ac-ispell-setup))
+#+end_src
+
 * Major modes
 
 ** IBuffer
+
+
 #+begin_src emacs-lisp
-  (use-package ibuf-ext
-    :defer t
-    :bind ("C-x C-b" . ibuffer))
+  (require 'vc)
+  (require 'ibuf-ext)
+
+  (use-package ibuffer-vc
+    :ensure t
+    :commands (ibuffer-vc-set-filter-groups-by-vc-root))
+
+  (use-package ibuffer
+    :bind ("C-x C-b" . ibuffer)
+    :config (add-hook 'ibuffer-hook
+                      (lambda ()
+                        (ibuffer-vc-set-filter-groups-by-vc-root)
+                        (ibuffer-do-sort-by-alphabetic))))
 #+end_src
+
+* Edit Server
+#+begin_src emacs-lisp
+(use-package edit-server
+  :ensure t
+  :defer 5
+  :config (edit-server-start))
+#+end_src
+

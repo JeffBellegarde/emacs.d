@@ -1,3 +1,10 @@
+(eval-when-compile ;;Load use-package only when needed
+  (require 'use-package))
+(require 'diminish)  ;;use-package dependencies
+(require 'bind-key)
+
+(setq debug-on-error t)
+
 (defvar jmb-emacs-init-file load-file-name)
 (defvar jmb-emacs-config-dir
       (file-name-directory jmb-emacs-init-file))
@@ -52,21 +59,19 @@
        'ace-window
        'fish-mode
        'flx-ido
-       'flycheck
        'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
        'gist
        'go-eldoc
        'go-errcheck
-       'ibuffer-vc
+;;       'ibuffer-vc
        'ido
        'ido-vertical-mode
        'paradox
        'projectile
        'rfringe
        'ruby-end
-       'smex
        'use-package
        'yasnippet
        'zenburn-theme
@@ -130,15 +135,18 @@
 ;;     ("emacs-config" (or (filename . ".emacs.d")
 ;;             (filename . "emacs")))
 ;;     ("magit" (name . "\*magit")))))
-
-(use-package dired+
+(use-package sr-speedbar
+  :commands (sr-speedbar-toggle)
   :ensure t)
 
-;;dired
-;(use-package dired+
-;  :ensure t)
-;(use-package dired-details+
-;  :ensure t)
+(defun my/dired-mode-hook ()
+  (hl-line-mode t)
+  (toggle-truncate-lines 1))
+
+(use-package dired+
+  :ensure t
+  :config
+  (add-hook 'dired-mode-hook #'my/dired-mode-hook))
 
 ;;expand-region
 (use-package expand-region
@@ -198,14 +206,16 @@
   :ensure t)
 
 ;;git-gutter
-(require 'git-gutter-fringe)
+(when (functionp 'define-fringe-bitmap)
+  (require 'git-gutter-fringe))
 
 (use-package guide-key
   :ensure t
-  :idle (guide-key-mode 1)
+  :defer 2
   :config
   (progn
-    (setq guide-key/guide-key-sequence t)))
+    (setq guide-key/guide-key-sequence t)
+    (guide-key-mode 1)))
 
 ;;(load "idle-highlight-setup")
 (use-package idle-highlight-mode
@@ -229,7 +239,7 @@
 ;;(key-chord-define-global "q["     "\C-u5\C-x{")
 ;;(key-chord-define-global "q]"     "\C-u5\C-x}")
 
-(require 'ibuffer-vc)
+;(require 'ibuffer-vc)
 (require 'ruby-end)
 
 (use-package exec-path-from-shell
@@ -240,10 +250,10 @@
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "GOPATH"))
 
-(add-hook 'ibuffer-hook
-     (lambda ()
-       (ibuffer-vc-set-filter-groups-by-vc-root)
-       (ibuffer-do-sort-by-alphabetic)))
+;; (add-hook 'ibuffer-hook
+;;      (lambda ()
+;;        (ibuffer-vc-set-filter-groups-by-vc-root)
+;;        (ibuffer-do-sort-by-alphabetic)))
 ;ido
 ;;(require 'ido)
 ;;(require 'ido-vertical-mode)
@@ -274,7 +284,7 @@
 (use-package ack-and-a-half
   :ensure t
   :commands (ack-and-a-half ack-and-a-half-same ack-and-a-half-find-file ack-and-a-half-find-file-same)
-  :pre-init
+  :init
   (progn
     (defalias 'ack 'ack-and-a-half)
     (defalias 'ack-same 'ack-and-a-half-same)
@@ -283,8 +293,10 @@
 
 (use-package undo-tree
   :ensure t
-  :init (global-undo-tree-mode)
-  :config (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace))
+  :config
+  (progn
+    (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace)
+    (global-undo-tree-mode)))
 
 (use-package auto-complete
   :ensure t
@@ -373,8 +385,8 @@
          ("C-c q" . vr/query-replace)
          ("C-c m" . vr/mc-mark)))
 
-(require 'ansi-color)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(use-package ansi-color
+  :config (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 
 (defun my-standard-comint-mode-hooks ()
   (add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
@@ -444,7 +456,7 @@
 (use-package dockerfile-mode
   :ensure t)
 
-(require 'uniquify)
+(use-package uniquify)
 
 (use-package apples-mode
   :commands (apples-do-applescript))
@@ -466,6 +478,20 @@ end tell"
 (global-set-key (kbd "<f9>") 'compile)
 
 (use-package impatient-mode
+  :ensure t
   :commands (impatient-mode))
+(use-package flycheck
+  :ensure t
+  :config (global-flycheck-mode 1))
+(use-package flycheck-tip
+  :ensure t
+  :disabled t
+  :bind ("C-c C-n" . flycheck-tip-cycle)
+  :config (setq flycheck-tip-avoid-show-func nil))
+
+(use-package popwin
+  :defer 3)
 
 (org-babel-load-file "~/.emacs.d/setup.org")
+
+(setq debug-on-error nil)
