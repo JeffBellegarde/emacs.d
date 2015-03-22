@@ -83,6 +83,7 @@ The launcher map is defined at the top so other things can add to it.
 (define-key launcher-map "d" #'ediff-buffers)
 ;;(define-key launcher-map "f" #'find-dired)
 (define-key launcher-map "a" #'ack)
+(define-key launcher-map "e" #'elfeed)
 (define-key launcher-map "h" #'man) ; Help
 (define-key launcher-map "i" #'package-install-from-buffer)
 ;;(define-key launcher-map "n" #'nethack)
@@ -361,6 +362,23 @@ I try to hit the keys at the same time so I want a really short delay.
                         (ibuffer-vc-set-filter-groups-by-vc-root)
                         (ibuffer-do-sort-by-alphabetic))))
 #+end_src
+
+** Elfeed (Rss)
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :commands (elfeed)
+    :ensure t
+    :config
+    (progn
+      (add-hook 'elfeed-search-mode-hook 'jmb-disable-show-trailing-whitespace)
+      (add-hook 'elfeed-show-mode-hook 'jmb-disable-show-trailing-whitespace)
+      (elfeed-org)))
+  (use-package elfeed-org
+    :commands (elfeed-org)
+    :ensure t)
+
+#+end_src
+
 
 * Edit Server
 #+begin_src emacs-lisp

@@ -1,7 +1,3 @@
-(eval-when-compile ;;Load use-package only when needed
-  (require 'use-package))
-(require 'diminish)  ;;use-package dependencies
-(require 'bind-key)
 
 (setq debug-on-error t)
 
@@ -49,10 +45,9 @@
 
 
 (require 'package)
-(setq package-archives
-      '(("melpa" . "http://melpa.milkbox.net/packages/")
-        ("gnu" . "http://elpa.gnu.org/packages/")
-        ("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/")))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/") t)
 (package-initialize)
 (defvar jmb-required-packages
       (list
@@ -80,7 +75,12 @@
   (when (not (package-installed-p package))
     (package-refresh-contents)
     (package-install package)))
-(require 'use-package)
+(eval-when-compile ;;Load use-package only when needed
+  (require 'use-package))
+(require 'diminish)  ;;use-package dependencies
+(require 'bind-key)
+
+;;(require 'use-package)
 
 (defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))

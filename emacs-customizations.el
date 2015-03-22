@@ -10,6 +10,7 @@
  '(ack-and-a-half-prompt-for-directory t)
  '(ansi-color-for-comint-mode t)
  '(autotest-use-ui t)
+ '(browse-url-new-window-flag t)
  '(comint-prompt-read-only t)
  '(comint-scroll-to-bottom-on-input t)
  '(cua-enable-cua-keys t)
@@ -128,34 +129,10 @@
  '(ns-tool-bar-display-mode (quote both) t)
  '(ns-tool-bar-size-mode nil t)
  '(org-agenda-dim-blocked-tasks t)
- '(org-agenda-files
-   (quote
-    ("~/.deft/tasks.org" "~/.deft/cleanup.org" "~/.deft/maintenance.org" "~/.deft/support.org" "~/.deft/notes.org")))
+ '(org-agenda-files (quote ("~/.deft/notes.org")))
  '(org-agenda-todo-list-sublevels nil)
  '(org-babel-load-languages (quote ((emacs-lisp . t) (sh . t))))
- '(org-capture-templates
-   (quote
-    (("s" "Support" entry
-      (file+headline "~/.deft/support.org" "Support")
-      "** TODO %?
-%U %a
-%i
-")
-     ("c" "Clean up" entry
-      (file+headline "~/.deft/cleanup.org" "Clean up")
-      "** TODO %?
-%U %a
-%i")
-     ("m" "Maintenance" entry
-      (file+headline "~/.deft/maintenance.org" "Maintenance")
-      "** TODO %?
-%U %a
-%i")
-     ("t" "Tasks" entry
-      (file+headline "~/.deft/tasks.org" "Tasks")
-      "** TODO %?
-%U %a
-%i"))))
+ '(org-capture-templates nil)
  '(org-confirm-babel-evaluate nil)
  '(org-default-notes-file "~/.deft/notes.org")
  '(org-fontify-done-headline t)
@@ -165,6 +142,7 @@
  '(org-pretty-entities t)
  '(org-pretty-entities-include-sub-superscripts nil)
  '(org-replace-disputed-keys t)
+ '(org-return-follows-link t)
  '(org-src-fontify-natively t)
  '(org-src-window-setup (quote current-window))
  '(org-use-speed-commands t)
@@ -237,4 +215,5 @@
  '(diredp-dir-priv ((t (:foreground "#7474FFFFFFFF"))))
  '(hydra-face-amaranth ((t (:foreground "magenta1" :weight bold))))
  '(hydra-face-red ((t (:foreground "brown3" :weight bold))))
- '(ido-first-match ((t (:foreground "cyan" :weight bold)))))
+ '(ido-first-match ((t (:foreground "cyan" :weight bold))))
+ '(message-header-subject ((t (:foreground "#DFAF8F" :weight bold :height 2.0)))))
