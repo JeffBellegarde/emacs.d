@@ -174,7 +174,6 @@
 *** http://menagea3.net/comic.rss
 *** http://www.odoripark.com/feed/
 *** http://olympusoverdrive.com/rss.php
-*** http://www.pinkpartscomic.com/inc/feed.php
 *** http://www.theidlestate.com/?feed=rss2
 *** http://chrissandersart.com/?feed=rss2
 *** http://www.thewotch.com/feed.php
@@ -188,25 +187,6 @@
 *** http://painbynumber.tumblr.com/rss
 *** http://feeds.feedburner.com/wwdn
 *** http://enthusiasm.cozy.org/feed
-*** http://www.ohjoysextoy.com/feed/
-*** NSFW                                                               :nsfw:
-**** http://spyingwithlana.com/feed/
-**** http://therockcocks.com/rss.php
-**** http://pronqueens.thecomicseries.com/rss
-**** http://www.pronquest.com/feed
-**** http://shipinbottle.pepsaga.com/?feed=rss2
-**** http://www.athenawheatley.com/athena_rss2.xml
-**** http://jessfink.com/Chester5000XYV/?feed=rss2
-**** http://collar6.com/feed
-**** http://doctorvoluptua.com/index.xml
-**** http://www.gogetaroomie.com/rss.php
-**** http://mylifewithfel.smackjeeves.com/rss/
-**** http://feeds.feedburner.com/NikkiSprite
-**** http://www.theultrafem.com/index.php/feed/
-**** http://www.oglaf.com/feeds/rss/
-**** http://pinkpartscomic.com/inc/feed.php
-**** http://www.c.urvy.org/curvy_rss2.xml
-
 ** Programming                                                  :programming:
 *** http://edgeperspectives.typepad.com/edge_perspectives/index.rdf
 *** http://lambda-the-ultimate.org/rss.xml
@@ -226,7 +206,6 @@
 *** http://www.infoq.com/rss/rss.action?token=4sD2hSw37yaAjWz31A7N7NIJ3reK8Ozz
 *** http://oremacs.com/atom.xml
 *** http://feeds.feedburner.com/EvolvingExcellence
-
 ** Talk                                                                :talk:
 *** http://blog.prof.so/feeds/posts/default
 *** http://what-if.xkcd.com/feed.atom

@@ -37,12 +37,11 @@ Who I am.
   (setq ring-bell-function (lambda () (message "*beep*")))
   (transient-mark-mode 1)
 #+end_src
-** Customization   
+** Customization
 #+begin_src emacs-lisp
 (setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
 (load custom-file)
 #+end_src
-
 ** Startup test
 This will verify that emacs startup is working correctly.
 From http://oremacs.com/2015/03/05/testing-init-sanity/
@@ -69,6 +68,11 @@ From http://oremacs.com/2015/03/05/testing-init-sanity/
         (delete-region (point-min) (point-max))
         (insert output)
         (search-backward "ERROR!")))))
+#+end_src
+
+** Personal key bindings
+#+begin_src emacs-lisp
+(bind-key "C-h K" 'describe-personal-keybindings)
 #+end_src
 
 * Launcher
@@ -365,15 +369,37 @@ I try to hit the keys at the same time so I want a really short delay.
 
 ** Elfeed (Rss)
 #+begin_src emacs-lisp
+  (defvar jmb-elfeed-auto-update-timer)
+  (defvar jmb-elfeed-auto-update-min-delay (* 60 60))
+  (defvar jmb-elfeed-auto-update-idle-delay (* 10 60))
+  (defun jmb-elfeed-update ()
+    (let ((idle-time (current-idle-time)))
+      (when (and idle-time
+                 (> (float-time idle-time) jmb-elfeed-auto-update-idle-delay)
+                 (> (- (float-time) (elfeed-db-last-update)) jmb-elfeed-auto-update-min-delay))
+        (message "Starting elfeed update")
+        (elfeed-update))))
+  (defun jmb-elfeed-start-auto-update ()
+    (interactive)
+    (setq jmb-elfeed-auto-update-timer (run-at-time 0 600 #'jmb-elfeed-update))
+    (add-hook 'kill-buffer-hook 'jmb-elfeed-stop-auto-update nil t))
+  (defun jmb-elfeed-stop-auto-update ()
+    (interactive)
+    (when (timerp jmb-elfeed-auto-update-timer)
+      (cancel-timer jmb-elfeed-auto-update-timer)
+      (setq jmb-elfeed-auto-update-timer nil)))
   (use-package elfeed
     :commands (elfeed)
+    :disabled t
     :ensure t
     :config
     (progn
       (add-hook 'elfeed-search-mode-hook 'jmb-disable-show-trailing-whitespace)
       (add-hook 'elfeed-show-mode-hook 'jmb-disable-show-trailing-whitespace)
+      (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
       (elfeed-org)))
   (use-package elfeed-org
+    :disabled t
     :commands (elfeed-org)
     :ensure t)
 

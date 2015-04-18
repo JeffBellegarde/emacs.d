@@ -13,6 +13,7 @@
  '(browse-url-new-window-flag t)
  '(comint-prompt-read-only t)
  '(comint-scroll-to-bottom-on-input t)
+ '(command-log-mode-is-global t)
  '(cua-enable-cua-keys t)
  '(cua-enable-modeline-indications t)
  '(cua-mode t nil (cua-base))

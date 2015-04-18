@@ -17,8 +17,8 @@
 (add-to-list 'load-path jmb-lisp-dir)
 ;;;(add-to-list 'load-path "~/.emacs.d/ruby")
 ;;(add-to-list 'load-path "~/src/emacs-Flymake")
-;(add-to-list 'load-path "~/src/autotest.el")
-;(add-to-list 'load-path "~/src/markdown-mode")
+;;(add-to-list 'load-path "~/src/autotest.el")
+;;(add-to-list 'load-path "~/src/markdown-mode")
 
 ;;(add-to-list 'load-path "~/src/perspective-el")
 ;;(require 'perspective)
@@ -82,9 +82,9 @@
 
 ;;(require 'use-package)
 
-(defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
-(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
-(load custom-file)
+;;(defvar jmb-emacs-src-dir (expand-file-name "src" user-emacs-directory))
+;;(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
+;;(load custom-file)
 
 ;; ;;mode-compile
 ;; (autoload 'mode-compile "mode-compile"
@@ -491,6 +491,23 @@ end tell"
 
 (use-package popwin
   :defer 3)
+
+(use-package command-log-mode
+  :commands command-log-mode
+  :ensure t)
+
+(use-package paredit
+  :commands (enable-pareditt-mode)
+  :ensure t
+  :init
+    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+
+(eldoc-mode)
 
 (org-babel-load-file "~/.emacs.d/setup.org")
 
