@@ -8,6 +8,7 @@
 (defvar jmb-disabled-whitespace-mode-hooks
       (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
 (defun jmb-disable-show-trailing-whitespace ()
+  (interactive)
   (setq show-trailing-whitespace nil))
 
 (dolist (hook jmb-disabled-whitespace-mode-hooks)
@@ -508,6 +509,12 @@ end tell"
     (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 
 (eldoc-mode)
+
+(use-package sx
+  :ensure t
+  :commands (sx-tab-all-questions)
+  :init
+  (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
 
 (org-babel-load-file "~/.emacs.d/setup.org")
 
