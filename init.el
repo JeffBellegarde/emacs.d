@@ -498,7 +498,7 @@ end tell"
   :ensure t)
 
 (use-package paredit
-  :commands (enable-pareditt-mode)
+  :commands (enable-paredit-mode)
   :ensure t
   :init
     (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -513,7 +513,7 @@ end tell"
 (use-package sx
   :ensure t
   :commands (sx-tab-all-questions)
-  :init
+  :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
 
 (org-babel-load-file "~/.emacs.d/setup.org")
