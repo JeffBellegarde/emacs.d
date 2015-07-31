@@ -52,7 +52,6 @@
 (package-initialize)
 (defvar jmb-required-packages
       (list
-       'ace-window
        'fish-mode
        'flx-ido
        'git-gutter-fringe
@@ -114,6 +113,7 @@
           ("C-c a" . org-agenda)
           ("C-c b" . org-iswitchb)
           ("C-c r" . org-capture))
+   :config (org-clock-persistence-insinuate)
    :ensure t)
 
 (use-package deft
@@ -517,5 +517,59 @@ end tell"
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
 
 (org-babel-load-file "~/.emacs.d/setup.org")
+(require 'org-protocol)
+
+(setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
+
+;; From http://doc.norang.ca/org-mode.html
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images 'append)
+
+(use-package ace-window
+  :ensure t
+  :defer 1
+  :config
+  (setq aw-keys   '(?a ?s ?d ?f ?j ?k ?l)
+        aw-dispatch-always t
+        aw-dispatch-alist
+        '((?x aw-delete-window     "Ace - Delete Window")
+          (?c aw-swap-window       "Ace - Swap Window")
+          (?n aw-flip-window)
+          (?v aw-split-window-vert "Ace - Split Vert Window")
+          (?h aw-split-window-horz "Ace - Split Horz Window")
+          (?m delete-other-windows "Ace - Maximize Window")
+          (?g delete-other-windows)
+          (?b balance-windows)
+          (?u winner-undo)
+          (?r winner-redo)))
+
+  (when (package-installed-p 'hydra)
+    (defhydra hydra-window-size (:color red)
+      "Windows size"
+      ("h" shrink-window-horizontally "shrink horizontal")
+      ("j" shrink-window "shrink vertical")
+      ("k" enlarge-window "enlarge vertical")
+      ("l" enlarge-window-horizontally "enlarge horizontal"))
+    (defhydra hydra-window-frame (:color red)
+      "Frame"
+      ("f" make-frame "new frame")
+      ("x" delete-frame "delete frame"))
+    (defhydra hydra-window-scroll (:color red)
+      "Scroll other window"
+      ("n" scroll-other-window "scroll")
+      ("p" scroll-other-window-dowqn "scroll down"))
+    (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+    (add-to-list 'aw-dispatch-alist '(?o hydra-window-scroll/body) t)
+    (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+  (ace-window-display-mode t))
+
+(use-package define-word
+  :ensure t)
+
+(use-package restclient
+  :ensure t)
 
 (setq debug-on-error nil)

@@ -20,6 +20,7 @@ Who I am.
   (tool-bar-mode -1)
   (line-number-mode 1)
   (add-hook 'after-init-hook 'server-start)
+  (add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
 
   ;;mode-compile
   (autoload 'mode-compile "mode-compile"
@@ -36,6 +37,7 @@ Who I am.
 
   (setq ring-bell-function (lambda () (message "*beep*")))
   (transient-mark-mode 1)
+
 #+end_src
 ** Customization
 #+begin_src emacs-lisp
@@ -396,7 +398,7 @@ I try to hit the keys at the same time so I want a really short delay.
     (progn
       (add-hook 'elfeed-search-mode-hook 'jmb-disable-show-trailing-whitespace)
       (add-hook 'elfeed-show-mode-hook 'jmb-disable-show-trailing-whitespace)
-      (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
+      ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
       (elfeed-org)))
   (use-package elfeed-org
     :disabled t
