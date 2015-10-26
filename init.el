@@ -572,6 +572,21 @@ end tell"
 (use-package restclient
   :ensure t)
 
+(use-package eww
+  :commands (eww)
+  :config
+  (add-hook 'eww-mode-hook 'jmb-disable-show-trailing-whitespace)
+  (defadvice eww-tag-title (after rrix/eww-rename-buffer-ad (cont))
+    "Update EWW buffer title with new page load."
+    (message eww-current-title)
+    (rename-buffer (format "*eww : %s *" eww-current-title) t))
+  :ensure t)
+
+(use-package swift-mode
+  :config
+  (add-to-list 'flycheck-checkers 'swift)
+  :ensure t)
+
 (use-package wanderlust
   :disabled t
   :ensure t
