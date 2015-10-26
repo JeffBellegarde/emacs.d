@@ -349,6 +349,13 @@ I try to hit the keys at the same time so I want a really short delay.
     :config (ac-ispell-setup))
 #+end_src
 
+
+** Dash Api docs for os x
+(use-package dash-at-point
+  :ensure t
+  :bind (("s-D"     . dash-at-point)
+         ("C-c e"   . dash-at-point-with-docset)))
+
 * Major modes
 
 ** IBuffer
