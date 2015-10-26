@@ -5,6 +5,15 @@
 * To be done
 
 * Emacs Basics
+** Install emacs
+Emacs needs to be installed before this can even run. Still provides a nice place to track the command line args.
+
+
+
+#+begin_src sh
+brew install emacs --with-cocoa --with-imagemagick --with-gnutls
+#+end_src
+
 ** Personal information
 
 Who I am.
@@ -327,11 +336,6 @@ I try to hit the keys at the same time so I want a really short delay.
 
 ** Flycheck
 
-#+begin_src emacs-lisp
-;;(add-to-list 'guide-key/guide-key-sequence "C-c !")
-#+end_src
-
-
 ** ISpell
 #+begin_src emacs-lisp
   (use-package ispell
@@ -355,6 +359,21 @@ I try to hit the keys at the same time so I want a really short delay.
   :ensure t
   :bind (("s-D"     . dash-at-point)
          ("C-c e"   . dash-at-point-with-docset)))
+
+** which-key
+
+An improved version of guide-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :ensure t
+    :init (which-key-mode)
+    :config (progn (setq which-key-use-C-h-for-paging t
+                         which-key-prevent-C-h-from-cycling t)
+                   (setq which-key-idle-delay 0.5)
+                   (which-key-setup-side-window-right-bottom)
+                   (add-hook 'which-key-mode-hook 'jmb-disable-show-trailing-whitespace)))
+#+end_src
+
 
 * Major modes
 

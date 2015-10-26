@@ -1,2 +1,2 @@
-;; org-persist.el - Jeffs-MacBook-Pro-2.local at <2015-07-30 Thu 16:41>
+;; org-persist.el - Jeffs-MBP.home at <2015-10-26 Mon 13:07>
 (setq stored-clock-history '(("/Users/Bellegarde/.deft/work.org" . 19)))

@@ -210,8 +210,10 @@
 (when (functionp 'define-fringe-bitmap)
   (require 'git-gutter-fringe))
 
+;; currently using which-key instead.
 (use-package guide-key
   :ensure t
+  :disabled t
   :defer 2
   :config
   (progn
@@ -632,3 +634,4 @@ end tell"
 
 
 (setq debug-on-error nil)
+
