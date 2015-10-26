@@ -114,11 +114,15 @@
  '(indicate-empty-lines nil)
  '(inhibit-startup-echo-area-message "Bellegarde")
  '(inhibit-startup-screen t)
+ '(initial-scratch-message nil)
  '(kill-whole-line t)
  '(load-prefer-newer t)
  '(magit-default-tracking-name-function (quote magit-default-tracking-name-branch-only))
  '(magit-diff-refine-hunk t)
  '(magit-expand-staged-on-commit (quote full))
+ '(magit-log-arguments
+   (quote
+    ("--graph" "--color" "--decorate" "--simplify-by-decoration")))
  '(magit-process-connection-type nil)
  '(magit-process-popup-time 5)
  '(magit-remote-ref-format (quote remote-slash-branch))
@@ -169,6 +173,7 @@
  '(org-return-follows-link t)
  '(org-src-fontify-natively t)
  '(org-src-window-setup (quote current-window))
+ '(org-startup-with-inline-images t)
  '(org-use-speed-commands t)
  '(outline-occur-by-mode
    (quote

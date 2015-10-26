@@ -411,9 +411,9 @@ I try to hit the keys at the same time so I want a really short delay.
 
 * Edit Server
 #+begin_src emacs-lisp
-(use-package edit-server
-  :ensure t
-  :defer 5
-  :config (edit-server-start))
+  (use-package edit-server
+    :ensure t
+    :defer 5
+    :config (edit-server-start))
 #+end_src
 
