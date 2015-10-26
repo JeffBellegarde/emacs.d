@@ -92,6 +92,7 @@ The launcher map is defined at the top so other things can add to it.
 (define-key launcher-map "e" #'elfeed)
 (define-key launcher-map "h" #'man) ; Help
 (define-key launcher-map "i" #'package-install-from-buffer)
+(define-key launcher-map "g" #'gnus)
 ;;(define-key launcher-map "n" #'nethack)
 (define-key launcher-map "l" #'count-lines-page)
 (define-key launcher-map "p" #'paradox-list-packages)
