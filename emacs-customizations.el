@@ -4,13 +4,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(abbrev-mode t t)
- '(ace-window-display-mode t)
  '(ack-and-a-half-arguments (quote ("--ignore-dir bundle" "--ignore-dir vendor")))
  '(ack-and-a-half-executable "ack")
  '(ack-and-a-half-prompt-for-directory t)
  '(ansi-color-for-comint-mode t)
  '(auth-source-save-behavior nil)
  '(autotest-use-ui t)
+ '(browse-kill-ring-highlight-current-entry t)
+ '(browse-kill-ring-highlight-inserted-item (quote solid))
  '(browse-url-new-window-flag t)
  '(comint-prompt-read-only t)
  '(comint-scroll-to-bottom-on-input t)

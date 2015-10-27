@@ -106,6 +106,9 @@
 ;;(global-set-key [67108907] 'text-scale-increase)
 ;;(global-set-key [67108909] 'text-scale-decrease)
 
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
 
  (use-package org
    :bind (
@@ -532,9 +535,10 @@ end tell"
 
 (use-package ace-window
   :ensure t
-  :defer 1
+  :commands (ace-window)
   :config
   (setq aw-keys   '(?a ?s ?d ?f ?j ?k ?l)
+        ace-window-display-mode t
         aw-dispatch-always t
         aw-dispatch-alist
         '((?x aw-delete-window     "Ace - Delete Window")
@@ -569,9 +573,11 @@ end tell"
   (ace-window-display-mode t))
 
 (use-package define-word
+  :commands (define-word)
   :ensure t)
 
 (use-package restclient
+  :commands (restclient)
   :ensure t)
 
 (use-package eww
@@ -585,6 +591,7 @@ end tell"
   :ensure t)
 
 (use-package swift-mode
+  :mode "\\.swift\\'"
   :config
   (add-to-list 'flycheck-checkers 'swift)
   :ensure t)
