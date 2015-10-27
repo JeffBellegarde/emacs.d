@@ -275,7 +275,9 @@
 (global-auto-revert-mode t)
 (use-package magit
   :ensure t
-  :bind ("C-c i" . magit-status))
+  :bind ("C-c i" . magit-status)
+  :config (setq magit-push-always-verify nil))
+
 ;(require 'magit)
 ;(global-set-key "\C-ci" 'magit-status)
 
