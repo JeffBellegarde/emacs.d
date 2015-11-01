@@ -175,6 +175,18 @@ Use ack and use resursive by default. C-u to be non-recursive.
      ("C-x M-i" . helm-multi-swoop-all)))
 #+end_src
 
+
+*** ag
+
+Funcationality enabled but not bound to anything yet.
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-ag
+    :ensure t
+    :commands (helm-ag helm-do-agg))
+
+#+END_SRC
+
 ** Hydra
 #+begin_src emacs-lisp
   (use-package hydra
