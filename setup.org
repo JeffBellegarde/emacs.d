@@ -172,7 +172,9 @@ Use ack and use resursive by default. C-u to be non-recursive.
     (("M-i" . helm-swoop)
      ("M-I" . helm-swoop-back-to-last-point)
      ("C-c M-i" . helm-multi-swoop)
-     ("C-x M-i" . helm-multi-swoop-all)))
+     ("C-x M-i" . helm-multi-swoop-all))
+    :config (setq helm-swoop-pre-input-function
+                  (lambda () (thing-at-point 'symbol))))
 #+end_src
 
 
@@ -394,7 +396,29 @@ An improved version of guide-key
 #+END_SRC
 
 
+** Help-at
+
+#+BEGIN_SRC emacs-lisp
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+#+END_SRC
+
 * Major modes
+
+** Eclim
+
+#+BEGIN_SRC emacs-lisp
+    (use-package emacs-eclim
+      :ensure t
+      :config
+      (require 'eclimd)
+      (setq eclim-executable "/opt/eclipse/eclim"
+            eclimd-default-workspace "~/Documents/workspace"
+            eclim-problems-show-pos t))
+
+
+#+END_SRC
 
 ** IBuffer
 
