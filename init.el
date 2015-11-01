@@ -278,6 +278,14 @@
   :bind ("C-c i" . magit-status)
   :config (setq magit-push-always-verify nil))
 
+(use-package git-messenger
+  :ensure t
+  :bind ("C-x v p" . git-messenger:popup-message)
+  :config
+  (setq git-messenger:show-detail t)
+  ;;;;Where does magit-commit-mode come from?
+  ;;(add-hook 'git-messenger:popup-buffer-hook 'magit-commit-mode)
+  )
 ;(require 'magit)
 ;(global-set-key "\C-ci" 'magit-status)
 

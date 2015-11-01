@@ -226,7 +226,7 @@
      ("^~/[Gg]it[Hh]ub/" ":Git:")
      ("^~/[Gg]it\\([Hh]ub\\|\\)-?[Pp]rojects/" ":Git:"))))
  '(smtpmail-smtp-server "smtp.gmail.com")
- '(smtpmail-smtp-service 587)
+ '(smtpmail-smtp-service 587 t)
  '(speedbar-use-images nil)
  '(sr-speedbar-right-side nil)
  '(tab-width 2)
