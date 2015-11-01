@@ -131,7 +131,8 @@ Use ack and use resursive by default. C-u to be non-recursive.
            ("M-x" . helm-M-x)
            ("C-x b" . helm-mini)
            ("C-h SPC" . helm-all-mark-rings)
-           ("C-x C-f" . helm-find-files))
+           ("C-x C-f" . helm-find-files)
+           ("M-y" . helm-show-kill-ring))
     :config (progn
               (require 'helm-config)
               (helm-mode 1)
@@ -374,6 +375,7 @@ An improved version of guide-key
 ** Browse kill ring
 #+BEGIN_SRC emacs-lisp
   (use-package browse-kill-ring
+:disabled t
     :bind ("M-y" . browse-kill-ring)
     :ensure t)
 
