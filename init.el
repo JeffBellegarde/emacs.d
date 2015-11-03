@@ -203,7 +203,9 @@
 ;;(require 'golint)
 
 (use-package auto-complete
-  :ensure t)
+  :ensure t
+  :config
+  (global-auto-complete-mode t))
 
 ;;(require 'auto-complete-config) ;don't seem to need this
 (use-package go-autocomplete
@@ -314,10 +316,6 @@
     (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace)
     (global-undo-tree-mode)))
 
-(use-package auto-complete
-  :ensure t
-  :config
-  (global-auto-complete-mode t))
 
 ;;(require 'desktop-recover)
 (prefer-coding-system 'utf-8)

@@ -47,6 +47,8 @@ Who I am.
   (setq ring-bell-function (lambda () (message "*beep*")))
   (transient-mark-mode 1)
 
+  (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 #+end_src
 ** Customization
 #+begin_src emacs-lisp
@@ -109,6 +111,18 @@ The launcher map is defined at the top so other things can add to it.
 (define-key launcher-map "t" #'proced) ; top
 #+end_src
 * Global Minor Modes
+** Company mode (completion)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :commands (global-company-mode)
+    :bind (("C-/" . company-complete))
+    :config
+    (add-hook 'after-init-hook 'global-company-mode))
+
+#+END_SRC
+
 ** Winner (window layouts)
 Binds C-c <left> and C-c <right>
 #+begin_src emacs-lisp
@@ -409,8 +423,8 @@ An improved version of guide-key
 ** Eclim
 
 #+BEGIN_SRC emacs-lisp
-    (use-package emacs-eclim
-      :ensure t
+    (use-package eclim
+      :ensure emacs-eclim
       :config
       (require 'eclimd)
       (setq eclim-executable "/opt/eclipse/eclim"
