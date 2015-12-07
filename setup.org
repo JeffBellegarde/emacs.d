@@ -52,7 +52,7 @@ Who I am.
 #+end_src
 ** Customization
 #+begin_src emacs-lisp
-(setq custom-file (expand-file-name "emacs-customizations.el" jmb-emacs-config-dir))
+(setq custom-file (expand-file-name "emacs-customizations.el" user-emacs-directory))
 (load custom-file)
 #+end_src
 ** Startup test
@@ -418,19 +418,43 @@ An improved version of guide-key
 (help-at-pt-set-timer)
 #+END_SRC
 
+
+** Beacon
+
+
+#+BEGIN_SRC emacs-lisp
+    (use-package beacon
+      :diminish ""
+      :config (beacon-mode))
+#+END_SRC
+
+
+** God Mode
+
+#+BEGIN_SRC emacs-lisp
+    (use-package god-mode
+      :disabled t
+      :bind ("<escape>" . god-mode-all)
+      :config
+      (add-to-list 'god-exempt-major-modes 'Custom-mode)
+      ;;(setq god-exempt-major-modes nil)
+      ;;(setq god-exempt-predicates nil)
+      (defun my-update-cursor ()
+        (setq cursor-type (if (or god-local-mode buffer-read-only)
+                              'box
+                            'bar)))
+      (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+      (add-hook 'god-mode-disabled-hook 'my-update-cursor))
+
+
+
+#+END_SRC
+
 * Major modes
 
 ** Eclim
 
 #+BEGIN_SRC emacs-lisp
-    (use-package eclim
-      :ensure emacs-eclim
-      :config
-      (require 'eclimd)
-      (setq eclim-executable "/opt/eclipse/eclim"
-            eclimd-default-workspace "~/Documents/workspace"
-            eclim-problems-show-pos t))
-
 
 #+END_SRC
 
@@ -501,3 +525,4 @@ An improved version of guide-key
     :config (edit-server-start))
 #+end_src
 
+	
