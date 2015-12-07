@@ -5,9 +5,15 @@
   (require 'use-package))
 
 
+;; Load provate vars. Not to be checked in.
 (load "~/private.el")
 ;; * Top heading
-;; ** Sub heading
+;; ** Disable show trailing whitespace.
+;; I show whitespace by default but need to turn it off in some modes.
+;; Orignally i kep a list in but I use
+;;   (add-hook <hook-name> jmb-disable-show-trailing-whitespace)
+;; in appropriate use-package statements.
+
 (defvar jmb-disabled-whitespace-mode-hooks
       (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
 
@@ -19,7 +25,7 @@
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 
-
+;; ** Unorganized stuff
 
 
 (use-package use-package-chords
@@ -237,6 +243,8 @@
         (desktop-save desktop-dirname)))
   (add-hook 'auto-save-hook 'jmb-desktop-save))
 
+
+;; ** Ruby stuff
 ;;Locally installed. Not on melpa. Deal with next time i do ruby.
 ;;(use-package rcov-overlay)
 (use-package yari
@@ -272,6 +280,7 @@
 ;;(setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
 ;;(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
 
+;; ** Environment variables from fish
 (defun jmb/empty-string (str)
   (string= "" str))
 (defun jmb/update-env-vars-from-fish ()
@@ -282,15 +291,18 @@
               (value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
          (if (not (string= "" name)) (setenv name value))))))
 
-;;(require 'rubydb)
-;;(require 'one-key-macro)
 
+;; ** indent whole buffer
 (defun iwb ()
   "indent whole buffer"
   (interactive)
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil)
   (untabify (point-min) (point-max)))
+
+;; ** random unused stuff
+;;(require 'rubydb)
+;;(require 'one-key-macro)
 
 ;;(global-set-key  "\C-c\C-a" 'autotest-switch)
 
@@ -299,13 +311,14 @@
 ;;  (condition-case nil (imenu-add-defs-to-menubar) (error nil)))
 ;; (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
-;;visual-regexp
+;; ** visual-regexp
 (use-package visual-regexp
   :ensure t
   :bind (("C-c C-q" . vr/replace)
          ("C-c q" . vr/query-replace)
          ("C-c m" . vr/mc-mark)))
 
+;; ** Shell mode stuff
 (use-package ansi-color
   :commands (ansi-color-for-comint-mode-on)
   :preface (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
@@ -367,6 +380,8 @@
 ;(defun guard-notification (type title message image)
 ;  (message type))
 
+;; ** ace-window
+;; Still not in the habit of using it.
 (use-package ace-window
   :ensure t
   :commands (ace-window)
@@ -406,13 +421,17 @@
     (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
   (ace-window-display-mode t))
 
+;; ** define-word
 (use-package define-word
   :commands (define-word)
   :ensure t)
 
+;; ** restclient
 (use-package restclient
   :commands (restclient))
 
+;; ** Eww basic browser.
+;; Occasionally useful.
 (use-package eww
   :commands (eww)
   :config
@@ -423,14 +442,19 @@
     (rename-buffer (format "*eww : %s *" eww-current-title) t))
   :ensure t)
 
+;; ** Swift -- for editing .swift
+;; *** TODO Autocompletion https://github.com/nathankot/company-sourcekit
 (use-package swift-mode
   :mode "\\.swift\\'"
   :config
   (add-to-list 'flycheck-checkers 'swift)
   :ensure t)
 
+;; ** Wanderlust -- email
+;; Stores read state locally isntead of in gmail. Not Used.
 (use-package wanderlust
   :ensure t
+  :disabled t
   :init
   (setq elmo-maildir-folder-path "~/Maildir"
         wl-stay-folder-window t                       ;; show the folder pane (left)
@@ -579,9 +603,11 @@ end tell"
   :mode "\\.elm\\'")
 (when (fboundp 'imagemagick-register-types)
    (imagemagick-register-types))
-;; * Mu4e
+;; ** Mu4e -- email
+;; I don't like the view system. 
 (use-package mu4e
   :ensure nil
+  :disabled t
   :commands (mu4e)
   :config
   (setq mu4e-drafts-folder "/[Gmail].Drafts")
