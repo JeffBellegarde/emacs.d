@@ -430,6 +430,9 @@
 (use-package restclient
   :commands (restclient))
 
+(use-package request
+  :commands (request))
+
 ;; ** Eww basic browser.
 ;; Occasionally useful.
 (use-package eww
