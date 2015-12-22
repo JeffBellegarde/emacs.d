@@ -5,12 +5,12 @@
   (require 'use-package))
 
 
-;; Load provate vars. Not to be checked in.
+;; Load private vars. Not to be checked in.
 (load "~/private.el")
 ;; * Top heading
 ;; ** Disable show trailing whitespace.
 ;; I show whitespace by default but need to turn it off in some modes.
-;; Orignally i kep a list in but I use
+;; Orignally i kept a list in but now I use
 ;;   (add-hook <hook-name> jmb-disable-show-trailing-whitespace)
 ;; in appropriate use-package statements.
 
@@ -31,6 +31,9 @@
 (use-package use-package-chords
   :ensure t
   :config (key-chord-mode 1))
+
+(use-package ob-restclient
+  :ensure t)
 
  (use-package org
    :bind (
@@ -192,10 +195,16 @@
   (global-hungry-delete-mode))
 
 (global-auto-revert-mode t)
+
+;; ** Magit
 (use-package magit
   :ensure t
-  :bind ("C-c i" . magit-status))
+  :bind ("C-c i" . magit-status)
+  :defines (magit-emacsclient-executable)
+  :config (if (eq system-type "darwin")
+              (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")))
 
+;; ** Git messenger
 (use-package git-messenger
   :ensure t
   :bind ("C-x v p" . git-messenger:popup-message)
@@ -203,18 +212,19 @@
 	  (setq git-messenger:show-detail t)
   ;;;;Where does magit-commit-mode come from?
   ;;(add-hook 'git-messenger:popup-buffer-hook 'magit-commit-mode)
-  )
-;(require 'magit)
-;(global-set-key "\C-ci" 'magit-status)
+    )
 
 ;(require 'rfringe)
 ;;(require 'flymake-cursor)
 ;;(require 'flymake-ruby)
+;; ** Linum
 (require 'linum)
 (global-linum-mode)
 ;;(window-numbering-mode)
 ;;(require 'imenu+)
 ;;(require 'ack)
+
+;; ** Ack
 (use-package ack-and-a-half
   :ensure t
   :commands (ack-and-a-half ack-and-a-half-same ack-and-a-half-find-file ack-and-a-half-find-file-same)
@@ -225,6 +235,7 @@
     (defalias 'ack-find-file 'ack-and-a-half-find-file)
     (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)))
 
+;; ** Undo Tree
 (use-package undo-tree
   :ensure t
   :config
@@ -233,6 +244,7 @@
 
 (prefer-coding-system 'utf-8)
 
+;; ** Desktop
 (use-package desktop
   :config
   (desktop-save-mode 1)
@@ -506,8 +518,6 @@
 
 (use-package keychain-environment)
 
-(if (eq system-type "darwin")
-    (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
 
 ;;docker
 (use-package docker)
@@ -678,6 +688,7 @@ end tell"
 
 ;; ** github-notifier
 (use-package github-notifier
+  :disabled t
   :config
   (setq github-notifier-mode-line
         '(:eval
@@ -713,7 +724,17 @@ end tell"
   :config
   (require 'eclimd)
   (setq eclim-executable "/opt/eclipse/eclim"
-	eclimd-default-workspace "~/Documents/workspace"
-	eclim-problems-show-pos t))
+        eclimd-default-workspace "~/Documents/workspace"
+        eclim-problems-show-pos t)
+  (add-hook 'eclim-mode-hook 'company-mode))
 
+
+(defun youtube-dl ()
+  (interactive)
+  (let* ((str (current-kill 0))
+         (default-directory "~/Downloads")
+         (proc (get-buffer-process (ansi-term "/bin/bash"))))
+    (term-send-string
+     proc
+     (concat "cd ~/Downloads && youtube-dl " str "\n"))))
 
