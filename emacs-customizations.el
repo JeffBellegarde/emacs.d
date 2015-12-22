@@ -51,7 +51,6 @@
      ("wp-github" :url "https://api.github.dev.pages" :username "jbellegarde" :token "3cf9ddc0f84d8170cf3b8be1dda5d6ab2a5df950" :remote-regexp "^\\(?:git@github\\.dev\\.pages:\\|\\(?:git\\|https?\\|ssh\\)://.*@?github\\.dev\\.pages/\\)\\(.*\\)/\\(.*\\)\\(?:\\.git\\)?"))))
  '(gh-profile-default-profile "wp-github")
  '(git-gutter:verbosity 2)
- '(github-notifier-token "338f2389f55333d05a85b100dbaf00e85215ffb7")
  '(global-auto-revert-mode t)
  '(global-git-gutter-mode t)
  '(global-linum-mode t)
