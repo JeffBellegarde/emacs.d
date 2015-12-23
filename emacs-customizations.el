@@ -149,7 +149,8 @@
     ((emacs-lisp . t)
      (sh . t)
      (dot . t)
-     (plantuml . t))))
+     (plantuml . t)
+     (restclient . t))))
  '(org-capture-templates
    (quote
     (("w" "Default template" entry

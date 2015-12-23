@@ -25,17 +25,19 @@
   (add-hook hook 'jmb-disable-show-trailing-whitespace))
 
 
-;; ** Unorganized stuff
-
-
+;; ** Chords for use-package
+;; Enables key chords
 (use-package use-package-chords
   :ensure t
   :config (key-chord-mode 1))
 
-(use-package ob-restclient
-  :ensure t)
+;; ** restclient
+(use-package restclient
+  :commands (restclient))
 
- (use-package org
+
+;; ** org
+(use-package org
    :bind (
           ("C-c l" . org-store-link)
           ("C-c a" . org-agenda)
@@ -44,10 +46,19 @@
    :config (org-clock-persistence-insinuate)
    :ensure t)
 
+;; *** ob-restclient
+;; Alows restclient in org-mode.
+;; Use my local copy until [[https://github.com/alf/ob-restclient.el/pull/5]] is closed.
+(use-package ob-restclient
+  :load-path "~/src/ob-restclient.el"
+  :ensure t)
+
+;; ** Deft
 (use-package deft
   :ensure t
   :bind ("C-c d" . deft))
 
+;; ** sr-speedbar
 (use-package sr-speedbar
   :commands (sr-speedbar-toggle)
   :ensure t)
@@ -71,7 +82,7 @@
 
 
 
-;;expand-region
+;; ** expand-region
 (use-package expand-region
   :ensure t
   :commands (er/expand-region er/contract-region))
@@ -83,13 +94,13 @@
 ;; (global-set-key (kbd "C-(") 'shrink-window)
 ;; (global-set-key (kbd "C-)") 'enlarge-window)
 
-;;ensime
+;; ** ensime
 (use-package ensime
   :commands (ensime-scala-mode-hook)
   :ensure t
   :init (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
 
-;; gomode
+;; ** gomode
 (setenv "GOPATH" "/Users/Bellegarde/go_src")
 (setq exec-path (append exec-path '("/Users/Bellegarde/go_src/bin")))
 (use-package go-mode
@@ -118,6 +129,8 @@
     (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
     (load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
     ))
+
+;; ** Unorganized stuff
 
 ;;(require 'golint)
 (use-package auto-complete
@@ -438,10 +451,6 @@
   :commands (define-word)
   :ensure t)
 
-;; ** restclient
-(use-package restclient
-  :commands (restclient))
-
 (use-package request
   :commands (request))
 
@@ -688,7 +697,7 @@ end tell"
 
 ;; ** github-notifier
 (use-package github-notifier
-  :disabled t
+  :defer 10
   :config
   (setq github-notifier-mode-line
         '(:eval
