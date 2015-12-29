@@ -58,14 +58,82 @@
   :ensure t
   :bind ("C-c d" . deft))
 
+;; ** Helm
+
+;; *** Basic
+
+
+;;Use ack and use resursive by default. C-u to be non-recursive.
+(use-package helm
+    :ensure t
+    :defines (helm-M-x-fuzzy-match helm-grep-default-command helm-grep-default-recurse-command)
+    :bind (
+           ("C-c h" . helm-command-prefix)
+           ("M-x" . helm-M-x)
+           ("C-x b" . helm-mini)
+           ("C-h SPC" . helm-all-mark-rings)
+           ("C-x C-f" . helm-find-files)
+           ("M-y" . helm-show-kill-ring))
+    :config
+    (require 'helm-config)
+    (helm-mode 1)
+    (global-unset-key (kbd "C-x c"))
+    ;;rebind the keys
+    (bind-key "C-c h g" 'helm-google-suggest)
+    (bind-key "C-c h o" 'helm-occur)
+    (bind-key "C-c h x" 'helm-register)
+    (bind-key "C-c h M-:" 'helm-eval-expression-with-eldoc)
+    (setq helm-M-x-fuzzy-match t)
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+    
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+    
+    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+    (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+    (when (executable-find "ack")
+      (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
+            helm-grep-default-recurse-command) "ack -Hn --no-group --no-color %p %f")
+
+    ;; *** Descbinds
+(use-package helm-descbinds
+  :ensure t
+  :defer t
+  :bind ("C-h b" . helm-descbinds)
+  :config
+  (progn
+    (helm-descbinds-mode))))
+;; *** swoop
+
+(use-package helm-swoop
+    :ensure t
+    :bind
+    (("M-i" . helm-swoop)
+     ("M-I" . helm-swoop-back-to-last-point)
+     ("C-c M-i" . helm-multi-swoop)
+     ("C-x M-i" . helm-multi-swoop-all))
+    :config (setq helm-swoop-pre-input-function
+                  (lambda () (thing-at-point 'symbol))))
+;; *** ag
+
+;; Funcationality enabled but not bound to anything yet.
+
+(use-package helm-ag
+    :ensure t
+    :commands (helm-ag helm-do-agg))
+
+
 ;; ** sr-speedbar
+;; I also customize speedbar itself here.
 (use-package sr-speedbar
   :commands (sr-speedbar-toggle)
-  :ensure t)
+  :ensure t
+  :config
+  (setq speedbar-show-unknown-files t))
 
+;; ** dired
 (use-package dired
   :commands (dired)
-  :defer t
   :ensure nil
   :config
   (defun my/dired-mode-hook ()
@@ -77,10 +145,6 @@
     :ensure t
     :config
     (add-hook 'dired-mode-hook #'my/dired-mode-hook)))
-
-
-
-
 
 ;; ** expand-region
 (use-package expand-region
@@ -259,6 +323,7 @@
 
 ;; ** Desktop
 (use-package desktop
+  :functions 'desktop-owner
   :config
   (desktop-save-mode 1)
   (defun jmb-desktop-save ()
@@ -405,6 +470,139 @@
 ;(defun guard-notification (type title message image)
 ;  (message type))
 
+;; ** Hydra
+(use-package hydra
+    :ensure t
+    :bind ( ("C-M-o" . hydra-window/body)
+            ("<f2>" . hydra-zoom/body)
+            ("C-x SPC" . hydra-rectangle/body))
+    :chords (("jk" . hydra-window/body)
+             ("jl" . hydra-navigate/body))
+    :commands (defhydra)
+    :config
+    (hydra-add-font-lock)
+;; *** Zoom
+    (defhydra hydra-zoom (global-map "<f2>")
+      "zoom"
+      ("g" text-scale-increase "in")
+      ("l" text-scale-decrease "out")
+      ("0" (text-scale-set 0) "reset"))
+    
+;; *** Window manipulation
+    (defun hydra-move-splitter-left (arg)
+      "Move window splitter left."
+      (interactive "p")
+      (if (let ((windmove-wrap-around))
+            (windmove-find-other-window 'right))
+          (shrink-window-horizontally arg)
+        (enlarge-window-horizontally arg)))
+
+    (defun hydra-move-splitter-right (arg)
+      "Move window splitter right."
+      (interactive "p")
+      (if (let ((windmove-wrap-around))
+            (windmove-find-other-window 'right))
+          (enlarge-window-horizontally arg)
+        (shrink-window-horizontally arg)))
+
+    (defun hydra-move-splitter-up (arg)
+      "Move window splitter up."
+      (interactive "p")
+      (if (let ((windmove-wrap-around))
+            (windmove-find-other-window 'up))
+          (enlarge-window arg)
+        (shrink-window arg)))
+
+    (defun hydra-move-splitter-down (arg)
+      "Move window splitter down."
+      (interactive "p")
+      (if (let ((windmove-wrap-around))
+            (windmove-find-other-window 'up))
+          (shrink-window arg)
+        (enlarge-window arg)))
+
+    (defhydra hydra-window (:color amaranth)
+      "window"
+      ("h" windmove-left)
+      ("j" windmove-down)
+      ("k" windmove-up)
+      ("l" windmove-right)
+      ("H" hydra-move-splitter-left)
+      ("J" hydra-move-splitter-down)
+      ("K" hydra-move-splitter-up)
+      ("L" hydra-move-splitter-right)
+
+      ("3" (lambda ()
+             (interactive)
+             (split-window-right)
+             (windmove-right))
+       "vert")
+      ("2" (lambda ()
+             (interactive)
+             (split-window-below)
+             (windmove-down))
+       "horz")
+      ("t" transpose-frame "'")
+      ("1" delete-other-windows "one" :color blue)
+      ("a" ace-window "ace")
+      ("s" ace-swap-window "swap")
+      ("d" ace-delete-window "del")
+      ("i" ace-maximize-window "ace-one" :color blue)
+      ("b" helm-mini "buf")
+      ;;("m" headlong-bookmark-jump "bmk")
+      ("q" nil "cancel"))
+    (global-set-key (kbd "C-M-o") 'hydra-window/body)
+    (key-chord-define-global "jk" 'hydra-window/body)
+
+;; *** Navigation
+    (defhydra hydra-navigate (:color amaranth)
+      "navigate"
+      ("k" beginning-of-defun "beginning-of-defun")
+      ("j" end-of-defun "end-of-defun")
+      ("h" er/expand-region "expand-region")
+      ("l" er/contract-region "contract-region")
+      ("a" move-beginning-of-line "line start")
+      ("e" move-end-of-line "line end")
+      ("SPC" set-mark-command :color red)
+      ("n" narrow-to-region "narrow")
+      ("q" nil "cancel"))
+  ;;  (key-chord-define-global "jl" 'hydra-navigate/body)
+
+ ;; Rectangles
+    (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                                         :color pink
+                                         :post (deactivate-mark))
+      "
+      _k_   ^^_d_elete    _s_tring
+    _h_ _l_   _o_k        _w_kill
+      _j_   ^^_n_ew-copy  _r_eset
+  ^^        ^^_e_xchange  _u_ndo
+  ^^^^      ^^            _y_ank
+    "
+      ("h" backward-char nil)
+      ("l" forward-char nil)
+      ("k" previous-line nil)
+      ("j" next-line nil)
+      ("<left>" backward-char nil)
+      ("<right>" forward-char nil)
+      ("<up>" previous-line nil)
+      ("<down>" next-line nil)
+      ("e" exchange-point-and-mark nil)
+      ("n" copy-rectangle-as-kill nil)
+      ("d" delete-rectangle nil)
+      ("r" (if (region-active-p)
+               (deactivate-mark)
+             (rectangle-mark-mode 1)) nil)
+      ("y" yank-rectangle nil)
+      ("u" undo nil)
+      ("s" string-rectangle nil)
+      ("w" kill-rectangle nil)
+      ("o" nil nil)
+      ("q" nil nil)
+      )
+    (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body))
+
+
 ;; ** ace-window
 ;; Still not in the habit of using it.
 (use-package ace-window
@@ -466,12 +664,28 @@
     (rename-buffer (format "*eww : %s *" eww-current-title) t))
   :ensure t)
 
+;; ** flycheck
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode 1)
+  (setq flycheck-emacs-lisp-load-path  'inherit))
+(add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
+
+;; don't know wht this is disabled? Maybe conflict with org?
+(use-package flycheck-tip
+  :ensure t
+  :disabled t
+  :bind ("C-c C-n" . flycheck-tip-cycle)
+  :config (setq flycheck-tip-avoid-show-func nil))
+
+
 ;; ** Swift -- for editing .swift
 ;; *** TODO Autocompletion https://github.com/nathankot/company-sourcekit
 (use-package swift-mode
   :mode "\\.swift\\'"
   :config
-  (add-to-list 'flycheck-checkers 'swift)
+  (add-to-list flycheck-checkers 'swift)
   :ensure t)
 
 ;; ** Wanderlust -- email
@@ -561,19 +775,6 @@ end tell"
   :ensure t
   :commands (impatient-mode))
 
-(use-package flycheck
-  :ensure t
-  :config
-  (global-flycheck-mode 1)
-  (setq flycheck-emacs-lisp-load-path  'inherit))
-(add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
-
-(use-package flycheck-tip
-  :ensure t
-  :disabled t
-  :bind ("C-c C-n" . flycheck-tip-cycle)
-  :config (setq flycheck-tip-avoid-show-func nil))
-
 (use-package popwin)
 
 (use-package command-log-mode
@@ -594,7 +795,7 @@ end tell"
 (eldoc-mode)
 
 (use-package sx
-  :ensure t
+  :ensure t  
   :commands (sx-tab-all-questions)
   :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
@@ -602,6 +803,8 @@ end tell"
 
 (require 'org-protocol)
 
+(eval-when-compile
+  (defvar org-plant))
 (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
 
 (use-package orgstruct-mode
@@ -737,7 +940,8 @@ end tell"
         eclim-problems-show-pos t)
   (add-hook 'eclim-mode-hook 'company-mode))
 
-
+;; ** youtube-dl
+;; download youtube videos.
 (defun youtube-dl ()
   (interactive)
   (let* ((str (current-kill 0))
@@ -746,4 +950,31 @@ end tell"
     (term-send-string
      proc
      (concat "cd ~/Downloads && youtube-dl " str "\n"))))
+
+;; ** pop-to-mark
+;; When popping the mark, continue popping until the cursor
+;; actually moves.
+;; from [http://endlessparentheses.com/faster-pop-to-mark-command.html?source=rss]
+(defadvice pop-to-mark-command (around ensure-new-position activate)
+  (let ((p (point)))
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+
+;; repeat pop-to-mark on C-SPC
+(setq set-mark-command-repeat-pop t)
+
+;; ** popup-imenu
+;; SHould probably enable this only where imenu is used.
+(use-package popup-imenu
+  :bind ("C-<tab>" . popup-imenu)
+  :ensure t
+  :config
+  (define-key popup-isearch-keymap (kbd "C-<tab>") 'popup-isearch-cancel))
+
+;; ** super-save
+;; Auto save buffers
+(use-package super-save
+  :ensure t
+  :functions 'super-save-initialize
+  :config (super-save-initialize))
 
