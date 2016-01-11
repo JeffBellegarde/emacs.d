@@ -1053,3 +1053,10 @@ end tell"
     "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
     :keybinding "y")
   (engine-mode))
+
+;; ** Multiple-cursors
+(use-package multiple-cursors
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-prev-like-this)
+         ("C-c <" . mc/mark-all-like-this)))
+
