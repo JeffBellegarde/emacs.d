@@ -208,10 +208,17 @@
 (use-package go-autocomplete
   :ensure t)
 
-;;git-gutter
-(when (functionp 'define-fringe-bitmap)
-  (require 'git-gutter-fringe))
+;; ** git-gutter
+;; git-gutter-fringe avoids conflicts with linum mode.
 
+(when (functionp 'define-fringe-bitmap)
+  (use-package git-gutter-fringe
+    :config
+    (setq git-gutter:update-interval 2)))
+
+
+
+;; ** guide-key
 ;; currently using which-key instead.
 (use-package guide-key
   :ensure t
@@ -679,6 +686,9 @@
   :bind ("C-c C-n" . flycheck-tip-cycle)
   :config (setq flycheck-tip-avoid-show-func nil))
 
+(use-package flycheck-cask
+  :commands (flycheck-cask-setup)
+  :init (add-hook 'flycheck-mode-hook #'flycheck-cask-setup))
 
 ;; ** Swift -- for editing .swift
 ;; *** TODO Autocompletion https://github.com/nathankot/company-sourcekit
@@ -791,6 +801,11 @@ end tell"
     (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
     (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
     (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+
+(use-package lispy
+  :commands lispy-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 
 (eldoc-mode)
 
@@ -969,6 +984,7 @@ end tell"
   :bind ("C-<tab>" . popup-imenu)
   :ensure t
   :config
+  (setq popup-imenu-position 'point)
   (define-key popup-isearch-keymap (kbd "C-<tab>") 'popup-isearch-cancel))
 
 ;; ** super-save
@@ -978,3 +994,62 @@ end tell"
   :functions 'super-save-initialize
   :config (super-save-initialize))
 
+;; **el-mock
+;; used for testing
+(use-package el-mock)
+
+;; **engine-mode
+;; External search engines.
+
+(use-package engine-mode
+  :bind "C-c /"
+  :config
+  (defengine amazon
+    "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
+    :keybinding "a")
+
+  (defengine duckduckgo
+    "https://duckduckgo.com/?q=%s"
+    :keybinding "d")
+
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :keybinding "g")
+
+  (defengine google
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
+
+  (defengine google-images
+    "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
+
+  (defengine google-maps
+    "http://maps.google.com/maps?q=%s"
+    :docstring "Mappin' it up.")
+
+  (defengine project-gutenberg
+    "http://www.gutenberg.org/ebooks/search/?query=%s")
+
+  (defengine rfcs
+    "http://pretty-rfc.herokuapp.com/search?q=%s")
+
+  (defengine stack-overflow
+    "https://stackoverflow.com/search?q=%s")
+
+  (defengine twitter
+    "https://twitter.com/search?q=%s")
+
+  (defengine wikipedia
+    "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+    :keybinding "w"
+    :docstring "Searchin' the wikis.")
+
+  (defengine wiktionary
+    "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
+
+  (defengine wolfram-alpha
+    "http://www.wolframalpha.com/input/?i=%s")
+
+  (defengine youtube
+    "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+    :keybinding "y")
+  (engine-mode))

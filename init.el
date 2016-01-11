@@ -17,7 +17,7 @@
       (list
        'fish-mode
        'flx-ido
-       'git-gutter-fringe
+;;       'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
        'gist
