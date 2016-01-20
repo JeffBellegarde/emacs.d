@@ -24,3 +24,4 @@ org-clock-save.el
 /request/curl-cookie-jar
 /.cask/
 /semanticdb/
+/.mc-lists.el

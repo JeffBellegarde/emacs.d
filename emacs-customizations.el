@@ -15,6 +15,8 @@
  '(browse-kill-ring-highlight-current-entry t)
  '(browse-kill-ring-highlight-inserted-item (quote solid))
  '(browse-url-new-window-flag t)
+ '(circe-server-killed-confirmation nil)
+ '(circe-server-max-reconnect-attempts 1)
  '(comint-prompt-read-only t)
  '(comint-scroll-to-bottom-on-input t)
  '(command-log-mode-is-global t)
@@ -202,7 +204,8 @@
  '(rspec-use-rake-flag nil)
  '(safe-local-variable-values
    (quote
-    ((orgstruct-heading-prefix-regexp . "^;;; +")
+    ((org-use-property-inheritance . t)
+     (orgstruct-heading-prefix-regexp . "^;;; +")
      (encoding . utf-8)
      (ruby-compilation-executable . "ruby")
      (ruby-compilation-executable . "ruby1.8")
