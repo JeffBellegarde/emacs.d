@@ -97,7 +97,7 @@
 
 ;; *** ob-restclient
 ;; Alows restclient in org-mode.
-;; Use my local copy until [[https://github.com/alf/ob-restclient.el/pull/5]] is closed.
+;; Use my local copy until [[https://github.com/alf/ob-restclient.el/pull/5][ob-restclient]] is closed.
 (use-package ob-restclient
   :load-path "~/src/ob-restclient.el"
   :ensure t)
@@ -332,6 +332,12 @@
 
 (global-auto-revert-mode t)
 
+;; ** EPA for file encryotion
+;; Add -*- mode: org -*- -*- epa-file-encrypt-to: ("bellegar@gmail.com") -*-
+;; to automatically encrypt/decrypt.
+(require 'epa)
+(epa-file-enable)
+
 ;; ** Magit
 (use-package magit-gh-pulls
   :commands turn-on-magit-gh-pulls)
@@ -346,7 +352,7 @@
   (setq magit-repository-directories `("~/src"))
   (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
 
-;; ** Git messenger
+;; *** Git messenger
 (use-package git-messenger
   :ensure t
   :bind ("C-x v p" . git-messenger:popup-message)
@@ -896,13 +902,16 @@ end tell"
   :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
 
-
+;; * Org
+;; ** Org protocol
 (require 'org-protocol)
 
+;; ** Org plan uml
 (eval-when-compile
   (defvar org-plant))
 (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
 
+;; ** orgstruct
 (use-package orgstruct-mode
   :ensure nil
   :defines (orgstruct-heading-prefix-regexp)
@@ -920,6 +929,7 @@ end tell"
     (error nil)))
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images 'append)
 
+;; ** elm
 (use-package elm-mode
   :mode "\\.elm\\'")
 (when (fboundp 'imagemagick-register-types)
@@ -1184,3 +1194,4 @@ end tell"
 ;; * Finish loading
 (setq debug-on-error nil)
 (make-frame-visible)
+(put 'narrow-to-region 'disabled nil)

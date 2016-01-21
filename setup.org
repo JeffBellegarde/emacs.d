@@ -174,10 +174,10 @@ An improved version of guide-key
   (use-package which-key
     :ensure t
     :defer 5
+    :diminish ""
     :config
     (which-key-mode)
-    (setq which-key-use-C-h-for-paging t
-          which-key-prevent-C-h-from-cycling t
+    (setq which-key-use-C-h-commands t
           which-key-idle-delay 0.5)
     (which-key-setup-side-window-right-bottom)
     (add-hook 'which-key-mode-hook 'jmb-disable-show-trailing-whitespace))
@@ -187,7 +187,7 @@ An improved version of guide-key
 ** Browse kill ring
 #+BEGIN_SRC emacs-lisp
   (use-package browse-kill-ring
-:disabled t
+    :disabled t
     :bind ("M-y" . browse-kill-ring)
     :ensure t)
 
