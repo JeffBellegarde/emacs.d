@@ -111,17 +111,6 @@ The launcher map is defined at the top so other things can add to it.
 (define-key launcher-map "t" #'proced) ; top
 #+end_src
 * Global Minor Modes
-** Company mode (completion)
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :commands (global-company-mode)
-    :bind (("C-/" . company-complete))
-    :config
-    (add-hook 'after-init-hook 'global-company-mode))
-
-#+END_SRC
 
 ** Winner (window layouts)
 Binds C-c <left> and C-c <right>
@@ -150,10 +139,10 @@ I try to hit the keys at the same time so I want a really short delay.
 #+end_src
 
 ** ISpell
+No dictionary?
 #+begin_src emacs-lisp
   (use-package ispell
-    :ensure t
-    :bind ("M-." . ispell-word)
+;;    :bind ("M-." . ispell-word)
     :commands (ispell-word))
 #+end_src
 

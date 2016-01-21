@@ -246,8 +246,11 @@
 ;; ** Unorganized stuff
 
 ;;(require 'golint)
+;; Conflicts with company.
+;; Best to find a way to shift to the correct one for each mode.
 (use-package auto-complete
   :ensure t
+  :disabled t
   :config
   (global-auto-complete-mode t))
 
@@ -330,12 +333,18 @@
 (global-auto-revert-mode t)
 
 ;; ** Magit
+(use-package magit-gh-pulls
+  :commands turn-on-magit-gh-pulls)
+
 (use-package magit
   :ensure t
   :bind ("C-c i" . magit-status)
   :defines (magit-emacsclient-executable)
-  :config (if (eq system-type "darwin")
-              (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")))
+  :config
+  (if (eq system-type "darwin")
+      (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
+  (setq magit-repository-directories `("~/src"))
+  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
 
 ;; ** Git messenger
 (use-package git-messenger
@@ -370,12 +379,33 @@
 
 ;; ** Undo Tree
 (use-package undo-tree
-  :ensure t
   :config
   (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace)
   (global-undo-tree-mode))
 
 (prefer-coding-system 'utf-8)
+
+;; ** Company
+(use-package company
+  ;;  :commands (global-company-mode)
+  :demand t
+  :bind (("C-/" . company-complete))
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+
+;; Uses C-/ within company complete to shift to helm.
+(use-package helm-company
+  :init
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-/") 'helm-company)))
+
+(use-package company-quickhelp
+  :if (display-graphic-p)
+  :defer t
+  :init (add-hook 'company-mode-hook 'company-quickhelp-mode)
+  :config
+  (setq company-quickhelp-delay 1
+        company-quickhelp-max-lines 10))
 
 ;; ** Desktop
 (use-package desktop
