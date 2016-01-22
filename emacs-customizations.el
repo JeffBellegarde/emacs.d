@@ -165,6 +165,7 @@
  '(org-clock-persist t)
  '(org-confirm-babel-evaluate nil)
  '(org-default-notes-file "~/.deft/notes.org")
+ '(org-directory "~/.deft")
  '(org-fontify-done-headline t)
  '(org-log-into-drawer t)
  '(org-modules

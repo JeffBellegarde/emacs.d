@@ -108,52 +108,47 @@
   :bind ("C-c d" . deft))
 
 ;; ** Helm
-
-;; *** Basic
-
-
-;;Use ack and use resursive by default. C-u to be non-recursive.
 (use-package helm
-    :ensure t
-    :defines (helm-M-x-fuzzy-match helm-grep-default-command helm-grep-default-recurse-command)
-    :bind (
-           ("C-c h" . helm-command-prefix)
-           ("M-x" . helm-M-x)
-           ("C-x b" . helm-mini)
-           ("C-h SPC" . helm-all-mark-rings)
-           ("C-x C-f" . helm-find-files)
-           ("M-y" . helm-show-kill-ring))
-    :config
-    (require 'helm-config)
-    (helm-mode 1)
-    (global-unset-key (kbd "C-x c"))
-    ;;rebind the keys
-    (bind-key "C-c h g" 'helm-google-suggest)
-    (bind-key "C-c h o" 'helm-occur)
-    (bind-key "C-c h x" 'helm-register)
-    (bind-key "C-c h M-:" 'helm-eval-expression-with-eldoc)
-    (setq helm-M-x-fuzzy-match t)
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-    
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-    
-    (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-    (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
-    (when (executable-find "ack")
-      (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
-            helm-grep-default-recurse-command) "ack -Hn --no-group --no-color %p %f")
-
-    ;; *** Descbinds
-(use-package helm-descbinds
   :ensure t
-  :defer t
-  :bind ("C-h b" . helm-descbinds)
+  :defines (helm-M-x-fuzzy-match helm-grep-default-command helm-grep-default-recurse-command)
+  :bind (
+         ("C-c h" . helm-command-prefix)
+         ("M-x" . helm-M-x)
+         ("C-x b" . helm-mini)
+         ("C-h SPC" . helm-all-mark-rings)
+         ("C-x C-f" . helm-find-files)
+         ("M-y" . helm-show-kill-ring))
   :config
-  (progn
-    (helm-descbinds-mode))))
-;; *** swoop
+  (require 'helm-config)
+  (helm-mode 1)
+  (global-unset-key (kbd "C-x c"))
+  ;;rebind the keys
+  (bind-key "C-c h g" 'helm-google-suggest)
+  (bind-key "C-c h o" 'helm-occur)
+  (bind-key "C-c h x" 'helm-register)
+  (bind-key "C-c h M-:" 'helm-eval-expression-with-eldoc)
+  (setq helm-M-x-fuzzy-match t)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+    
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+    
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
+  (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+  (when (executable-find "ack")
+    (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
+          helm-grep-default-recurse-command) "ack -Hn --no-group --no-color %p %f")
+
+;; *** Descbinds
+ (use-package helm-descbinds
+   :ensure t
+   :defer t
+   :bind ("C-h b" . helm-descbinds)
+   :config
+   (progn
+     (helm-descbinds-mode))))
+
+;; *** swoop
 (use-package helm-swoop
     :ensure t
     :bind
@@ -164,13 +159,10 @@
     :config (setq helm-swoop-pre-input-function
                   (lambda () (thing-at-point 'symbol))))
 ;; *** ag
-
 ;; Funcationality enabled but not bound to anything yet.
-
 (use-package helm-ag
     :ensure t
     :commands (helm-ag helm-do-agg))
-
 
 ;; ** sr-speedbar
 ;; I also customize speedbar itself here.
@@ -837,7 +829,7 @@
 (use-package keychain-environment)
 
 
-;;docker
+;; ** docker
 (use-package docker)
 
 (use-package dockerfile-mode
@@ -847,6 +839,7 @@
 
 ;;(use-package uniquify)
 
+;; ** applescript
 (use-package apples-mode
   :commands (apples-do-applescript))
 
@@ -876,16 +869,18 @@ end tell"
   :commands command-log-mode
   :ensure t)
 
+;; ** Lisp stuff
 (use-package paredit
+  :disabled t
   :commands (enable-paredit-mode)
   :ensure t
   :init
-    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 
 (use-package lispy
   :commands lispy-mode
@@ -896,14 +891,15 @@ end tell"
 
 (eldoc-mode)
 
+;; ** StackExchange
 (use-package sx
   :ensure t  
   :commands (sx-tab-all-questions)
   :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
 
-;; * Org
-;; ** Org protocol
+;; ** Org
+;; *** Org protocol
 (require 'org-protocol)
 
 ;; ** Org plan uml

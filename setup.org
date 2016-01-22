@@ -217,8 +217,8 @@ An improved version of guide-key
 
 #+BEGIN_SRC emacs-lisp
   (use-package god-mode
-    :disabled t
     :bind ("<escape>" . god-mode-all)
+    :disabled t
     :config
     (add-to-list 'god-exempt-major-modes 'Custom-mode)
     (add-to-list 'god-exempt-major-modes 'Info-mode)
