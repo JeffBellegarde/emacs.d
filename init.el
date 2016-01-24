@@ -254,13 +254,21 @@
 
 ;; ** git-gutter
 ;; git-gutter-fringe avoids conflicts with linum mode.
-
+;; Error: fringe-helper-modification-func: Invalid search bound (wrong side of point)
+;; It happens often and the package does not apper to be maintained.
+;; Moving to diff-hl.
 (when (functionp 'define-fringe-bitmap)
   (use-package git-gutter-fringe
+    :disabled t
     :config
     (setq git-gutter:update-interval 2)))
 
 
+;; ** diff-hl
+(use-package diff-hl
+  :config
+  (setq diff-hl-draw-borders nil)
+  (global-diff-hl-mode))
 
 ;; ** guide-key
 ;; currently using which-key instead.

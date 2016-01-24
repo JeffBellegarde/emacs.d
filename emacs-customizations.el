@@ -251,6 +251,9 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Monaco"))))
  '(aw-mode-line-face ((t (:foreground "red"))))
+ '(diff-hl-change ((t (:background "#6CA0A3" :foreground "#6CA0A3"))))
+ '(diff-hl-delete ((t (:background "#DCA3A3" :foreground "#DCA3A3"))))
+ '(diff-hl-insert ((t (:background "#8FB28F" :foreground "#8FB28F"))))
  '(diredp-dir-priv ((t (:foreground "#7474FFFFFFFF"))))
  '(hydra-face-amaranth ((t (:foreground "magenta1" :weight bold))))
  '(hydra-face-red ((t (:foreground "brown3" :weight bold))))
