@@ -1195,7 +1195,51 @@ end tell"
 ;; I'm not using the org base init anymore but haven't moved everything over.
 (org-babel-load-file "~/.emacs.d/setup.org")
 
+;; * Custom code
+;; ** Select and expand
+(make-variable-buffer-local
+ (defvar quick-select-start-position nil
+   "The original position of point when quick-select was started."))
+
+(defun quick-select (arg)
+  (interactive "P")
+  (if (or (eq last-command 'pop-to-mark-command) (consp arg))
+      (progn
+        (setq this-command 'set-mark-command)
+        (set-mark-command arg))
+    (add-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive nil t)
+    (setq quick-select-start-position (point))
+    (set-mark-command arg)
+    (quick-select/body)))
+
+(defun quick-select-stop-hydra-if-mark-inactive ()
+  (when (and (or deactivate-mark (not mark-active))
+             (not (= (point) quick-select-start-position)))
+    (hydra-disable)))
+
+(defhydra quick-select (
+                        :exit nil
+                        :foreign-keys run
+                        :before-exit (progn
+                                       (remove-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive t)
+                                       (er/clear-history)))
+  
+  "Quick Select"
+  ("c" (progn (message "c") (deactivate-mark)))
+  ("q" (progn (deactivate-mark) (goto-char quick-select-start-position)) :exit 1)
+  ("<SPC>" "quit" :exit t)
+  ("," (er--expand-region-1))
+  ("." (er/contract-region 1))
+  ("C-<SPC>" (progn
+               (interactive)
+               (set-mark-command nil)
+               (quick-select nil))
+   :exit t)
+  ("x" exchange-point-and-mark))
+
+(bind-key "C-<SPC>" 'quick-select)
 ;; * Finish loading
 (setq debug-on-error nil)
 (make-frame-visible)
 (put 'narrow-to-region 'disabled nil)
+
