@@ -14,7 +14,7 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/") t)
 (package-initialize)
-
+ 
 ;; ** Load a list of packages
 ;; I want to remove things from this list and use use-package instead.
 ;; Also inits use-package.
@@ -190,7 +190,7 @@
 ;; ** expand-region
 (use-package expand-region
   :ensure t
-  :commands (er/expand-region er/contract-region))
+  :commands (er/expand-region er/contract-region er--expand-region-1))
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
 ;; (global-set-key (kbd "C-#") 'er/contract-region)
@@ -281,11 +281,12 @@
     (setq guide-key/guide-key-sequence t)
     (guide-key-mode 1)))
 
-;;(load "idle-highlight-setup")
+;; ** Idle-highlight
 (use-package idle-highlight-mode
   :ensure t
   :commands (idle-highlight-mode))
 
+;; ** Pry
 (load "emacs-pry-setup")
 
 ;;smex
@@ -294,7 +295,7 @@
 ;; This is your old M-x.
 ;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; key-chord -- Automaticall brought in by use-package-chords
+;; ** key-chord -- Automaticall brought in by use-package-chords
 (use-package key-chord
   :ensure t
   :disabled t
