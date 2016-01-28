@@ -895,6 +895,7 @@ end tell"
   :commands lispy-mode
   :init
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+  :config
   ;;Lispy rebinds M-i so put it back.
   (add-hook 'emacs-lisp-mode-hook (lambda () (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))))
 
