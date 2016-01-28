@@ -103,7 +103,15 @@ The launcher map is defined at the top so other things can add to it.
 (define-key launcher-map "e" #'elfeed)
 (define-key launcher-map "h" #'man) ; Help
 (define-key launcher-map "i" #'package-install-from-buffer)
-(define-key launcher-map "g" #'gnus)
+ ;;switch to gnus group buffer or start gnus
+    (defun my-switch-to-gnus-group-buffer ()
+      "Switch to gnus group buffer if it exists, otherwise start gnus"
+      (interactive)
+      (if (or (not (fboundp 'gnus-alive-p))
+              (not (gnus-alive-p)))
+          (gnus)
+        (switch-to-buffer "*Group*")))
+(define-key launcher-map "g" #'my-switch-to-gnus-group-buffer)
 ;;(define-key launcher-map "n" #'nethack)
 (define-key launcher-map "l" #'count-lines-page)
 (define-key launcher-map "p" #'paradox-list-packages)

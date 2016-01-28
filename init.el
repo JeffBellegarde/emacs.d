@@ -903,7 +903,7 @@ end tell"
 
 ;; ** StackExchange
 (use-package sx
-  :ensure t  
+  :ensure t
   :commands (sx-tab-all-questions)
   :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
@@ -1234,6 +1234,11 @@ end tell"
     (set-mark-command arg)
     (quick-select/body)))
 
+(defun quick-select-stop ()
+  (remove-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive t)
+  (if (boundp #'er/clear-history)
+      (er/clear-history)))
+
 (defun quick-select-stop-hydra-if-mark-inactive ()
   (when (and (or deactivate-mark (not mark-active))
              (not (= (point) quick-select-start-position)))
@@ -1242,18 +1247,19 @@ end tell"
 (defhydra quick-select (
                         :exit nil
                         :foreign-keys run
-                        :before-exit (progn
-                                       (remove-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive t)
-                                       (er/clear-history)))
-  
+                        :before-exit #'quick-select-stop)
   "Quick Select"
-  ("c" (progn (message "c") (deactivate-mark)))
-  ("q" (progn (deactivate-mark) (goto-char quick-select-start-position)) :exit 1)
+  ;; ("c" (progn
+  ;;        (message "c")
+  ;;        (deactivate-mark)))
+  ("q" (progn
+         (deactivate-mark)
+         (goto-char quick-select-start-position)) :exit 1)
   ("<SPC>" "quit" :exit t)
   ("," (er--expand-region-1))
   ("." (er/contract-region 1))
+  ("r" (rectangle-mark-mode))
   ("C-<SPC>" (progn
-               (interactive)
                (set-mark-command nil)
                (quick-select nil))
    :exit t)
