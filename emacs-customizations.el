@@ -143,9 +143,7 @@
  '(magit-default-tracking-name-function (quote magit-default-tracking-name-branch-only))
  '(magit-diff-refine-hunk t)
  '(magit-expand-staged-on-commit (quote full))
- '(magit-log-arguments
-   (quote
-    ("--graph" "--color" "--decorate" "--simplify-by-decoration")))
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate")))
  '(magit-process-connection-type nil)
  '(magit-process-popup-time 5)
  '(magit-remote-ref-format (quote remote-slash-branch))
