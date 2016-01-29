@@ -54,7 +54,6 @@
  '(gh-profile-alist
    (quote
     (("github" :url "https://api.github.com" :remote-regexp "^\\(?:git@github\\.com:\\|\\(?:git\\|https?\\|ssh\\)://.*@?github\\.com/\\)\\(.*\\)/\\(.*\\)\\(?:\\.git\\)?"))))
- '(gh-profile-default-profile "wp-github")
  '(git-gutter:verbosity 2)
  '(global-auto-revert-mode t)
  '(global-git-gutter-mode t)
