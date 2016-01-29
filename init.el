@@ -377,8 +377,10 @@
 ;;(require 'ack)
 
 ;; ** Ack
+;; does not appear to be available in melpa.
+;; Formally abandoned. Need to fina a replacement.
 (use-package ack-and-a-half
-  :ensure t
+  :ensure nil
   :commands (ack-and-a-half ack-and-a-half-same ack-and-a-half-find-file ack-and-a-half-find-file-same)
   :init
   (progn
