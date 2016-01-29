@@ -4,12 +4,14 @@
 
 ;; * Setup personal lisp directory.
 ;; This is where I put non package lisp code.
+(message "load-file-name: %s" load-file-name)
 (defvar user-emacs-directory (if load-file-name
                                  (file-name-directory load-file-name)
                                "~/.emacs.d"))
 (message "usr-emacs-dir: %s" user-emacs-directory)
 (defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path jmb-lisp-dir)
+
 
 ;; * Init the package system
 (require 'package)
@@ -55,12 +57,19 @@
 (require 'diminish)  ;;use-package dependencies
 (require 'bind-key)
 
+;; ** Customization
+(setq custom-file (expand-file-name "emacs-customizations.el" user-emacs-directory))
+(load custom-file)
 
 ;; * Privates
 ;; Load private vars. Not to be checked in.
 (when (file-exists-p "~/private.el")
   (load "~/private.el"))
 
+;; *Theme
+;; Use after-init-hook to avoid loading until after the config is loaded.
+
+(add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
 ;; * Configuration
 ;; ** Disable show trailing whitespace.
 ;; I show whitespace by default but need to turn it off in some modes.
@@ -346,7 +355,9 @@
 (epa-file-enable)
 
 ;; ** Magit
+;; magit-gh-pulls is throwing errors.
 (use-package magit-gh-pulls
+  :disabled t
   :commands turn-on-magit-gh-pulls)
 
 (use-package magit
@@ -357,7 +368,8 @@
   (if (eq system-type "darwin")
       (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
   (setq magit-repository-directories `("~/src"))
-  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+  ;; (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+  )
 
 ;; *** Git messenger
 (use-package git-messenger
