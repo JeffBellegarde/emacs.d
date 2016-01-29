@@ -4,7 +4,10 @@
 
 ;; * Setup personal lisp directory.
 ;; This is where I put non package lisp code.
-(defvar user-emacs-directory "~/.emacs.d")
+(defvar user-emacs-directory (if load-file-name
+                                 (file-name-directory load-file-name)
+                               "~/.emacs.d"))
+(message "usr-emacs-dir: %s" user-emacs-directory)
 (defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path jmb-lisp-dir)
 
