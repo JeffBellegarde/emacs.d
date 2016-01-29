@@ -55,7 +55,9 @@
 
 ;; * Privates
 ;; Load private vars. Not to be checked in.
-(load "~/private.el")
+(when (file-exists-p "~/private.el")
+  (load "~/private.el"))
+
 ;; * Configuration
 ;; ** Disable show trailing whitespace.
 ;; I show whitespace by default but need to turn it off in some modes.
@@ -232,8 +234,8 @@
     ;;(require 'go-flycheck)
     (add-to-list 'load-path "~/go_src/src/github.com/nsf/gocode")
     (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
-    (load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
-    ))
+    (when (file-exists-p "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el")
+      (load-file "$GOPATH/src/code.google.com/p/go.tools/cmd/oracle/oracle.el"))))
 
 ;; ** Unorganized stuff
 
@@ -287,7 +289,8 @@
   :commands (idle-highlight-mode))
 
 ;; ** Pry
-(load "emacs-pry-setup")
+(when (file-exists-p "emacs-pry-setup")
+  (load "emacs-pry-setup"))
 
 ;;smex
 ;(global-set-key (kbd "M-x") 'smex)
@@ -1215,7 +1218,7 @@ end tell"
 
 ;; * Load from setup.org
 ;; I'm not using the org base init anymore but haven't moved everything over.
-(org-babel-load-file "~/.emacs.d/setup.org")
+(org-babel-load-file "setup.org")
 
 ;; * Custom code
 ;; ** Select and expand
