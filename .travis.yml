@@ -22,7 +22,7 @@ install:
 #- cask install
 script:
 #- cask exec ert-runner
-- emacs --batch --eval "(condition-case e (progn (load \"/home/travis/build/JeffBellegarde/emacs.d/init.el\") (message \"-OK-\")) (error (message \"ERROR!\") (signal (car e) (cdr e))))"
+- emacs --batch --eval "(condition-case-unless-debug e (progn (load \"/home/travis/build/JeffBellegarde/emacs.d/init.el\") (message \"-OK-\")) (error (message \"ERROR!\") (signal (car e) (cdr e))))"
 cache:
   directories:
   - /home/travis/.emacs.d/elpa

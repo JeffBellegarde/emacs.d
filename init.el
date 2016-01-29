@@ -4,10 +4,10 @@
 
 ;; * Setup personal lisp directory.
 ;; This is where I put non package lisp code.
-(message "load-file-name: %s" load-file-name)
-(defvar user-emacs-directory (if load-file-name
-                                 (file-name-directory load-file-name)
-                               "~/.emacs.d"))
+(message "load-file-name: %s %s" load-file-name (file-name-directory load-file-name))
+(defconst user-emacs-directory (if load-file-name
+                                   (file-name-directory load-file-name)
+                                 "~/.emacs.d"))
 (message "usr-emacs-dir: %s" user-emacs-directory)
 (defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path jmb-lisp-dir)
@@ -1212,19 +1212,21 @@ end tell"
   (setq alert-default-style 'notifier))
 
 (use-package circe
+  :commands (circe)
   :config
   (setq circe-network-options
-      '(("eloldreader.irc.slack.com"
-         :tls t
-         :port 6667
-         :nick "bellegar"
-         :sasl-username "bellegar"
-         :pass "eloldreader.QE2nZCb1Nc17XyNYuGv4"
-         :channels ("#general")
-         ))))
+        '(("eloldreader.irc.slack.com"
+           :tls t
+           :port 6667
+           :nick "bellegar"
+           :sasl-username "bellegar"
+           :pass circe-eloldreader-pass
+           :channels ("#general")
+           ))))
 
 (use-package slack
   :commands (slack-start)
+  :defines (slack-user-name)
   :config
   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
   (setq slack-room-subscription '(general slackbot))
@@ -1233,9 +1235,278 @@ end tell"
   (add-hook 'slack-mode-hook 'jmb-disable-show-trailing-whitespace))
 
 
-;; * Load from setup.org
-;; I'm not using the org base init anymore but haven't moved everything over.
-(org-babel-load-file "setup.org")
+;; * Emacs Basics
+;; ** Install emacs
+;; Emacs needs to be installed before this can even run. Still provides a nice place to track the command line args.
+;; #+begin_src sh
+;; brew install emacs --with-cocoa --with-imagemagick --with-gnutls
+;; #+end_src
+
+;; ** Personal information
+;; Who I am.
+(setq user-full-name "Jeff Bellegarde"
+      user-mail-address "bellegar@gmail.com")
+
+;; ** Basic config
+  (require 'use-package)
+  (column-number-mode)
+  (tool-bar-mode -1)
+  (line-number-mode 1)
+  (add-hook 'after-init-hook 'server-start)
+  (add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
+
+  ;;mode-compile
+  (autoload 'mode-compile "mode-compile"
+    "Command to compile current buffer file based on the major mode" t)
+  (global-set-key "\C-cc" 'mode-compile)
+  (autoload 'mode-compile-kill "mode-compile"
+    "Command to kill a compilation launched by `mode-compile'" t)
+  (global-set-key "\C-ck" 'mode-compile-kill)
+  (global-set-key "\C-z" 'undo)
+  (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
+  (auto-compression-mode 1)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq use-dialog-box nil)
+
+  (setq ring-bell-function (lambda () (message "*beep*")))
+  (transient-mark-mode 1)
+
+  (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
+;; ** Startup test
+;; This will verify that emacs startup is working correctly.
+;; From http://oremacs.com/2015/03/05/testing-init-sanity/
+
+(defun ora-test-emacs ()
+  (interactive)
+  (require 'async)
+  (async-start
+   (lambda () (shell-command-to-string
+          "emacs --batch --eval \"
+(condition-case e
+    (progn
+      (load \\\"~/.emacs.d/init.el\\\")
+      (message \\\"-OK-\\\"))
+  (error
+   (message \\\"ERROR!\\\")
+   (signal (car e) (cdr e))))\""))
+   `(lambda (output)
+      (if (string-match "-OK-" output)
+          (when ,(called-interactively-p 'any)
+            (message "All is well"))
+        (switch-to-buffer-other-window "*startup error*")
+        (delete-region (point-min) (point-max))
+        (insert output)
+        (search-backward "ERROR!")))))
+
+;; ** Personal key bindings
+(bind-key "C-h K" 'describe-personal-keybindings)
+
+;; * Launcher
+
+;; The launcher map is defined at the top so other things can add to it.
+
+(define-prefix-command 'launcher-map)
+(define-key ctl-x-map "l" 'launcher-map)
+(global-set-key (kbd "s-l") 'launcher-map)
+(define-key launcher-map "c" #'calc)
+(define-key launcher-map "d" #'ediff-buffers)
+;;(define-key launcher-map "f" #'find-dired)
+(define-key launcher-map "a" #'ack)
+(define-key launcher-map "e" #'elfeed)
+(define-key launcher-map "h" #'man) ; Help
+(define-key launcher-map "i" #'package-install-from-buffer)
+ ;;switch to gnus group buffer or start gnus
+    (defun my-switch-to-gnus-group-buffer ()
+      "Switch to gnus group buffer if it exists, otherwise start gnus"
+      (interactive)
+      (if (or (not (fboundp 'gnus-alive-p))
+              (not (gnus-alive-p)))
+          (gnus)
+        (switch-to-buffer "*Group*")))
+(define-key launcher-map "g" #'my-switch-to-gnus-group-buffer)
+;;(define-key launcher-map "n" #'nethack)
+(define-key launcher-map "l" #'count-lines-page)
+(define-key launcher-map "p" #'paradox-list-packages)
+(define-key launcher-map "s" #'shell)
+(define-key launcher-map "t" #'proced) ; top
+;; * Global Minor Modes
+
+;; ** Winner (window layouts)
+;; Binds C-c <left> and C-c <right>
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
+
+
+;; ** KeyChord
+;; I try to hit the keys at the same time so I want a really short delay.
+(setq key-chord-two-keys-delay 0.05)
+
+
+;; ** Smart Mode line
+
+
+  (use-package smart-mode-line
+    :defer 2
+    :ensure t
+    :config
+    (sml/setup))
+
+
+
+;; ** ISpell
+;; No dictionary?
+(use-package ispell
+;;    :bind ("M-." . ispell-word)
+    :commands (ispell-word))
+
+;; ** Auto complete ISpell
+(use-package ac-ispell
+    :ensure t
+    :commands (ac-ispell-ac-setup)
+    :init (add-hook 'text-mode-hook 'ac-ispell-ac-setup)
+    :config (ac-ispell-setup))
+
+
+;; ** Dash
+
+;; Api docs for os x. Open a seperate app. Not sure if I like it yet.
+(use-package dash-at-point
+  :ensure t
+  :bind (("s-D"     . dash-at-point)
+         ("C-c e"   . dash-at-point-with-docset)))
+
+;; ** which-key
+
+;; An improved version of guide-key
+(use-package which-key
+    :ensure t
+    :defer 5
+    :diminish ""
+    :config
+    (which-key-mode)
+    (setq which-key-use-C-h-commands t
+          which-key-idle-delay 0.5)
+    (which-key-setup-side-window-right-bottom)
+    (add-hook 'which-key-mode-hook 'jmb-disable-show-trailing-whitespace))
+
+
+;; ** Browse kill ring
+(use-package browse-kill-ring
+    :disabled t
+    :bind ("M-y" . browse-kill-ring)
+    :ensure t)
+
+
+
+;; ** Help-at
+
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+
+
+;; ** Beacon
+
+
+(use-package beacon
+      :diminish ""
+     :config (beacon-mode))
+
+;; ** God Mode
+
+(use-package god-mode
+    :bind ("<escape>" . god-mode-all)
+    :disabled t
+    :config
+    (add-to-list 'god-exempt-major-modes 'Custom-mode)
+    (add-to-list 'god-exempt-major-modes 'Info-mode)
+    (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+    (defun my-update-cursor ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only)
+                            'box
+                          'bar)))
+    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
+    (defun c/god-mode-update-cursor ()
+      (let ((limited-colors-p (> 257 (length (defined-colors)))))
+        (cond (god-local-mode (progn
+                                (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
+                                (set-face-background 'mode-line-inactive (if limited-colors-p "white" "#e9e2cb"))))
+              (t (progn
+                   (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
+                   (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
+    (add-hook 'god-mode-enabled-hook 'c/god-mode-update-cursor)
+    (add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor))
+
+
+
+
+;; * Major modes
+
+;; ** IBuffer
+
+
+;;(require 'vc)
+  (use-package ibuffer-vc
+      :ensure t
+      :commands (ibuffer-vc-set-filter-groups-by-vc-root))
+
+  (use-package ibuffer
+    :bind ("C-x C-b" . ibuffer)
+    :config
+    (require 'ibuf-ext)
+    (add-hook 'ibuffer-hook
+              (lambda ()
+                (ibuffer-vc-set-filter-groups-by-vc-root)
+                (ibuffer-do-sort-by-alphabetic))))
+
+
+;; ** Elfeed (Rss)
+(defvar jmb-elfeed-auto-update-timer)
+  (defvar jmb-elfeed-auto-update-min-delay (* 60 60))
+  (defvar jmb-elfeed-auto-update-idle-delay (* 10 60))
+  (defun jmb-elfeed-update ()
+    (let ((idle-time (current-idle-time)))
+      (when (and idle-time
+                 (> (float-time idle-time) jmb-elfeed-auto-update-idle-delay)
+                 (> (- (float-time) (elfeed-db-last-update)) jmb-elfeed-auto-update-min-delay))
+        (message "Starting elfeed update")
+        (elfeed-update))))
+  (defun jmb-elfeed-start-auto-update ()
+    (interactive)
+    (setq jmb-elfeed-auto-update-timer (run-at-time 0 600 #'jmb-elfeed-update))
+    (add-hook 'kill-buffer-hook 'jmb-elfeed-stop-auto-update nil t))
+  (defun jmb-elfeed-stop-auto-update ()
+    (interactive)
+    (when (timerp jmb-elfeed-auto-update-timer)
+      (cancel-timer jmb-elfeed-auto-update-timer)
+      (setq jmb-elfeed-auto-update-timer nil)))
+  (use-package elfeed
+    :commands (elfeed)
+    :disabled t
+    :ensure t
+    :config
+    (progn
+      (add-hook 'elfeed-search-mode-hook 'jmb-disable-show-trailing-whitespace)
+      (add-hook 'elfeed-show-mode-hook 'jmb-disable-show-trailing-whitespace)
+      ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
+      (elfeed-org)))
+  (use-package elfeed-org
+    :disabled t
+    :commands (elfeed-org)
+    :ensure t)
+
+
+
+;; * Edit Server
+(use-package edit-server
+    :ensure t
+    :defer 5
+    :config (edit-server-start))
+
+	
 
 ;; * Custom code
 ;; ** Select and expand
@@ -1286,6 +1557,7 @@ end tell"
   ("x" exchange-point-and-mark))
 
 (bind-key "C-<SPC>" 'quick-select)
+
 ;; * Finish loading
 (setq debug-on-error nil)
 (make-frame-visible)
