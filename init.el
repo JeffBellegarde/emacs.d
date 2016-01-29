@@ -4,11 +4,9 @@
 
 ;; * Setup personal lisp directory.
 ;; This is where I put non package lisp code.
-(message "load-file-name: %s %s" load-file-name (file-name-directory load-file-name))
 (defconst user-emacs-directory (if load-file-name
                                    (file-name-directory load-file-name)
                                  "~/.emacs.d"))
-(message "usr-emacs-dir: %s" user-emacs-directory)
 (defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path jmb-lisp-dir)
 
@@ -30,7 +28,6 @@
 ;;       'git-gutter-fringe
        'gitconfig-mode
        'gitignore-mode
-       'gist
        'go-eldoc
        'go-errcheck
 ;;       'ibuffer-vc
@@ -78,7 +75,7 @@
 ;; in appropriate use-package statements.
 
 (defvar jmb-disabled-whitespace-mode-hooks
-      (list 'magit-mode-hook 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
+      (list 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
 
 (defun jmb-disable-show-trailing-whitespace ()
   (interactive)
@@ -354,11 +351,42 @@
 (require 'epa)
 (epa-file-enable)
 
+;; * Launcher
+
+;; The launcher map is defined at the top so other things can add to it.
+
+(defun my-switch-to-gnus-group-buffer ()
+  "Switch to gnus group buffer if it exists, otherwise start gnus"
+  (interactive)
+  (if (or (not (fboundp 'gnus-alive-p))
+          (not (gnus-alive-p)))
+      (gnus)
+    (switch-to-buffer "*Group*")))
+(bind-keys :prefix "C-x l" :prefix-map launcher-map :prefix-docstring "Key map for launching \"applications\"."
+           ("c" . calc)
+           ("d" . ediff-buffers)
+           ;;("f" . find-dired)
+           ("a" . ack)
+           ("e" . elfeed)
+           ("h" . man) ; Help
+           ("i" . package-install-from-buffer)
+           ("g" . my-switch-to-gnus-group-buffer)
+           ;;("n" . nethack)
+           ;; ("l" . count-lines-page)
+           ("p" . paradox-list-packages)
+           ("s" . shell)
+           ("t" . proced)) ; top
+(global-set-key (kbd "s-l") 'launcher-map)
+
 ;; ** Magit
 ;; magit-gh-pulls is throwing errors.
+(use-package gh
+  :init
+  :config
+  )
+
 (use-package magit-gh-pulls
-  :disabled t
-  :commands turn-on-magit-gh-pulls)
+  :commands (turn-on-magit-gh-pulls))
 
 (use-package magit
   :ensure t
@@ -368,8 +396,13 @@
   (if (eq system-type "darwin")
       (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
   (setq magit-repository-directories `("~/src"))
-  ;; (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
-  )
+  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+
+;; *** Gist
+(use-package gist
+  :commands (gist-list)
+  :init
+  (bind-key "l" #'gist-list launcher-map))
 
 ;; *** Git messenger
 (use-package git-messenger
@@ -1303,34 +1336,6 @@ end tell"
 ;; ** Personal key bindings
 (bind-key "C-h K" 'describe-personal-keybindings)
 
-;; * Launcher
-
-;; The launcher map is defined at the top so other things can add to it.
-
-(define-prefix-command 'launcher-map)
-(define-key ctl-x-map "l" 'launcher-map)
-(global-set-key (kbd "s-l") 'launcher-map)
-(define-key launcher-map "c" #'calc)
-(define-key launcher-map "d" #'ediff-buffers)
-;;(define-key launcher-map "f" #'find-dired)
-(define-key launcher-map "a" #'ack)
-(define-key launcher-map "e" #'elfeed)
-(define-key launcher-map "h" #'man) ; Help
-(define-key launcher-map "i" #'package-install-from-buffer)
- ;;switch to gnus group buffer or start gnus
-    (defun my-switch-to-gnus-group-buffer ()
-      "Switch to gnus group buffer if it exists, otherwise start gnus"
-      (interactive)
-      (if (or (not (fboundp 'gnus-alive-p))
-              (not (gnus-alive-p)))
-          (gnus)
-        (switch-to-buffer "*Group*")))
-(define-key launcher-map "g" #'my-switch-to-gnus-group-buffer)
-;;(define-key launcher-map "n" #'nethack)
-(define-key launcher-map "l" #'count-lines-page)
-(define-key launcher-map "p" #'paradox-list-packages)
-(define-key launcher-map "s" #'shell)
-(define-key launcher-map "t" #'proced) ; top
 ;; * Global Minor Modes
 
 ;; ** Winner (window layouts)
@@ -1505,7 +1510,6 @@ end tell"
     :ensure t
     :defer 5
     :config (edit-server-start))
-
 	
 
 ;; * Custom code
@@ -1557,9 +1561,11 @@ end tell"
   ("x" exchange-point-and-mark))
 
 (bind-key "C-<SPC>" 'quick-select)
+;; ** Allow the narrow-to-region command.
+(put 'narrow-to-region 'disabled nil)
 
 ;; * Finish loading
 (setq debug-on-error nil)
 (make-frame-visible)
-(put 'narrow-to-region 'disabled nil)
+
 
