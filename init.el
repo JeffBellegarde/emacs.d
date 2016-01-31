@@ -1523,41 +1523,57 @@ end tell"
 
 (defvar quick-select-keymap (make-sparse-keymap))
 
-(defun quick-select-activate ()
-  (unless quick-select-active
-    (setq quick-select-start-position (point))
-    (setq quick-select-active t)
-    (internal-push-keymap quick-select-keymap 'overriding-terminal-local-map)))
-
-(defun quick-select-deactivate ()
-  (interactive)
-  (when quick-select-active
-    (setq quick-select-start-position nil)
-    (internal-pop-keymap quick-select-keymap 'overriding-terminal-local-map)
-    (setq quick-select-active nil)))
-
-(add-hook 'activate-mark-hook 'quick-select-activate)
-(add-hook 'deactivate-mark-hook 'quick-select-deactivate)
-
+;; (setq deactivate-mark-hook '())
 (bind-keys :map quick-select-keymap
-           ("c" .  (lambda ()
-                     (interactive)
-                     (message "c")
-                     (deactivate-mark)))
+           ;; ("c" .  (lambda ()
+           ;;           (interactive)
+           ;;           (message "c")
+           ;;           (deactivate-mark)))
            ("q" . (lambda ()
                     (interactive)
-                    (deactivate-mark)
                     (if quick-select-start-position
-                        (goto-char quick-select-start-position))))
+                        (goto-char quick-select-start-position))
+                    (deactivate-mark)))
            ("<SPC>" . quick-select-deactivate)
            ("," . (lambda () (interactive) (er--expand-region-1)))
            ("." . (lambda () (interactive) (er/contract-region 1)))
            ("r" . rectangle-mark-mode)
-           ("C-<SPC>" . (lambda ()
-                          (interactive)
-                          (set-mark-command nil)
-                          (set-mark-command (point))))
+           ;; ("C-<SPC>" . (lambda ()
+           ;;                (interactive)
+           ;;                (set-mark-command nil)
+           ;;                (set-mark-command (point))))
            ("x" . exchange-point-and-mark))
+
+(define-key quick-select-keymap "/" engine-mode-prefixed-map)
+
+(define-minor-mode quick-select-active-mode  "Quick select is active."
+  :lighter "QSA"
+  :keymap quick-select-keymap
+  (if quick-select-active-mode
+      (progn 
+       (setq quick-select-start-position (point)))
+    (setq quick-select-start-position nil)))
+
+(defun quick-select-activate ()
+  (quick-select-active-mode 1)
+  ;; (unless quick-select-active
+  ;; (setq quick-select-start-position (point))
+  ;; (setq quick-select-active t)
+  ;; (internal-push-keymap quick-select-keymap 'overriding-terminal-local-map)
+  )
+
+(defun quick-select-deactivate ()
+  (interactive)
+  (quick-select-active-mode 0)
+  ;; (
+  ;; (when quick-select-active
+  ;;   (setq quick-select-start-position nil)
+  ;;   (internal-pop-keymap quick-select-keymap 'overriding-terminal-local-map)
+  ;;   (setq quick-select-active nil))
+  )
+
+(add-hook 'activate-mark-hook 'quick-select-activate)
+(add-hook 'deactivate-mark-hook 'quick-select-deactivate)
 
 ;; (defun quick-select (arg)
 ;;   (interactive "P")
