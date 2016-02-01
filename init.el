@@ -1168,7 +1168,8 @@ end tell"
 
 (use-package engine-mode
   :config
-  (engine-mode))
+  (engine-mode)
+  (define-key region-command-mode-keymap "/" engine-mode-prefixed-map))
 
 (defengine amazon
   "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s"
