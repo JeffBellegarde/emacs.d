@@ -197,11 +197,25 @@
     :ensure t
     :config
     (add-hook 'dired-mode-hook #'my/dired-mode-hook)))
+;; ** Select and expand
+
+(use-package region-command-mode
+  :ensure nil
+  :load-path "~/src/region-command-mode"
+  :config
+  (region-command-mode t) )
 
 ;; ** expand-region
 (use-package expand-region
   :ensure t
-  :commands (er/expand-region er/contract-region er--expand-region-1))
+  :commands (er/expand-region er/contract-region er--expand-region-1)
+  :init
+  (defun my-er/clear-history ()
+    (unless region-command-mode-active-mode
+      (er/clear-history)))
+  (define-key region-command-mode-keymap "," (lambda () (interactive) (er--expand-region-1)))
+  (define-key region-command-mode-keymap "." (lambda () (interactive) (er/contract-region 1)))
+  (add-hook 'region-command-mode-active-hook 'my-er/clear-history))
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
 ;; (global-set-key (kbd "C-#") 'er/contract-region)
@@ -1513,112 +1527,15 @@ end tell"
 	
 
 ;; * Custom code
-;; ** Select and expand
-(make-variable-buffer-local
- (defvar quick-select-start-position nil
-   "The original position of point when quick-select was started."))
 
-(make-variable-buffer-local
- (defvar quick-select-active nil))
-
-(defvar quick-select-keymap (make-sparse-keymap))
-
-;; (setq deactivate-mark-hook '())
-(bind-keys :map quick-select-keymap
-           ;; ("c" .  (lambda ()
-           ;;           (interactive)
-           ;;           (message "c")
-           ;;           (deactivate-mark)))
-           ("q" . (lambda ()
-                    (interactive)
-                    (if quick-select-start-position
-                        (goto-char quick-select-start-position))
-                    (deactivate-mark)))
-           ("<SPC>" . quick-select-deactivate)
-           ("," . (lambda () (interactive) (er--expand-region-1)))
-           ("." . (lambda () (interactive) (er/contract-region 1)))
-           ("r" . rectangle-mark-mode)
-           ;; ("C-<SPC>" . (lambda ()
-           ;;                (interactive)
-           ;;                (set-mark-command nil)
-           ;;                (set-mark-command (point))))
-           ("x" . exchange-point-and-mark))
-
-(define-key quick-select-keymap "/" engine-mode-prefixed-map)
-
-(define-minor-mode quick-select-active-mode  "Quick select is active."
-  :lighter "QSA"
-  :keymap quick-select-keymap
-  (if quick-select-active-mode
-      (progn 
-       (setq quick-select-start-position (point)))
-    (setq quick-select-start-position nil)))
-
-(defun quick-select-activate ()
-  (quick-select-active-mode 1)
-  ;; (unless quick-select-active
-  ;; (setq quick-select-start-position (point))
-  ;; (setq quick-select-active t)
-  ;; (internal-push-keymap quick-select-keymap 'overriding-terminal-local-map)
-  )
-
-(defun quick-select-deactivate ()
+;; *** reverse-string
+(defun my/reverse-string ()
   (interactive)
-  (quick-select-active-mode 0)
-  ;; (
-  ;; (when quick-select-active
-  ;;   (setq quick-select-start-position nil)
-  ;;   (internal-pop-keymap quick-select-keymap 'overriding-terminal-local-map)
-  ;;   (setq quick-select-active nil))
-  )
-
-(add-hook 'activate-mark-hook 'quick-select-activate)
-(add-hook 'deactivate-mark-hook 'quick-select-deactivate)
-
-;; (defun quick-select (arg)
-;;   (interactive "P")
-;;   (if (or (eq last-command 'pop-to-mark-command) (consp arg))
-;;       (progn
-;;         (setq this-command 'set-mark-command)
-;;         (set-mark-command arg))
-;;     (add-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive nil t)
-;;     (setq quick-select-start-position (point))
-;;     (set-mark-command arg)
-;;     (quick-select/body)))
-
-;; (defun quick-select-stop ()
-;;   (remove-hook 'post-command-hook 'quick-select-stop-hydra-if-mark-inactive t)
-;;   (if (boundp #'er/clear-history)
-;;       (er/clear-history)))
-
-;; (defun quick-select-stop-hydra-if-mark-inactive ()
-;;   (when (and (or deactivate-mark (not mark-active))
-;;              (not (= (point) quick-select-start-position)))
-;;     (hydra-disable)))
-
-;; (defhydra quick-select (
-;;                         :exit nil
-;;                         :foreign-keys run
-;;                         :before-exit #'quick-select-stop)
-;;   "Quick Select"
-;;   ;; ("c" (progn
-;;   ;;        (message "c")
-;;   ;;        (deactivate-mark)))
-;;   ("q" (progn
-;;          (deactivate-mark)
-;;          (goto-char quick-select-start-position)) :exit 1)
-;;   ("<SPC>" "quit" :exit t)
-;;   ("," (er--expand-region-1))
-;;   ("." (er/contract-region 1))
-;;   ("r" (rectangle-mark-mode))
-;;   ("C-<SPC>" (progn
-;;                (set-mark-command nil)
-;;                (quick-select nil))
-;;    :exit t)
-;;   ("x" exchange-point-and-mark))
-
-;; (bind-key "C-<SPC>" 'set-mark-command)
-
+  (let* ((input (buffer-substring (mark) (point)))
+         (reversed (concat (reverse (append input nil)))))
+    (delete-region (mark)
+                   (point))
+    (insert reversed)))
 ;; ** Allow the narrow-to-region command.
 (put 'narrow-to-region 'disabled nil)
 
