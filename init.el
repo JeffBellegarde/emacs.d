@@ -223,8 +223,8 @@
     :ensure t
     :config
     (add-hook 'dired-mode-hook #'my/dired-mode-hook)))
-;; ** Select and expand
 
+;; ** Select and expand
 (use-package region-command-mode
   :ensure nil
   :load-path "~/src/region-command-mode"
@@ -234,14 +234,14 @@
 ;; ** expand-region
 (use-package expand-region
   :ensure t
-  :commands (er/expand-region er/contract-region er--expand-region-1)
+  :commands (er/expand-region er/contract-region er--expand-region-1 er/clear-history)
   :init
   (defun my-er/clear-history ()
-    (unless region-command-mode-active-mode
+    (unless region-command-active-mode
       (er/clear-history)))
   (define-key region-command-mode-keymap "," (lambda () (interactive) (er--expand-region-1)))
   (define-key region-command-mode-keymap "." (lambda () (interactive) (er/contract-region 1)))
-  (add-hook 'region-command-mode-active-hook 'my-er/clear-history))
+  (add-hook 'region-command-active-mode-hook 'my-er/clear-history))
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
 ;; (global-set-key (kbd "C-#") 'er/contract-region)
