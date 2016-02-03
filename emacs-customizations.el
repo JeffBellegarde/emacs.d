@@ -301,4 +301,5 @@
  '(hydra-face-amaranth ((t (:foreground "magenta1" :weight bold))))
  '(hydra-face-red ((t (:foreground "brown3" :weight bold))))
  '(ido-first-match ((t (:foreground "cyan" :weight bold))))
- '(message-header-subject ((t (:foreground "#DFAF8F" :weight bold :height 2.0)))))
+ '(message-header-subject ((t (:foreground "#DFAF8F" :weight bold :height 2.0))))
+ '(region ((t (:background "DarkOrchid4")))))
