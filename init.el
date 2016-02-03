@@ -100,22 +100,44 @@
   :commands (restclient))
 
 
-;; ** org
+;; ** Org
 (use-package org
-   :bind (
-          ("C-c l" . org-store-link)
-          ("C-c a" . org-agenda)
-          ("C-c b" . org-iswitchb)
-          ("C-c r" . org-capture))
-   :config (org-clock-persistence-insinuate)
-   :ensure t)
-
-;; *** ob-restclient
-;; Alows restclient in org-mode.
-;; Use my local copy until [[https://github.com/alf/ob-restclient.el/pull/5][ob-restclient]] is closed.
-(use-package ob-restclient
-  :load-path "~/src/ob-restclient.el"
+  :bind (
+         ("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c b" . org-iswitchb)
+         ("C-c r" . org-capture))
+  :config (org-clock-persistence-insinuate)
+  :defines org-plantuml-jar-path
+  (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
+  ;; *** ob-restclient
+  ;; Alows restclient in org-mode.
+  ;; This is intialized by putting 'restclient' in the variable `org-babel-load-languages' configured through customize.
+  (use-package ob-restclient
+    :ensure t)
   :ensure t)
+
+;; *** Org protocol
+(require 'org-protocol)
+
+;; ** orgstruct
+(use-package orgstruct-mode
+  :ensure nil
+  :commands (orgstruct-mode)
+  :defines (orgstruct-heading-prefix-regexp)
+  :preface
+  (defun my/list-mode-hook ()
+    (setq orgstruct-heading-prefix-regexp  ";; "))
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'my/list-mode-hook)
+  (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode))
+
+;; From http://doc.norang.ca/org-mode.html
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images 'append)
 
 ;; ** Deft
 (use-package deft
@@ -978,33 +1000,6 @@ end tell"
   :commands (sx-tab-all-questions)
   :config
   (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
-
-;; ** Org
-;; *** Org protocol
-(require 'org-protocol)
-
-;; ** Org plan uml
-(eval-when-compile
-  (defvar org-plant))
-(setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
-
-;; ** orgstruct
-(use-package orgstruct-mode
-  :ensure nil
-  :defines (orgstruct-heading-prefix-regexp)
-  :preface
-  (defun my/list-mode-hook ()
-    (setq orgstruct-heading-prefix-regexp  ";; "))
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'my/list-mode-hook)
-  (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode))
-
-;; From http://doc.norang.ca/org-mode.html
-(defun bh/display-inline-images ()
-  (condition-case nil
-      (org-display-inline-images)
-    (error nil)))
-(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images 'append)
 
 ;; ** elm
 (use-package elm-mode
