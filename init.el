@@ -1183,7 +1183,8 @@ end tell"
   :keybinding "g")
 
 (defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  :keybinding "o")
 
 (defengine google-images
   "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
@@ -1200,6 +1201,10 @@ end tell"
 
 (defengine stack-overflow
   "https://stackoverflow.com/search?q=%s")
+
+(defengine start-page
+  "https://startpage.com/do/dsearch?query=%s"
+  :keybinding "/")
 
 (defengine twitter
   "https://twitter.com/search?q=%s")
