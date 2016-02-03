@@ -176,9 +176,9 @@
    (quote
     (("w" "Default template" entry
       (file+headline "~/.deft/notes.org" "Urls")
-      "** TODO %?%c
-%u
-%i" :empty-lines 1))))
+      "** TODO %u %? %c
+%i
+" :empty-lines 1))))
  '(org-clock-clocked-in-display (quote frame-title))
  '(org-clock-idle-time 10)
  '(org-clock-out-remove-zero-time-clocks t)
