@@ -68,6 +68,10 @@
 
 (add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
 ;; * Configuration
+
+;; ** Low level stuff
+(setq tab-always-indent 'complete)
+
 ;; ** Disable show trailing whitespace.
 ;; I show whitespace by default but need to turn it off in some modes.
 ;; Orignally i kept a list in but now I use
