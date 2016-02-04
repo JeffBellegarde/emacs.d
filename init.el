@@ -17,7 +17,7 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/") t)
 (package-initialize)
- 
+
 ;; ** Load a list of packages
 ;; I want to remove things from this list and use use-package instead.
 ;; Also inits use-package.
@@ -73,21 +73,15 @@
 (setq tab-always-indent 'complete)
 
 ;; ** Disable show trailing whitespace.
-;; I show whitespace by default but need to turn it off in some modes.
-;; Orignally i kept a list in but now I use
-;;   (add-hook <hook-name> jmb-disable-show-trailing-whitespace)
-;; in appropriate use-package statements.
+;; Utility function whow trailing-whitespace. Add to the appropriate mode hookds.
 
-(defvar jmb-disabled-whitespace-mode-hooks
-      (list 'yari-mode-hook 'gud-mode-hook 'shell-mode-hook 'pry 'info-mode))
+(defun jmb/turn-on-show-trailing-whitespace ()
+ (setq show-trailing-whitespace t))
 
-(defun jmb-disable-show-trailing-whitespace ()
-  (interactive)
-  (setq show-trailing-whitespace nil))
+;; ** Prog mode
+;; It's pretty rare to have a programming mode that wants whitespace at the end of a line.
 
-(dolist (hook jmb-disabled-whitespace-mode-hooks)
-  (add-hook hook 'jmb-disable-show-trailing-whitespace))
-
+(add-hook 'prog-mode-hook #'jmb/turn-on-show-trailing-whitespace)
 
 ;; ** Chords for use-package
 ;; Enables key chords
@@ -107,8 +101,9 @@
          ("C-c a" . org-agenda)
          ("C-c b" . org-iswitchb)
          ("C-c r" . org-capture))
-  :config (org-clock-persistence-insinuate)
-  :defines org-plantuml-jar-path
+  :defines 'org-plantuml-jar-path
+  :config
+  (org-clock-persistence-insinuate)
   (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
   ;; *** ob-restclient
   ;; Alows restclient in org-mode.
@@ -166,11 +161,8 @@
   (bind-key "C-c h M-:" 'helm-eval-expression-with-eldoc)
   (setq helm-M-x-fuzzy-match t)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-    
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-    
   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
   (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
   (when (executable-find "ack")
     (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
@@ -422,8 +414,7 @@
 ;; magit-gh-pulls is throwing errors.
 (use-package gh
   :init
-  :config
-  )
+  :config)
 
 (use-package magit-gh-pulls
   :commands (turn-on-magit-gh-pulls))
@@ -480,7 +471,6 @@
 ;; ** Undo Tree
 (use-package undo-tree
   :config
-  (add-hook 'undo-tree-visualizer-mode-hook 'jmb-disable-show-trailing-whitespace)
   (global-undo-tree-mode))
 
 (prefer-coding-system 'utf-8)
@@ -528,9 +518,6 @@
 ;;(require 'yari)
 (defun ri-bind-key ()
   (local-set-key [f1] 'yari))
-
-;;(defun turn-on-show-trailing-whitespace ()
-;;  (setq show-trailing-whitespace t))
 
 ;;(autoload 'ruby-mode "~/,emacs.d/ruby/ruby-mode" "Major mode for ruby files" t)
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
@@ -843,7 +830,6 @@
 (use-package eww
   :commands (eww)
   :config
-  (add-hook 'eww-mode-hook 'jmb-disable-show-trailing-whitespace)
   (defadvice eww-tag-title (after rrix/eww-rename-buffer-ad (cont))
     "Update EWW buffer title with new page load."
     (message eww-current-title)
@@ -972,6 +958,8 @@ end tell"
   :ensure t)
 
 ;; ** Lisp stuff
+;; *** paredit
+;; I prefer lispy these daus
 (use-package paredit
   :disabled t
   :commands (enable-paredit-mode)
@@ -987,19 +975,20 @@ end tell"
 (use-package lispy
   :commands lispy-mode
   :init
-  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  :config
+  (defun jmb-lispy/activate-lispy-mode ()
+    (lispy-mode 1))
+  (add-hook 'emacs-lisp-mode-hook #'jmb-lispy/activate-lispy-mode)
   ;;Lispy rebinds M-i so put it back.
-  (add-hook 'emacs-lisp-mode-hook (lambda () (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))))
+  (defun jmb-lispy/rebiind-to-helm-swoop ()
+    (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))
+  (add-hook 'lispy-mode-hook #'jmb-lispy/rebiind-to-helm-swoop))
 
 (eldoc-mode)
 
 ;; ** StackExchange
 (use-package sx
   :ensure t
-  :commands (sx-tab-all-questions)
-  :config
-  (add-hook 'sx-question-mode-hook 'jmb-disable-show-trailing-whitespace))
+  :commands (sx-tab-all-questions))
 
 ;; ** elm
 (use-package elm-mode
@@ -1008,7 +997,7 @@ end tell"
    (imagemagick-register-types))
 
 ;; ** Mu4e -- email
-;; I don't like the view system. 
+;; I don't like the view system.
 (use-package mu4e
   :ensure nil
   :disabled t
@@ -1051,9 +1040,8 @@ end tell"
    (concat
     "Jeff Bellegarde\n"))
   (require 'mu4e-contrib)
-  (setq mu4e-html2text-command 'mu4e-shr2text)
-  (add-hook 'mu4e-headers-mode-hook 'jmb-disable-show-trailing-whitespace))
-(add-hook 'mu4e-view-mode-hook 'jmb-disable-show-trailing-whitespace)
+  (setq mu4e-html2text-command 'mu4e-shr2text))
+
 
 (use-package smtpmail
   :ensure nil
@@ -1283,8 +1271,7 @@ end tell"
   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
   (setq slack-room-subscription '(general slackbot))
   (setq slack-client-id "18435938982.18441556390")
-  (setq slack-user-name "bellegar")
-  (add-hook 'slack-mode-hook 'jmb-disable-show-trailing-whitespace))
+  (setq slack-user-name "bellegar"))
 
 
 ;; * Emacs Basics
@@ -1412,8 +1399,7 @@ end tell"
     (which-key-mode)
     (setq which-key-use-C-h-commands t
           which-key-idle-delay 0.5)
-    (which-key-setup-side-window-right-bottom)
-    (add-hook 'which-key-mode-hook 'jmb-disable-show-trailing-whitespace))
+    (which-key-setup-side-window-right-bottom))
 
 
 ;; ** Browse kill ring
@@ -1513,8 +1499,6 @@ end tell"
     :ensure t
     :config
     (progn
-      (add-hook 'elfeed-search-mode-hook 'jmb-disable-show-trailing-whitespace)
-      (add-hook 'elfeed-show-mode-hook 'jmb-disable-show-trailing-whitespace)
       ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
       (elfeed-org)))
   (use-package elfeed-org

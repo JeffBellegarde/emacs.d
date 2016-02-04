@@ -237,7 +237,7 @@
  '(shell-file-name "/usr/local/bin/fish")
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
- '(show-trailing-whitespace t)
+ '(show-trailing-whitespace nil)
  '(shr-table-corner 43)
  '(sml/replacer-regexp-list
    (quote
