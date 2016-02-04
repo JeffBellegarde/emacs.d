@@ -959,7 +959,7 @@ end tell"
 
 ;; ** Lisp stuff
 ;; *** paredit
-;; I prefer lispy these daus
+;; I prefer lispy these days
 (use-package paredit
   :disabled t
   :commands (enable-paredit-mode)
@@ -1513,7 +1513,6 @@ end tell"
     :ensure t
     :defer 5
     :config (edit-server-start))
-	
 
 ;; * Custom code
 
