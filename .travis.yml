@@ -20,6 +20,7 @@ before_install:
 #- export PATH="/home/travis/.cask/bin:$PATH"
 install:
 #- cask install
+- git clone https://github.com/JeffBellegarde/region-command-mode.git ~/src/region-command-mode
 script:
 #- cask exec ert-runner
 - emacs --batch --eval "(condition-case-unless-debug e (progn (load \"/home/travis/build/JeffBellegarde/emacs.d/init.el\") (message \"-OK-\")) (error (message \"ERROR!\") (signal (car e) (cdr e))))"
