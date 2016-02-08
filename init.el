@@ -818,10 +818,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package ace-window
   :ensure t
   :commands (ace-window)
+  :init
+  (define-key jmb-base-keys-buffer-map " " #'ace-window)
   :config
   (setq aw-keys   '(?a ?s ?d ?f ?j ?k ?l)
         ace-window-display-mode t
-        aw-dispatch-always t
+        ;; aw-dispatch-always t
         aw-dispatch-alist
         '((?x aw-delete-window     "Ace - Delete Window")
           (?c aw-swap-window       "Ace - Swap Window")
@@ -833,7 +835,6 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
           (?b balance-windows)
           (?u winner-undo)
           (?r winner-redo)))
-
   (when (package-installed-p 'hydra)
     (defhydra hydra-window-size (:color red)
       "Windows size"
