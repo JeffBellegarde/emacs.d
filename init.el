@@ -1401,6 +1401,7 @@ end tell"
   (defun my-winner/start-winner ()
     (interactive)
     (winner-undo)
+    (setq this-command 'winner-undo)
     (hydra-winner/body))
   (define-key jmb-base-keys-buffer-map (kbd "d") #'my-winner/start-winner))
 
