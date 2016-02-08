@@ -72,6 +72,33 @@
 ;; ** Low level stuff
 (setq tab-always-indent 'complete)
 
+;; ** Base Keymaps
+;; My plan is to setup a small number of base keymaps to hook other functioanlity to. Some commands
+;; may still be attached to top level commands, but I want everything to be accessible using the base keymaps.
+(defvar jmb-base-keys-map (make-sparse-keymap))
+(defvar jmb-base-keys-work-at-point-map (make-sparse-keymap)
+  "Keymap for point based manipulation.
+If a command works on or around the point, it goes here.
+Often commands that belong are also mapped to a top-level key for speed.
+Some commands that only use the thing at point as a default might be put in other places.
+If the the point of the command is the point, is should probably be here.
+")
+(bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
+(defvar jmb-base-keys-buffer-map (make-sparse-keymap)
+  "Keymap for buffer manipulation.
+This also handles frames, and windows. If it rearranges what is shown this is a good place for it.
+")
+(bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
+(define-key jmb-base-keys-buffer-map (kbd "<SPC>") #'other-window)
+
+(define-minor-mode jmb-base-keys-mode
+  "docs"
+  :lighter " Base"
+  :global t
+  :keymap jmb-base-keys-map)
+
+(jmb-base-keys-mode 1)
+
 ;; ** Disable show trailing whitespace.
 ;; Utility function whow trailing-whitespace. Add to the appropriate mode hookds.
 
@@ -221,7 +248,7 @@
   :ensure nil
   :load-path "~/src/region-command-mode"
   :config
-  (region-command-mode t) )
+  (region-command-mode t))
 
 ;; ** expand-region
 (use-package expand-region
@@ -231,9 +258,18 @@
   (defun my-er/clear-history ()
     (unless region-command-active-mode
       (er/clear-history)))
-  (define-key region-command-mode-keymap "," (lambda () (interactive) (er--expand-region-1)))
-  (define-key region-command-mode-keymap "." (lambda () (interactive) (er/contract-region 1)))
-  (add-hook 'region-command-active-mode-hook 'my-er/clear-history))
+  (defun my-er/expand-region ()
+    (interactive)
+    (let ((expand-region-fast-keys-enabled nil))
+      (er/expand-region 1)))
+  (defun my-er/contract-region ()
+    (interactive)
+    (let ((expand-region-fast-keys-enabled nil))
+      (er/contract-region 1)))
+  (define-key region-command-mode-keymap "," #'my-er/expand-region)
+  (define-key region-command-mode-keymap "." #'my-er/contract-region)
+  (add-hook 'region-command-active-mode-hook #'my-er/clear-history)
+  (define-key jmb-base-keys-work-at-point-map " " #'my-er/expand-region))
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
 ;; (global-set-key (kbd "C-#") 'er/contract-region)
@@ -649,7 +685,7 @@
     :bind ( ("C-M-o" . hydra-window/body)
             ("<f2>" . hydra-zoom/body)
             ("C-x SPC" . hydra-rectangle/body))
-    :chords (("jk" . hydra-window/body)
+    :chords (;; ("jk" . hydra-window/body)
              ("jl" . hydra-navigate/body))
     :commands (defhydra)
     :config
@@ -725,7 +761,7 @@
       ;;("m" headlong-bookmark-jump "bmk")
       ("q" nil "cancel"))
     (global-set-key (kbd "C-M-o") 'hydra-window/body)
-    (key-chord-define-global "jk" 'hydra-window/body)
+    ;; (key-chord-define-global "jk" 'hydra-window/body)
 
 ;; *** Navigation
     (defhydra hydra-navigate (:color amaranth)
@@ -773,7 +809,8 @@
       ("o" nil nil)
       ("q" nil nil)
       )
-    (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body))
+    ;; (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+    )
 
 
 ;; ** ace-window
@@ -972,6 +1009,10 @@ end tell"
   (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
   (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 
+(defun jmb--elevate-keymap (keymap-name)
+  (add-to-list 'minor-mode-overriding-map-alist
+               (assoc keymap-name minor-mode-map-alist)))
+
 (use-package lispy
   :commands lispy-mode
   :init
@@ -979,9 +1020,12 @@ end tell"
     (lispy-mode 1))
   (add-hook 'emacs-lisp-mode-hook #'jmb-lispy/activate-lispy-mode)
   ;;Lispy rebinds M-i so put it back.
-  (defun jmb-lispy/rebiind-to-helm-swoop ()
+  (defun jmb-lispy/rebind-to-helm-swoop ()
     (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))
-  (add-hook 'lispy-mode-hook #'jmb-lispy/rebiind-to-helm-swoop))
+  (defun jmb-lispy/elevate-command-region-keys ()
+    (jmb--elevate-keymap 'region-command-active-mode))
+  (add-hook 'lispy-mode-hook #'jmb-lispy/rebind-to-helm-swoop)
+  (add-hook 'lispy-mode-hook #'jmb-lispy/elevate-command-region-keys))
 
 (eldoc-mode)
 
@@ -1347,7 +1391,18 @@ end tell"
 ;; ** Winner (window layouts)
 ;; Binds C-c <left> and C-c <right>
 (when (fboundp 'winner-mode)
-      (winner-mode 1))
+  (winner-mode 1)
+  (defhydra hydra-winner (:timeout 10)
+    ("d" (progn
+           (winner-undo)
+           (setq this-command 'winner-undo)) "Undo")
+    ("<SPC>" nil "Quit")
+    ("q" #'winner-redo "Cancel" :exit t))
+  (defun my-winner/start-winner ()
+    (interactive)
+    (winner-undo)
+    (hydra-winner/body))
+  (define-key jmb-base-keys-buffer-map (kbd "d") #'my-winner/start-winner))
 
 
 ;; ** KeyChord
@@ -1367,10 +1422,10 @@ end tell"
 
 
 ;; ** ISpell
-;; No dictionary?
 (use-package ispell
-;;    :bind ("M-." . ispell-word)
-    :commands (ispell-word))
+  :commands (ispell-word)
+  :init
+  (define-key jmb-base-keys-work-at-point-map (kbd "s") #'ispell-word))
 
 ;; ** Auto complete ISpell
 (use-package ac-ispell
@@ -1506,6 +1561,19 @@ end tell"
     :commands (elfeed-org)
     :ensure t)
 
+;; ** Ediff
+;; Restore window layout after an ediff session.
+;; From https://emacs.stackexchange.com/questions/7482/restoring-windows-and-layout-after-an-ediff-session
+(defvar my-ediff-last-windows nil)
+
+(defun my-store-pre-ediff-winconfig ()
+  (setq my-ediff-last-windows (current-window-configuration)))
+
+(defun my-restore-pre-ediff-winconfig ()
+  (set-window-configuration my-ediff-last-windows))
+
+(add-hook 'ediff-before-setup-hook #'my-store-pre-ediff-winconfig)
+(add-hook 'ediff-quit-hook #'my-restore-pre-ediff-winconfig)
 
 
 ;; * Edit Server
