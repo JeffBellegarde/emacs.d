@@ -83,12 +83,11 @@ Often commands that belong are also mapped to a top-level key for speed.
 Some commands that only use the thing at point as a default might be put in other places.
 If the the point of the command is the point, is should probably be here.
 ")
-(bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
+
 (defvar jmb-base-keys-buffer-map (make-sparse-keymap)
   "Keymap for buffer manipulation.
 This also handles frames, and windows. If it rearranges what is shown this is a good place for it.
 ")
-(bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
 (define-key jmb-base-keys-buffer-map (kbd "<SPC>") #'other-window)
 
 (define-minor-mode jmb-base-keys-mode
@@ -115,6 +114,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package use-package-chords
   :ensure t
   :config (key-chord-mode 1))
+
+(bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
+(bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
 
 ;; ** restclient
 (use-package restclient
