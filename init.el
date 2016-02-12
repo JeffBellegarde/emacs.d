@@ -118,6 +118,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
 (bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
 
+;; ** Aggressive indent mode
+(use-package aggressive-indent)
+
 ;; ** restclient
 (use-package restclient
   :commands (restclient))
@@ -1022,6 +1025,7 @@ end tell"
   (defun jmb-lispy/activate-lispy-mode ()
     (lispy-mode 1))
   (add-hook 'emacs-lisp-mode-hook #'jmb-lispy/activate-lispy-mode)
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   ;;Lispy rebinds M-i so put it back.
   (defun jmb-lispy/rebind-to-helm-swoop ()
     (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))
