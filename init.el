@@ -1260,8 +1260,8 @@ end tell"
     "http://www.wolframalpha.com/input/?i=%s")
 
 (defengine youtube
-    "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
-    :keybinding "y")
+  "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+  :keybinding "y")
 
 ;; ** Multiple-cursors
 (use-package multiple-cursors
@@ -1270,7 +1270,7 @@ end tell"
          ("C-c <" . multiple-cursors-hydra/body))
   :config
   (defhydra multiple-cursors-hydra (:hint nil)
-  "
+    "
      ^Up^            ^Down^        ^Other^
 ----------------------------------------------
 [_p_]   Next    [_n_]   Next    [_l_] Edit lines
@@ -1278,16 +1278,19 @@ end tell"
 [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
 ^ ^             ^ ^             [_q_] Quit
 "
-  ("l" mc/edit-lines :exit t)
-  ("a" mc/mark-all-like-this :exit t)
-  ("n" mc/mark-next-like-this)
-  ("N" mc/skip-to-next-like-this)
-  ("M-n" mc/unmark-next-like-this)
-  ("p" mc/mark-previous-like-this)
-  ("P" mc/skip-to-previous-like-this)
-  ("M-p" mc/unmark-previous-like-this)
-  ("r" mc/mark-all-in-region-regexp :exit t)
-  ("q" nil)))
+    ("l" mc/edit-lines :exit t)
+    ("a" mc/mark-all-like-this :exit t)
+    ("n" mc/mark-next-like-this)
+    ("N" mc/skip-to-next-like-this)
+    ("M-n" mc/unmark-next-like-this)
+    ("p" mc/mark-previous-like-this)
+    ("P" mc/skip-to-previous-like-this)
+    ("M-p" mc/unmark-previous-like-this)
+    ("r" mc/mark-all-in-region-regexp :exit t)
+    ("q" nil))
+  (add-to-list 'mc/unsupported-minor-modes 'region-command-mode)
+  (add-to-list 'mc/unsupported-minor-modes 'lispy-mode)
+  (define-key region-command-mode-keymap "m" #'mc/mark-next-like-this))
 
 
 ;; ** travis
