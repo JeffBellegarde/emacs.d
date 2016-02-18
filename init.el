@@ -1401,7 +1401,7 @@ end tell"
 
 ;; * Global Minor Modes
 
-;; * Key frequency
+;; ** Key frequency
 (use-package keyfreq
   :defer 30
   :config
