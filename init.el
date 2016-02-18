@@ -200,14 +200,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
           helm-grep-default-recurse-command) "ack -Hn --no-group --no-color %p %f")
 
-;; *** Descbinds
- (use-package helm-descbinds
-   :ensure t
-   :defer t
-   :bind ("C-h b" . helm-descbinds)
-   :config
-   (progn
-     (helm-descbinds-mode))))
+  ;; *** Descbinds
+  (use-package helm-descbinds
+    :ensure t
+    :defer t
+    :bind ("C-h b" . helm-descbinds)
+    :config
+    (progn
+      (helm-descbinds-mode))))
 
 ;; *** Describe modes
 (use-package helm-describe-modes
@@ -215,19 +215,19 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; *** swoop
 (use-package helm-swoop
-    :ensure t
-    :bind
-    (("M-i" . helm-swoop)
-     ("M-I" . helm-swoop-back-to-last-point)
-     ("C-c M-i" . helm-multi-swoop)
-     ("C-x M-i" . helm-multi-swoop-all))
-    :config (setq helm-swoop-pre-input-function
-                  (lambda () (thing-at-point 'symbol))))
+  :ensure t
+  :bind
+  (("M-i" . helm-swoop)
+   ("M-I" . helm-swoop-back-to-last-point)
+   ("C-c M-i" . helm-multi-swoop)
+   ("C-x M-i" . helm-multi-swoop-all))
+  :config (setq helm-swoop-pre-input-function
+                (lambda () (thing-at-point 'symbol))))
 ;; *** ag
 ;; Funcationality enabled but not bound to anything yet.
 (use-package helm-ag
-    :ensure t
-    :commands (helm-ag helm-do-agg))
+  :ensure t
+  :commands (helm-ag helm-do-agg))
 
 ;; ** sr-speedbar
 ;; I also customize speedbar itself here.
@@ -379,10 +379,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (load "emacs-pry-setup"))
 
 ;;smex
-;(global-set-key (kbd "M-x") 'smex)
-;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
-;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; ** key-chord -- Automaticall brought in by use-package-chords
 (use-package key-chord
@@ -394,7 +394,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;(key-chord-define-global "q["     "\C-u5\C-x{")
 ;;(key-chord-define-global "q]"     "\C-u5\C-x}")
 
-;(require 'ibuffer-vc)
+;; (require 'ibuffer-vc)
 (require 'ruby-end)
 
 (use-package exec-path-from-shell
@@ -409,7 +409,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;      (lambda ()
 ;;        (ibuffer-vc-set-filter-groups-by-vc-root)
 ;;        (ibuffer-do-sort-by-alphabetic)))
-;ido
+;; ido
 ;;(require 'ido)
 ;;(require 'ido-vertical-mode)
 ;;(ido-vertical-mode 1)
@@ -485,12 +485,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :ensure t
   :bind ("C-x v p" . git-messenger:popup-message)
   :config
-	  (setq git-messenger:show-detail t)
+  (setq git-messenger:show-detail t)
   ;;;;Where does magit-commit-mode come from?
   ;;(add-hook 'git-messenger:popup-buffer-hook 'magit-commit-mode)
-    )
+  )
 
-;(require 'rfringe)
+;;(require 'rfringe)
 ;;(require 'flymake-cursor)
 ;;(require 'flymake-ruby)
 ;; ** Linum
@@ -592,12 +592,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (defun jmb/empty-string (str)
   (string= "" str))
 (defun jmb/update-env-vars-from-fish ()
-   (let ((lines (split-string (shell-command-to-string "fish -c \"set -xUL\"") "\n")))
-     (dolist (line lines)
-       (let* ((parts (split-string line " "))
-              (name (elt parts 0))
-              (value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
-         (if (not (string= "" name)) (setenv name value))))))
+  (let ((lines (split-string (shell-command-to-string "fish -c \"set -xUL\"") "\n")))
+    (dolist (line lines)
+      (let* ((parts (split-string line " "))
+             (name (elt parts 0))
+             (value (mapconcat 'identity (cl-remove-if 'jmb/empty-string (reverse (butlast (reverse parts)  1))) ":")))
+        (if (not (string= "" name)) (setenv name value))))))
 
 
 ;; ** indent whole buffer
@@ -1261,7 +1261,7 @@ end tell"
   "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
 
 (defengine wolfram-alpha
-    "http://www.wolframalpha.com/input/?i=%s")
+  "http://www.wolframalpha.com/input/?i=%s")
 
 (defengine youtube
   "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
