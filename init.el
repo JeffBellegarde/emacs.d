@@ -15,7 +15,6 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/") t)
 (package-initialize)
 
 ;; ** Load a list of packages
@@ -63,7 +62,7 @@
 (when (file-exists-p "~/private.el")
   (load "~/private.el"))
 
-;; *Theme
+;; * Theme
 ;; Use after-init-hook to avoid loading until after the config is loaded.
 
 (add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
