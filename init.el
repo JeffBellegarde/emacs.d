@@ -1401,6 +1401,13 @@ end tell"
 
 ;; * Global Minor Modes
 
+;; * Key frequency
+(use-package keyfreq
+  :defer 30
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
 ;; ** Winner (window layouts)
 ;; Binds C-c <left> and C-c <right>
 (when (fboundp 'winner-mode)
