@@ -209,6 +209,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
    (progn
      (helm-descbinds-mode))))
 
+;; *** Describe modes
+(use-package helm-describe-modes
+  :bind (("C-h m" . helm-describe-modes)))
+
 ;; *** swoop
 (use-package helm-swoop
     :ensure t
