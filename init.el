@@ -82,7 +82,8 @@ Often commands that belong are also mapped to a top-level key for speed.
 Some commands that only use the thing at point as a default might be put in other places.
 If the the point of the command is the point, is should probably be here.
 ")
-
+(defvar jmb-base-keys-point-jump-map (make-sparse-keymap))
+(define-key-after jmb-base-keys-work-at-point-map "j" jmb-base-keys-point-jump-map)
 (defvar jmb-base-keys-buffer-map (make-sparse-keymap)
   "Keymap for buffer manipulation.
 This also handles frames, and windows. If it rearranges what is shown this is a good place for it.
@@ -820,7 +821,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     ;; (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
     )
 
-
+;; ** Avy
+;; Jumping around.
+(use-package avy
+  :init
+  (define-key jmb-base-keys-point-jump-map "j" #'avy-goto-word-1)
+  (define-key jmb-base-keys-point-jump-map "k" #'avy-goto-word-0))
 ;; ** ace-window
 ;; Still not in the habit of using it.
 (use-package ace-window
