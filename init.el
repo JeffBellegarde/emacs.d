@@ -690,136 +690,136 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Hydra
 (use-package hydra
-    :ensure t
-    :bind ( ("C-M-o" . hydra-window/body)
-            ("<f2>" . hydra-zoom/body)
-            ("C-x SPC" . hydra-rectangle/body))
-    :chords (;; ("jk" . hydra-window/body)
-             ("jl" . hydra-navigate/body))
-    :commands (defhydra)
-    :config
-    (hydra-add-font-lock)
-;; *** Zoom
-    (defhydra hydra-zoom (global-map "<f2>")
-      "zoom"
-      ("g" text-scale-increase "in")
-      ("l" text-scale-decrease "out")
-      ("0" (text-scale-set 0) "reset"))
-    
-;; *** Window manipulation
-    (defun hydra-move-splitter-left (arg)
-      "Move window splitter left."
-      (interactive "p")
-      (if (let ((windmove-wrap-around))
-            (windmove-find-other-window 'right))
-          (shrink-window-horizontally arg)
-        (enlarge-window-horizontally arg)))
+  :ensure t
+  :bind ( ("C-M-o" . hydra-window/body)
+          ("<f2>" . hydra-zoom/body)
+          ("C-x SPC" . hydra-rectangle/body))
+  :chords (;; ("jk" . hydra-window/body)
+           ("jl" . hydra-navigate/body))
+  :commands (defhydra)
+  :config
+  (hydra-add-font-lock)
+  ;; *** Zoom
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("g" text-scale-increase "in")
+    ("l" text-scale-decrease "out")
+    ("0" (text-scale-set 0) "reset"))
+  
+  ;; *** Window manipulation
+  (defun hydra-move-splitter-left (arg)
+    "Move window splitter left."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (shrink-window-horizontally arg)
+      (enlarge-window-horizontally arg)))
 
-    (defun hydra-move-splitter-right (arg)
-      "Move window splitter right."
-      (interactive "p")
-      (if (let ((windmove-wrap-around))
-            (windmove-find-other-window 'right))
-          (enlarge-window-horizontally arg)
-        (shrink-window-horizontally arg)))
+  (defun hydra-move-splitter-right (arg)
+    "Move window splitter right."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (enlarge-window-horizontally arg)
+      (shrink-window-horizontally arg)))
 
-    (defun hydra-move-splitter-up (arg)
-      "Move window splitter up."
-      (interactive "p")
-      (if (let ((windmove-wrap-around))
-            (windmove-find-other-window 'up))
-          (enlarge-window arg)
-        (shrink-window arg)))
+  (defun hydra-move-splitter-up (arg)
+    "Move window splitter up."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (enlarge-window arg)
+      (shrink-window arg)))
 
-    (defun hydra-move-splitter-down (arg)
-      "Move window splitter down."
-      (interactive "p")
-      (if (let ((windmove-wrap-around))
-            (windmove-find-other-window 'up))
-          (shrink-window arg)
-        (enlarge-window arg)))
+  (defun hydra-move-splitter-down (arg)
+    "Move window splitter down."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (shrink-window arg)
+      (enlarge-window arg)))
 
-    (defhydra hydra-window (:color amaranth)
-      "window"
-      ("h" windmove-left)
-      ("j" windmove-down)
-      ("k" windmove-up)
-      ("l" windmove-right)
-      ("H" hydra-move-splitter-left)
-      ("J" hydra-move-splitter-down)
-      ("K" hydra-move-splitter-up)
-      ("L" hydra-move-splitter-right)
+  (defhydra hydra-window (:color amaranth)
+    "window"
+    ("h" windmove-left)
+    ("j" windmove-down)
+    ("k" windmove-up)
+    ("l" windmove-right)
+    ("H" hydra-move-splitter-left)
+    ("J" hydra-move-splitter-down)
+    ("K" hydra-move-splitter-up)
+    ("L" hydra-move-splitter-right)
 
-      ("3" (lambda ()
-             (interactive)
-             (split-window-right)
-             (windmove-right))
-       "vert")
-      ("2" (lambda ()
-             (interactive)
-             (split-window-below)
-             (windmove-down))
-       "horz")
-      ("t" transpose-frame "'")
-      ("1" delete-other-windows "one" :color blue)
-      ("a" ace-window "ace")
-      ("s" ace-swap-window "swap")
-      ("d" ace-delete-window "del")
-      ("i" ace-maximize-window "ace-one" :color blue)
-      ("b" helm-mini "buf")
-      ;;("m" headlong-bookmark-jump "bmk")
-      ("q" nil "cancel"))
-    (global-set-key (kbd "C-M-o") 'hydra-window/body)
-    ;; (key-chord-define-global "jk" 'hydra-window/body)
+    ("3" (lambda ()
+           (interactive)
+           (split-window-right)
+           (windmove-right))
+     "vert")
+    ("2" (lambda ()
+           (interactive)
+           (split-window-below)
+           (windmove-down))
+     "horz")
+    ("t" transpose-frame "'")
+    ("1" delete-other-windows "one" :color blue)
+    ("a" ace-window "ace")
+    ("s" ace-swap-window "swap")
+    ("d" ace-delete-window "del")
+    ("i" ace-maximize-window "ace-one" :color blue)
+    ("b" helm-mini "buf")
+    ;;("m" headlong-bookmark-jump "bmk")
+    ("q" nil "cancel"))
+  (global-set-key (kbd "C-M-o") 'hydra-window/body)
+  ;; (key-chord-define-global "jk" 'hydra-window/body)
 
-;; *** Navigation
-    (defhydra hydra-navigate (:color amaranth)
-      "navigate"
-      ("k" beginning-of-defun "beginning-of-defun")
-      ("j" end-of-defun "end-of-defun")
-      ("h" er/expand-region "expand-region")
-      ("l" er/contract-region "contract-region")
-      ("a" move-beginning-of-line "line start")
-      ("e" move-end-of-line "line end")
-      ("SPC" set-mark-command :color red)
-      ("n" narrow-to-region "narrow")
-      ("q" nil "cancel"))
+  ;; *** Navigation
+  (defhydra hydra-navigate (:color amaranth)
+    "navigate"
+    ("k" beginning-of-defun "beginning-of-defun")
+    ("j" end-of-defun "end-of-defun")
+    ("h" er/expand-region "expand-region")
+    ("l" er/contract-region "contract-region")
+    ("a" move-beginning-of-line "line start")
+    ("e" move-end-of-line "line end")
+    ("SPC" set-mark-command :color red)
+    ("n" narrow-to-region "narrow")
+    ("q" nil "cancel"))
   ;;  (key-chord-define-global "jl" 'hydra-navigate/body)
 
- ;; Rectangles
-    (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
-                                         :color pink
-                                         :post (deactivate-mark))
-      "
+  ;; Rectangles
+  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                                       :color pink
+                                       :post (deactivate-mark))
+    "
       _k_   ^^_d_elete    _s_tring
     _h_ _l_   _o_k        _w_kill
       _j_   ^^_n_ew-copy  _r_eset
   ^^        ^^_e_xchange  _u_ndo
   ^^^^      ^^            _y_ank
     "
-      ("h" backward-char nil)
-      ("l" forward-char nil)
-      ("k" previous-line nil)
-      ("j" next-line nil)
-      ("<left>" backward-char nil)
-      ("<right>" forward-char nil)
-      ("<up>" previous-line nil)
-      ("<down>" next-line nil)
-      ("e" exchange-point-and-mark nil)
-      ("n" copy-rectangle-as-kill nil)
-      ("d" delete-rectangle nil)
-      ("r" (if (region-active-p)
-               (deactivate-mark)
-             (rectangle-mark-mode 1)) nil)
-      ("y" yank-rectangle nil)
-      ("u" undo nil)
-      ("s" string-rectangle nil)
-      ("w" kill-rectangle nil)
-      ("o" nil nil)
-      ("q" nil nil)
-      )
-    ;; (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+    ("h" backward-char nil)
+    ("l" forward-char nil)
+    ("k" previous-line nil)
+    ("j" next-line nil)
+    ("<left>" backward-char nil)
+    ("<right>" forward-char nil)
+    ("<up>" previous-line nil)
+    ("<down>" next-line nil)
+    ("e" exchange-point-and-mark nil)
+    ("n" copy-rectangle-as-kill nil)
+    ("d" delete-rectangle nil)
+    ("r" (if (region-active-p)
+             (deactivate-mark)
+           (rectangle-mark-mode 1)) nil)
+    ("y" yank-rectangle nil)
+    ("u" undo nil)
+    ("s" string-rectangle nil)
+    ("w" kill-rectangle nil)
+    ("o" nil nil)
+    ("q" nil nil)
     )
+  ;; (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+  )
 
 ;; ** Avy
 ;; Jumping around.
