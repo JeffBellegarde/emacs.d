@@ -455,6 +455,11 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
            ("t" . proced)) ; top
 (global-set-key (kbd "s-l") 'launcher-map)
 
+;; ** Reddit
+(use-package nnredit
+  :ensure nil
+  :load-path "nnreddit")
+
 ;; ** Magit
 ;; magit-gh-pulls is throwing errors.
 (use-package gh
