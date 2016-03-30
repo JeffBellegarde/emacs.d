@@ -102,7 +102,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; Utility function whow trailing-whitespace. Add to the appropriate mode hookds.
 
 (defun jmb/turn-on-show-trailing-whitespace ()
- (setq show-trailing-whitespace t))
+  (setq show-trailing-whitespace t))
 
 ;; ** Prog mode
 ;; It's pretty rare to have a programming mode that wants whitespace at the end of a line.
