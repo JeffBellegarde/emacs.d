@@ -71,6 +71,14 @@
 ;; ** Low level stuff
 (setq tab-always-indent 'complete)
 
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
+
+;; Make backups of files, even when they're in version control
+(setq vc-make-backup-files t)
+
 ;; ** Base Keymaps
 ;; My plan is to setup a small number of base keymaps to hook other functioanlity to. Some commands
 ;; may still be attached to top level commands, but I want everything to be accessible using the base keymaps.
