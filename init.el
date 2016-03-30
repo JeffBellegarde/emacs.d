@@ -126,6 +126,24 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 (jmb-base-keys-mode 1)
 
+(defmacro my-link-modes (leader-mode follower-mode)
+  (let* ((funcname (intern (concat "my-link-modes/"
+                                   (symbol-name leader-mode)
+                                   "--"
+                                   (symbol-name follower-mode))))
+         (leader-hook (intern (concat (symbol-name leader-mode) "-hook")))
+         (docstring (concat "Hook to enable "
+                            (symbol-name follower-mode)
+                            " whenever " (symbol-name leader-mode)
+                            " is active.")))
+    `(progn
+       (defun ,funcname ()
+         ,docstring
+         (if (memq ',leader-mode minor-mode-alist)
+             (,follower-mode (symbol-value ',leader-mode))
+           (,follower-mode 1)))
+       (add-hook ',leader-hook #',funcname))))
+
 ;; ** Disable show trailing whitespace.
 ;; Utility function whow trailing-whitespace. Add to the appropriate mode hookds.
 
@@ -134,8 +152,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Prog mode
 ;; It's pretty rare to have a programming mode that wants whitespace at the end of a line.
-
-(add-hook 'prog-mode-hook #'jmb/turn-on-show-trailing-whitespace)
+(use-package prog-mode
+  :ensure nil
+  :config
+  (add-hook 'prog-mode-hook #'jmb/turn-on-show-trailing-whitespace)
+  ;; (defun my/linum-mode ()
+  ;;   (linum-mode t))
+  ;; (remove-hook 'prog-mode-hook #'my/linum-mode)
+  (my-link-modes prog-mode linum-mode))
 
 ;; ** Chords for use-package
 ;; Enables key chords
