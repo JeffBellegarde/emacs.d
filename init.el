@@ -581,6 +581,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 (add-hook 'ruby-mode-hook 'idle-highlight-mode)
 (add-hook 'ruby-mode-hook 'ri-bind-key)
+
+;; ** Crystal
+(use-package crystal-mode
+  :ensure nil
+  :mode "\\.cr$"
+  :interpreter "crystal"
+  :load-path "emacs-crystal-mode")
+
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
 ;;(require `fish-mode)
