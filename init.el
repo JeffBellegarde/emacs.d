@@ -462,9 +462,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Magit
 ;; magit-gh-pulls is throwing errors.
-(use-package gh
-  :init
-  :config)
+(use-package gh)
 
 (use-package magit-gh-pulls
   :commands (turn-on-magit-gh-pulls))
