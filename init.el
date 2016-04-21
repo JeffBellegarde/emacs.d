@@ -21,25 +21,24 @@
 ;; I want to remove things from this list and use use-package instead.
 ;; Also inits use-package.
 (defvar jmb-required-packages
-      (list
-       'fish-mode
-       'flx-ido
-;;       'git-gutter-fringe
-       'gitconfig-mode
-       'gitignore-mode
-       'go-eldoc
-       'go-errcheck
-;;       'ibuffer-vc
-       'ido
-       'ido-vertical-mode
-       'paradox
-       'projectile
-       'rfringe
-       'ruby-end
-       'use-package
-       'yasnippet
-       'zenburn-theme
-      ))
+  (list
+   'fish-mode
+   'flx-ido
+   ;;       'git-gutter-fringe
+   'gitconfig-mode
+   'gitignore-mode
+   'go-eldoc
+   'go-errcheck
+   ;;       'ibuffer-vc
+   'ido
+   'ido-vertical-mode
+   'paradox
+   'rfringe
+   'ruby-end
+   'use-package
+   'yasnippet
+   'zenburn-theme
+   ))
 
 (dolist (package jmb-required-packages)
   (when (not (package-installed-p package))
@@ -160,6 +159,23 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   ;;   (linum-mode t))
   ;; (remove-hook 'prog-mode-hook #'my/linum-mode)
   (my-link-modes prog-mode linum-mode))
+
+;; ** Projectile
+(use-package projectile
+  :bind ("C-c p" . projectile-command-map)
+  :config
+  (setq projectile-switch-project-action
+        #'projectile-commander)
+  (setq projectile-create-missing-test-files t)
+  (def-projectile-commander-method ?s
+    "Open a *shell* buffer for the project."
+    (shell (get-buffer-create
+            (format "*shell %s*"
+                    (projectile-project-name)))))
+
+  (def-projectile-commander-method ?c
+    "Run `compile' in the project."
+    (call-interactively #'compile)))
 
 ;; ** Chords for use-package
 ;; Enables key chords
@@ -511,6 +527,48 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package nnredit
   :ensure nil
   :load-path "nnreddit")
+
+;; ** Cider
+;; I don't use cider itself but use it's overlay functionality.
+(use-package cider
+  :mode "\\.clj\\'")
+
+;; ** Typeit
+;; A typing speed test for emacs
+(use-package typit
+  :commands (typit-basic-test typit-advanced-test))
+
+;; ** Inline overlays
+;; From http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
+(use-package my/inline-overlay
+  :ensure nil
+  :init
+  (autoload 'cider--make-result-overlay "cider-overlays")
+
+  (defun endless/eval-overlay (value point)
+    (cider--make-result-overlay (format "%S" value)
+      :where point
+      :duration 'command)
+    ;; Preserve the return value.
+    value)
+
+  (advice-add 'eval-region :around
+              (lambda (f beg end &rest r)
+                (endless/eval-overlay
+                 (apply f beg end r)
+                 end)))
+
+  (advice-add 'eval-last-sexp :filter-return
+              (lambda (r)
+                (endless/eval-overlay r (point))))
+
+  (advice-add 'eval-defun :filter-return
+              (lambda (r)
+                (endless/eval-overlay
+                 r
+                 (save-excursion
+                   (end-of-defun)
+                   (point))))))
 
 ;; ** Magit
 ;; magit-gh-pulls is throwing errors.
