@@ -1589,10 +1589,10 @@ end tell"
 
 ;; ** Auto complete ISpell
 (use-package ac-ispell
-    :ensure t
-    :commands (ac-ispell-ac-setup)
-    :init (add-hook 'text-mode-hook 'ac-ispell-ac-setup)
-    :config (ac-ispell-setup))
+  :ensure t
+  :commands (ac-ispell-ac-setup)
+  :init (add-hook 'text-mode-hook 'ac-ispell-ac-setup)
+  :config (ac-ispell-setup))
 
 
 ;; ** Dash
@@ -1607,21 +1607,21 @@ end tell"
 
 ;; An improved version of guide-key
 (use-package which-key
-    :ensure t
-    :defer 5
-    :diminish ""
-    :config
-    (which-key-mode)
-    (setq which-key-use-C-h-commands t
-          which-key-idle-delay 0.5)
-    (which-key-setup-side-window-right-bottom))
+  :ensure t
+  :defer 5
+  :diminish ""
+  :config
+  (which-key-mode)
+  (setq which-key-use-C-h-commands t
+        which-key-idle-delay 0.5)
+  (which-key-setup-side-window-right-bottom))
 
 
 ;; ** Browse kill ring
 (use-package browse-kill-ring
-    :disabled t
-    :bind ("M-y" . browse-kill-ring)
-    :ensure t)
+  :disabled t
+  :bind ("M-y" . browse-kill-ring)
+  :ensure t)
 
 
 
@@ -1634,36 +1634,35 @@ end tell"
 
 ;; ** Beacon
 
-
 (use-package beacon
-      :diminish ""
-     :config (beacon-mode))
+  :diminish ""
+  :config (beacon-mode))
 
 ;; ** God Mode
 
 (use-package god-mode
-    :bind ("<escape>" . god-mode-all)
-    :disabled t
-    :config
-    (add-to-list 'god-exempt-major-modes 'Custom-mode)
-    (add-to-list 'god-exempt-major-modes 'Info-mode)
-    (define-key god-local-mode-map (kbd "i") 'god-local-mode)
-    (defun my-update-cursor ()
-      (setq cursor-type (if (or god-local-mode buffer-read-only)
-                            'box
-                          'bar)))
-    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
-    (defun c/god-mode-update-cursor ()
-      (let ((limited-colors-p (> 257 (length (defined-colors)))))
-        (cond (god-local-mode (progn
-                                (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
-                                (set-face-background 'mode-line-inactive (if limited-colors-p "white" "#e9e2cb"))))
-              (t (progn
-                   (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
-                   (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
-    (add-hook 'god-mode-enabled-hook 'c/god-mode-update-cursor)
-    (add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor))
+  :bind ("<escape>" . god-mode-all)
+  :disabled t
+  :config
+  (add-to-list 'god-exempt-major-modes 'Custom-mode)
+  (add-to-list 'god-exempt-major-modes 'Info-mode)
+  (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+  (defun my-update-cursor ()
+    (setq cursor-type (if (or god-local-mode buffer-read-only)
+                          'box
+                        'bar)))
+  (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'my-update-cursor)
+  (defun c/god-mode-update-cursor ()
+    (let ((limited-colors-p (> 257 (length (defined-colors)))))
+      (cond (god-local-mode (progn
+                              (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
+                              (set-face-background 'mode-line-inactive (if limited-colors-p "white" "#e9e2cb"))))
+            (t (progn
+                 (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
+                 (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
+  (add-hook 'god-mode-enabled-hook 'c/god-mode-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor))
 
 
 
@@ -1674,52 +1673,52 @@ end tell"
 
 
 ;;(require 'vc)
-  (use-package ibuffer-vc
-      :ensure t
-      :commands (ibuffer-vc-set-filter-groups-by-vc-root))
+(use-package ibuffer-vc
+  :ensure t
+  :commands (ibuffer-vc-set-filter-groups-by-vc-root))
 
-  (use-package ibuffer
-    :bind ("C-x C-b" . ibuffer)
-    :config
-    (require 'ibuf-ext)
-    (add-hook 'ibuffer-hook
-              (lambda ()
-                (ibuffer-vc-set-filter-groups-by-vc-root)
-                (ibuffer-do-sort-by-alphabetic))))
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer)
+  :config
+  (require 'ibuf-ext)
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-vc-set-filter-groups-by-vc-root)
+              (ibuffer-do-sort-by-alphabetic))))
 
 
 ;; ** Elfeed (Rss)
 (defvar jmb-elfeed-auto-update-timer)
-  (defvar jmb-elfeed-auto-update-min-delay (* 60 60))
-  (defvar jmb-elfeed-auto-update-idle-delay (* 10 60))
-  (defun jmb-elfeed-update ()
-    (let ((idle-time (current-idle-time)))
-      (when (and idle-time
-                 (> (float-time idle-time) jmb-elfeed-auto-update-idle-delay)
-                 (> (- (float-time) (elfeed-db-last-update)) jmb-elfeed-auto-update-min-delay))
-        (message "Starting elfeed update")
-        (elfeed-update))))
-  (defun jmb-elfeed-start-auto-update ()
-    (interactive)
-    (setq jmb-elfeed-auto-update-timer (run-at-time 0 600 #'jmb-elfeed-update))
-    (add-hook 'kill-buffer-hook 'jmb-elfeed-stop-auto-update nil t))
-  (defun jmb-elfeed-stop-auto-update ()
-    (interactive)
-    (when (timerp jmb-elfeed-auto-update-timer)
-      (cancel-timer jmb-elfeed-auto-update-timer)
-      (setq jmb-elfeed-auto-update-timer nil)))
-  (use-package elfeed
-    :commands (elfeed)
-    :disabled t
-    :ensure t
-    :config
-    (progn
-      ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
-      (elfeed-org)))
-  (use-package elfeed-org
-    :disabled t
-    :commands (elfeed-org)
-    :ensure t)
+(defvar jmb-elfeed-auto-update-min-delay (* 60 60))
+(defvar jmb-elfeed-auto-update-idle-delay (* 10 60))
+(defun jmb-elfeed-update ()
+  (let ((idle-time (current-idle-time)))
+    (when (and idle-time
+               (> (float-time idle-time) jmb-elfeed-auto-update-idle-delay)
+               (> (- (float-time) (elfeed-db-last-update)) jmb-elfeed-auto-update-min-delay))
+      (message "Starting elfeed update")
+      (elfeed-update))))
+(defun jmb-elfeed-start-auto-update ()
+  (interactive)
+  (setq jmb-elfeed-auto-update-timer (run-at-time 0 600 #'jmb-elfeed-update))
+  (add-hook 'kill-buffer-hook 'jmb-elfeed-stop-auto-update nil t))
+(defun jmb-elfeed-stop-auto-update ()
+  (interactive)
+  (when (timerp jmb-elfeed-auto-update-timer)
+    (cancel-timer jmb-elfeed-auto-update-timer)
+    (setq jmb-elfeed-auto-update-timer nil)))
+(use-package elfeed
+  :commands (elfeed)
+  :disabled t
+  :ensure t
+  :config
+  (progn
+    ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
+    (elfeed-org)))
+(use-package elfeed-org
+  :disabled t
+  :commands (elfeed-org)
+  :ensure t)
 
 ;; ** Ediff
 ;; Restore window layout after an ediff session.
@@ -1738,13 +1737,13 @@ end tell"
 
 ;; * Edit Server
 (use-package edit-server
-    :ensure t
-    :defer 5
-    :config (edit-server-start))
+  :ensure t
+  :defer 5
+  :config (edit-server-start))
 
 ;; * Custom code
 
-;; *** reverse-string
+;; ** reverse-string
 (defun my/reverse-string ()
   (interactive)
   (let* ((input (buffer-substring (mark) (point)))
