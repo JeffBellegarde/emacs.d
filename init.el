@@ -191,7 +191,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** restclient
 (use-package restclient
-  :commands (restclient))
+  :commands (restclient-http-parse-current-and-do))
 
 
 ;; ** Org
@@ -655,7 +655,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; Uses C-/ within company complete to shift to helm.
 (use-package helm-company
-  :init
+  :commands (helm-company)
+  :config
   (with-eval-after-load 'company
     (define-key company-active-map (kbd "C-/") 'helm-company)))
 
@@ -1472,9 +1473,9 @@ end tell"
 
 ;; * Emacs Basics
 ;; ** Install emacs
-;; Emacs needs to be installed before this can even run. Still provides a nice place to track the command line args.
+;; Emacs needs to be installed before this can even run. Still provides a nice place to track the command line args. The --with-xwidgets are does not seem to have an effect. Not sure why.
 ;; #+begin_src sh
-;; brew install emacs --with-cocoa --with-imagemagick --with-gnutls
+;; brew install emacs --with-cocoa --with-imagemagick --with-gnutls --with-xwidgets
 ;; #+end_src
 
 ;; ** Personal information
