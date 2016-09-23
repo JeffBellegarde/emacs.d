@@ -52,6 +52,10 @@
 (require 'diminish)  ;;use-package dependencies
 (require 'bind-key)
 
+;; ** General
+;; Provides :general keyword for use-package for setting up bindings.
+(use-package general)
+
 ;; ** Customization
 (setq custom-file (expand-file-name "emacs-customizations.el" user-emacs-directory))
 (load custom-file)
@@ -284,13 +288,20 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; *** swoop
 (use-package helm-swoop
   :ensure t
+  :init
+  (defun my-helm-swoop-not-at-point ()
+    (interactive)
+    (let ((helm-swoop-pre-input-function (lambda () "")))
+      (helm-swoop)))
   :bind
   (("M-i" . helm-swoop)
    ("M-I" . helm-swoop-back-to-last-point)
    ("C-c M-i" . helm-multi-swoop)
    ("C-x M-i" . helm-multi-swoop-all))
-  :config (setq helm-swoop-pre-input-function
-                (lambda () (thing-at-point 'symbol))))
+  :general
+  (:keymaps 'jmb-base-keys-buffer-map "i"  'my-helm-swoop-not-at-point)
+  (:keymaps 'jmb-base-keys-work-at-point-map "i"  'helm-swoop))
+
 ;; *** ag
 ;; Funcationality enabled but not bound to anything yet.
 (use-package helm-ag

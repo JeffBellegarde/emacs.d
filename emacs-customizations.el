@@ -156,6 +156,7 @@
  '(magit-sha1-abbrev-length 5)
  '(magit-stage-all-confirm nil)
  '(make-backup-files nil)
+ '(minimap-window-location (quote right))
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
@@ -204,6 +205,9 @@
  '(outline-occur-by-mode
    (quote
     ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
+ '(package-selected-packages
+   (quote
+    (general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
  '(paradox-execute-asynchronously t)
  '(paradox-github-token t)
  '(pomodoro-work-start-message "Back to work!")
@@ -252,7 +256,8 @@
      ("^~/[Gg]it\\([Hh]ub\\|\\)-?[Pp]rojects/" ":Git:"))))
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 587)
- '(speedbar-use-images nil)
+ '(speedbar-default-position (quote left))
+ '(speedbar-use-images t)
  '(sr-speedbar-right-side nil)
  '(tab-width 2)
  '(tool-bar-mode nil)
