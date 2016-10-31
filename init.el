@@ -987,9 +987,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Avy
 ;; Jumping around.
 (use-package avy
+  :commands (avy-goto-word-0)
   :init
-  (define-key jmb-base-keys-point-jump-map "j" #'avy-goto-word-1)
-  (define-key jmb-base-keys-point-jump-map "k" #'avy-goto-word-0))
+  (define-key jmb-base-keys-buffer-map "j" #'avy-goto-word-0))
+
 ;; ** ace-window
 ;; Still not in the habit of using it.
 (use-package ace-window
