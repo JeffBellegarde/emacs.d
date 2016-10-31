@@ -1695,8 +1695,16 @@ end tell"
   (add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor))
 
 
+;; ** Bookmarks
 
+(use-package bm
+  :general
+  (:keymaps 'jmb-base-keys-buffer-map "t"  'bm-previous "g" 'bm-next)
+  (:keymaps 'jmb-base-keys-work-at-point-map "b"  'bm-toggle))
 
+(use-package helm-bm
+  :general
+  (:keymaps 'jmb-base-keys-buffer-map "b"  'helm-bm))
 ;; * Major modes
 
 ;; ** IBuffer
