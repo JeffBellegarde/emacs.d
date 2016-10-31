@@ -637,7 +637,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;(require 'flymake-ruby)
 ;; ** Linum
 (require 'linum)
-(global-linum-mode)
+;; (global-linum-mode nil)
 ;;(window-numbering-mode)
 ;;(require 'imenu+)
 ;;(require 'ack)
