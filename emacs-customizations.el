@@ -17,6 +17,9 @@
  '(autotest-use-ui t)
  '(beacon-blink-when-focused t)
  '(beacon-blink-when-window-scrolls nil)
+ '(bm-buffer-persistence t)
+ '(bm-cycle-all-buffers t)
+ '(bm-in-lifo-order t)
  '(browse-kill-ring-highlight-current-entry t)
  '(browse-kill-ring-highlight-inserted-item (quote solid))
  '(browse-url-new-window-flag t)
@@ -207,7 +210,8 @@
     ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
  '(package-selected-packages
    (quote
-    (general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
+    (magit helm-bm bm general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
+ '(paradox-automatically-star nil)
  '(paradox-execute-asynchronously t)
  '(paradox-github-token t)
  '(pomodoro-work-start-message "Back to work!")
