@@ -800,23 +800,23 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (add-hook 'comint-output-filter-functions 'ansi-color-process-output)
   (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)
   (local-set-key [home]        ; move to beginning of line, after prompt
-     'comint-bol)
+                 'comint-bol)
   (local-set-key [up]          ; cycle backward through command history
-     '(lambda () (interactive)
-        (if (comint-after-pmark-p)
-      (comint-previous-input 1)
-          (previous-line 1))))
+                 '(lambda () (interactive)
+                    (if (comint-after-pmark-p)
+                        (comint-previous-input 1)
+                      (previous-line 1))))
   (local-set-key [down]        ; cycle forward through command history
-     '(lambda () (interactive)
-        (if (comint-after-pmark-p)
-      (comint-next-input 1)
-          (forward-line 1)))))
+                 '(lambda () (interactive)
+                    (if (comint-after-pmark-p)
+                        (comint-next-input 1)
+                      (forward-line 1)))))
 
 (add-hook 'shell-mode-hook 'my-standard-comint-mode-hooks)
 
-;(require 'rdebug)
-;(add-hook 'shell-mode-hook 'turn-on-rdebug-track-mode)
-;(remove-hook 'shell-mode-hook 'turn-on-rdebug-track-mode)
+                                        ;(require 'rdebug)
+                                        ;(add-hook 'shell-mode-hook 'turn-on-rdebug-track-mode)
+                                        ;(remove-hook 'shell-mode-hook 'turn-on-rdebug-track-mode)
 
 ;;Allow the mouse to work even under an xterm window
 ;;(require 'mouse)
@@ -1217,7 +1217,7 @@ end tell"
 (use-package elm-mode
   :mode "\\.elm\\'")
 (when (fboundp 'imagemagick-register-types)
-   (imagemagick-register-types))
+  (imagemagick-register-types))
 
 ;; ** Mu4e -- email
 ;; I don't like the view system.
@@ -1233,7 +1233,7 @@ end tell"
   (setq mu4e-view-show-images t)
   (setq mu4e-view-prefer-html t)
 
-;;  don't save message to Sent Messages, Gmail/IMAP takes care of this
+  ;;  don't save message to Sent Messages, Gmail/IMAP takes care of this
   (setq mu4e-sent-messages-behavior 'delete)
 
   ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
@@ -1279,10 +1279,10 @@ end tell"
 
   ;;Alternatively, for emacs-24 you can use:
   (setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-stream-type 'starttls
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587)
+        smtpmail-stream-type 'starttls
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
 
   ;; don't keep message buffers around
 
@@ -1513,31 +1513,31 @@ end tell"
       user-mail-address "bellegar@gmail.com")
 
 ;; ** Basic config
-  (require 'use-package)
-  (column-number-mode)
-  (tool-bar-mode -1)
-  (line-number-mode 1)
-  (add-hook 'after-init-hook 'server-start)
-  (add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
+(require 'use-package)
+(column-number-mode)
+(tool-bar-mode -1)
+(line-number-mode 1)
+(add-hook 'after-init-hook 'server-start)
+(add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
 
-  ;;mode-compile
-  (autoload 'mode-compile "mode-compile"
-    "Command to compile current buffer file based on the major mode" t)
-  (global-set-key "\C-cc" 'mode-compile)
-  (autoload 'mode-compile-kill "mode-compile"
-    "Command to kill a compilation launched by `mode-compile'" t)
-  (global-set-key "\C-ck" 'mode-compile-kill)
-  (global-set-key "\C-z" 'undo)
-  (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
-  (auto-compression-mode 1)
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (setq use-dialog-box nil)
+;;mode-compile
+(autoload 'mode-compile "mode-compile"
+  "Command to compile current buffer file based on the major mode" t)
+(global-set-key "\C-cc" 'mode-compile)
+(autoload 'mode-compile-kill "mode-compile"
+  "Command to kill a compilation launched by `mode-compile'" t)
+(global-set-key "\C-ck" 'mode-compile-kill)
+(global-set-key "\C-z" 'undo)
+(autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
+(auto-compression-mode 1)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-dialog-box nil)
 
-  (setq ring-bell-function (lambda () (message "*beep*")))
-  (transient-mark-mode 1)
+(setq ring-bell-function (lambda () (message "*beep*")))
+(transient-mark-mode 1)
 
-  (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 ;; ** Startup test
 ;; This will verify that emacs startup is working correctly.
@@ -1548,7 +1548,7 @@ end tell"
   (require 'async)
   (async-start
    (lambda () (shell-command-to-string
-          "emacs --batch --eval \"
+               "emacs --batch --eval \"
 (condition-case e
     (progn
       (load \\\"~/.emacs.d/init.el\\\")
@@ -1603,11 +1603,11 @@ end tell"
 ;; ** Smart Mode line
 
 
-  (use-package smart-mode-line
-    :defer 2
-    :ensure t
-    :config
-    (sml/setup))
+(use-package smart-mode-line
+  :defer 2
+  :ensure t
+  :config
+  (sml/setup))
 
 
 
