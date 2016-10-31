@@ -55,6 +55,7 @@
    'use-package
    'yasnippet
    'zenburn-theme
+   'general ;;provides general-chord
    ))
 
 (dolist (package jmb-required-packages)
@@ -66,12 +67,9 @@
 (setq use-package-verbose t)
 (setq use-package-minimum-reported-time 0.01)
 (setq use-package-always-ensure t)
-(require 'diminish)  ;;use-package dependencies
+(require 'diminish) ;;use-package dependencies
 (require 'bind-key)
-
-;; ** General
-;; Provides :general keyword for use-package for setting up bindings.
-(use-package general)
+(require 'general)
 
 ;; ** Customization
 (setq custom-file (expand-file-name "emacs-customizations.el" user-emacs-directory))
@@ -205,6 +203,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :config (key-chord-mode 1))
 
 (bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
+;; (general-define-key :keymaps 'jmb-base-keys-map
+;;                     (general-chord "jk") jmb-base-keys-work-at-point-map
+;;                     (general-chord "kj") jmb-base-keys-work-at-point-map)
 (bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
 
 ;; ** Aggressive indent mode
