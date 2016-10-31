@@ -13,8 +13,25 @@
 
 ;; * Init the package system
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+;; Use https to access packages. (Your Editor is Malware)[https://glyph.twistedmatrix.com/2015/11/editor-malware.html]
+(setq package-archives nil)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(setq tls-checktrust t)
+;; Uses python's certi installed with 'python -m pip install --user certifi'
+(let ((trustfile
+       (replace-regexp-in-string
+        "\\\\" "/"
+        (replace-regexp-in-string
+         "\n" ""
+         (shell-command-to-string "python -m certifi")))))
+  (setq tls-program
+        (list
+         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                 (if (eq window-system 'w32) ".exe" "") trustfile)))
+  (setq gnutls-verify-error t)
+  (setq gnutls-trustfiles (list trustfile)))
+
 (package-initialize)
 
 ;; ** Load a list of packages
@@ -73,7 +90,7 @@
 
 ;; ** Low level stuff
 (setq tab-always-indent 'complete)
-
+(prefer-coding-system 'utf-8)
 ;; Write backup files to own directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
