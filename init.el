@@ -17,20 +17,21 @@
 (setq package-archives nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(setq tls-checktrust t)
-;; Uses python's certi installed with 'python -m pip install --user certifi'
-(let ((trustfile
-       (replace-regexp-in-string
-        "\\\\" "/"
-        (replace-regexp-in-string
-         "\n" ""
-         (shell-command-to-string "python -m certifi")))))
-  (setq tls-program
-        (list
-         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-                 (if (eq window-system 'w32) ".exe" "") trustfile)))
-  (setq gnutls-verify-error t)
-  (setq gnutls-trustfiles (list trustfile)))
+(unless (getenv "CI")
+  (setq tls-checktrust t)
+  ;; Uses python's certi installed with 'python -m pip install --user certifi'
+  (let ((trustfile
+         (replace-regexp-in-string
+          "\\\\" "/"
+          (replace-regexp-in-string
+           "\n" ""
+           (shell-command-to-string "python -m certifi")))))
+    (setq tls-program
+          (list
+           (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                   (if (eq window-system 'w32) ".exe" "") trustfile)))
+    (setq gnutls-verify-error t)
+    (setq gnutls-trustfiles (list trustfile))))
 
 (package-initialize)
 
@@ -49,7 +50,6 @@
    ;;       'ibuffer-vc
    'ido
    'ido-vertical-mode
-   'paradox
    'rfringe
    'ruby-end
    'use-package
@@ -171,6 +171,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (defun jmb/turn-on-show-trailing-whitespace ()
   (setq show-trailing-whitespace t))
 
+;; ** Spinner
+(use-package spinner
+  :ensure t)
+
 ;; ** Prog mode
 ;; It's pretty rare to have a programming mode that wants whitespace at the end of a line.
 (use-package prog-mode
@@ -230,12 +234,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :config
   (org-clock-persistence-insinuate)
   (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
-  ;; *** ob-restclient
-  ;; Alows restclient in org-mode.
-  ;; This is intialized by putting 'restclient' in the variable `org-babel-load-languages' configured through customize.
-  (use-package ob-restclient
-    :ensure t)
   :ensure t)
+
+;; *** ob-restclient
+;; Alows restclient in org-mode.
+;; This is intialized by putting 'restclient' in the variable `org-babel-load-languages' configured through customize.
+(use-package ob-restclient)
 
 ;; *** Org protocol
 (require 'org-protocol)
@@ -291,7 +295,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
   (when (executable-find "ack")
     (setq helm-grep-default-command "ack -H --no-group --no-color %p %f"
-          helm-grep-default-recurse-command) "ack -Hn --no-group --no-color %p %f")
+          helm-grep-default-recurse-command "ack -Hn --no-group --no-color %p %f"))
 
   ;; *** Descbinds
   (use-package helm-descbinds
@@ -529,7 +533,6 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (epa-file-enable)
 
 ;; * Launcher
-
 ;; The launcher map is defined at the top so other things can add to it.
 
 (defun my-switch-to-gnus-group-buffer ()
@@ -554,6 +557,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
            ("s" . shell)
            ("t" . proced)) ; top
 (global-set-key (kbd "s-l") 'launcher-map)
+
+;; ** Paradox
+;; package management
+;; TODO: Should add to the key to the launcher map here.
+(use-package paradox
+  :commands (paradox-list-packages))
 
 ;; ** Reddit
 (use-package nnredit
