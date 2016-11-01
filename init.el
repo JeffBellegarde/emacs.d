@@ -129,7 +129,9 @@ Some commands that only use the thing at point as a default might be put in othe
 If the the point of the command is the point, is should probably be here.
 ")
 (defvar jmb-base-keys-point-jump-map (make-sparse-keymap))
-(define-key-after jmb-base-keys-work-at-point-map "j" jmb-base-keys-point-jump-map)
+(define-key jmb-base-keys-work-at-point-map "j" jmb-base-keys-point-jump-map)
+(define-key jmb-base-keys-work-at-point-map ";" 'comment-line)
+
 (defvar jmb-base-keys-buffer-map (make-sparse-keymap)
   "Keymap for buffer manipulation.
 This also handles frames, and windows. If it rearranges what is shown this is a good place for it.
