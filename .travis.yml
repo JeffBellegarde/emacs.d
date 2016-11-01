@@ -18,6 +18,7 @@ before_install:
 - emacs --version
 #- curl -fsSkL --max-time 10 --retry 10 --retry-delay 10 https://raw.github.com/cask/cask/master/go | python
 #- export PATH="/home/travis/.cask/bin:$PATH"
+- python -m pip install --user certifi
 install:
 #- cask install
 - git clone https://github.com/JeffBellegarde/region-command-mode.git ~/src/region-command-mode
