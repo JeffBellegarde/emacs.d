@@ -828,30 +828,30 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;(load 'ensime-setup.e')
 
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
-;     '(lambda ()
-;             (local-set-key [home]        ; move to beginning of line, after prompt
-;                            'comint-bol)
-;        (local-set-key [up]          ; cycle backward through command history
-;                            '(lambda () (interactive)
-;                               (if (comint-after-pmark-p)
-;                                   (comint-previous-input 1)
-;                                 (previous-line 1))))
-;        (local-set-key [down]        ; cycle forward through command history
-;                            '(lambda () (interactive)
-;                               (if (comint-after-pmark-p)
-;                                   (comint-next-input 1)
-;                                 (forward-line 1))))
-;             ))
+;;     '(lambda ()
+;;              (local-set-key [home]        ; move to beginning of line, after prompt
+;;                            'comint-bol)
+;;        (local-set-key [up]          ; cycle backward through command history
+;;                            '(lambda () (interactive)
+;;                               (if (comint-after-pmark-p)
+;;                                   (comint-previous-input 1)
+;;                                 (previous-line 1))))
+;;        (local-set-key [down]        ; cycle forward through command history
+;;                            '(lambda () (interactive)
+;;                               (if (comint-after-pmark-p)
+;;                                   (comint-next-input 1)
+;;                                (forward-line 1))))
+;;             ))
 
 ;;Disable flymake in rspec
-;(defun flymake-rspec-init ()
-;  ())
+;;(defun flymake-rspec-init ()
+;;  ())
 
-;(push '(".+_spec\\.rb$" flymake-rspec-init) flymake-allowed-file-name-masks)
+;;(push '(".+_spec\\.rb$" flymake-rspec-init) flymake-allowed-file-name-masks)
 
 ;;;Guard notifications
-;(defun guard-notification (type title message image)
-;  (message type))
+;;(defun guard-notification (type title message image)
+;;  (message type))
 
 ;; ** Hydra
 (use-package hydra
