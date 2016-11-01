@@ -146,6 +146,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 (jmb-base-keys-mode 1)
 
+;; ** Link-modes
 (defmacro my-link-modes (leader-mode follower-mode)
   (let* ((funcname (intern (concat "my-link-modes/"
                                    (symbol-name leader-mode)
@@ -859,7 +860,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :bind ( ("C-M-o" . hydra-window/body)
           ("<f2>" . hydra-zoom/body)
           ("C-x SPC" . hydra-rectangle/body))
-  :chords (;; ("jk" . hydra-window/body)
+  :chords ( ;; ("jk" . hydra-window/body)
            ("jl" . hydra-navigate/body))
   :commands (defhydra)
   :config
