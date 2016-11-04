@@ -11,13 +11,14 @@
 (add-to-list 'load-path jmb-lisp-dir)
 
 
-;; * Init the package system
+;; * Init thej package system
 (require 'package)
 ;; Use https to access packages. (Your Editor is Malware)[https://glyph.twistedmatrix.com/2015/11/editor-malware.html]
 (setq package-archives nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (unless (getenv "CI")
+  (require 'tls)
   (setq tls-checktrust t)
   ;; Uses python's certi installed with 'python -m pip install --user certifi'
   (let ((trustfile
