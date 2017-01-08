@@ -11,7 +11,7 @@
 (add-to-list 'load-path jmb-lisp-dir)
 
 
-;; * Init thej package system
+;; * Init the package system
 (require 'package)
 ;; Use https to access packages. (Your Editor is Malware)[https://glyph.twistedmatrix.com/2015/11/editor-malware.html]
 (setq package-archives nil)
@@ -1719,6 +1719,11 @@ end tell"
 (use-package helm-bm
   :general
   (:keymaps 'jmb-base-keys-buffer-map "b"  'helm-bm))
+;; ** ace-link
+(use-package ace-link
+  :config
+  (ace-link-setup-default))
+
 ;; * Major modes
 
 ;; ** IBuffer
@@ -1787,6 +1792,8 @@ end tell"
 (add-hook 'ediff-quit-hook #'my-restore-pre-ediff-winconfig)
 
 
+;; ** Overseer
+(use-package overseer)
 ;; * Edit Server
 (use-package edit-server
   :ensure t
