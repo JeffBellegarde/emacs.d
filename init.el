@@ -1812,6 +1812,10 @@ end tell"
                                      (avy-goto-word-1 . (right-word left-word))))
   (schrute-mode))
 
+;; ** Highlight indent
+(use-package highlight-indent-guides
+  :config (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+
 ;; * Edit Server
 (use-package edit-server
   :ensure t
