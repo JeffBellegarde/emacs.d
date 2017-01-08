@@ -1803,6 +1803,15 @@ end tell"
   (setq atomic-chrome-extension-type-list '(ghost-text))
   (atomic-chrome-start-server))
 
+;; ** Shrute
+;; Reminders when using inefficent key sequences
+(use-package schrute
+  :diminish ""
+  :config
+  (setf schrute-shortcuts-commands '((avy-goto-line   . (next-line previous-line))
+                                     (avy-goto-word-1 . (right-word left-word))))
+  (schrute-mode))
+
 ;; * Edit Server
 (use-package edit-server
   :ensure t
