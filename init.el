@@ -1794,6 +1794,15 @@ end tell"
 
 ;; ** Overseer
 (use-package overseer)
+
+;; ** Atomic Chrome
+;; Allows Editing between chome and emacs
+(use-package atomic-chrome
+  :defer 10
+  :config
+  (setq atomic-chrome-extension-type-list '(ghost-text))
+  (atomic-chrome-start-server))
+
 ;; * Edit Server
 (use-package edit-server
   :ensure t
