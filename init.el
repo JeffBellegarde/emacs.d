@@ -84,7 +84,10 @@
 ;; * Theme
 ;; Use after-init-hook to avoid loading until after the config is loaded.
 
-(add-hook 'after-init-hook (lambda () (load-theme 'zenburn t)))
+(defun jmb-load-zenburn ()
+     (load-theme 'zenburn t))
+(add-hook 'after-init-hook #'jmb-load-zenburn)
+
 ;; * Configuration
 
 ;; ** Low level stuff
@@ -122,7 +125,7 @@
 ;; My plan is to setup a small number of base keymaps to hook other functioanlity to. Some commands
 ;; may still be attached to top level commands, but I want everything to be accessible using the base keymaps.
 (defvar jmb-base-keys-map (make-sparse-keymap))
-(defvar jmb-base-keys-work-at-point-map (make-sparse-keymap)
+(defvar jmb-base-keys-point-map (make-sparse-keymap)
   "Keymap for point based manipulation.
 If a command works on or around the point, it goes here.
 Often commands that belong are also mapped to a top-level key for speed.
@@ -130,14 +133,16 @@ Some commands that only use the thing at point as a default might be put in othe
 If the the point of the command is the point, is should probably be here.
 ")
 (defvar jmb-base-keys-point-jump-map (make-sparse-keymap))
-(define-key jmb-base-keys-work-at-point-map "j" jmb-base-keys-point-jump-map)
-(define-key jmb-base-keys-work-at-point-map ";" 'comment-line)
+(define-key jmb-base-keys-point-map "j" jmb-base-keys-point-jump-map)
+(define-key jmb-base-keys-point-map ";" 'comment-line)
 
 (defvar jmb-base-keys-buffer-map (make-sparse-keymap)
   "Keymap for buffer manipulation.
 This also handles frames, and windows. If it rearranges what is shown this is a good place for it.
 ")
 (define-key jmb-base-keys-buffer-map (kbd "<SPC>") #'other-window)
+
+(defvar jmb-base-keys-global-map (make-sparse-keymap))
 
 (define-minor-mode jmb-base-keys-mode
   "docs"
@@ -210,11 +215,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :ensure t
   :config (key-chord-mode 1))
 
-(bind-chord "jk" jmb-base-keys-work-at-point-map jmb-base-keys-map)
+(bind-chord "jk" jmb-base-keys-point-map jmb-base-keys-map)
 ;; (general-define-key :keymaps 'jmb-base-keys-map
-;;                     (general-chord "jk") jmb-base-keys-work-at-point-map
-;;                     (general-chord "kj") jmb-base-keys-work-at-point-map)
+;;                     (general-chord "jk") jmb-base-keys-point-map
+;;                     (general-chord "kj") jmb-base-keys-point-map)
 (bind-chord "fd" jmb-base-keys-buffer-map jmb-base-keys-map)
+(bind-chord "fk" jmb-base-keys-global-map jmb-base-keys-map)
 
 ;; ** Aggressive indent mode
 (use-package aggressive-indent)
@@ -248,14 +254,18 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** orgstruct
 (use-package orgstruct-mode
   :ensure nil
-  :commands (orgstruct-mode)
+  :commands (orgstruct++-mode)
   :defines (orgstruct-heading-prefix-regexp)
   :preface
   (defun my/list-mode-hook ()
     (setq orgstruct-heading-prefix-regexp  ";; "))
+  (defun my/fold-org-struct ()
+    (org-overview))
+  :config
+  (add-hook 'orgstruct-mode-hook #'my/fold-org-struct)
   :init
   (add-hook 'emacs-lisp-mode-hook #'my/list-mode-hook)
-  (add-hook 'emacs-lisp-mode-hook 'orgstruct-mode))
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-orgstruct++))
 
 ;; From http://doc.norang.ca/org-mode.html
 (defun bh/display-inline-images ()
@@ -326,7 +336,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
    ("C-x M-i" . helm-multi-swoop-all))
   :general
   (:keymaps 'jmb-base-keys-buffer-map "i"  'my-helm-swoop-not-at-point)
-  (:keymaps 'jmb-base-keys-work-at-point-map "i"  'helm-swoop))
+  (:keymaps 'jmb-base-keys-point-map "i"  'helm-swoop))
 
 ;; *** ag
 ;; Funcationality enabled but not bound to anything yet.
@@ -383,7 +393,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (define-key region-command-mode-keymap "," #'my-er/expand-region)
   (define-key region-command-mode-keymap "." #'my-er/contract-region)
   (add-hook 'region-command-active-mode-hook #'my-er/clear-history)
-  (define-key jmb-base-keys-work-at-point-map " " #'my-er/expand-region))
+  (define-key jmb-base-keys-point-map " " #'my-er/expand-region))
 ;; (require 'expand-region)
 ;; (global-set-key (kbd "C-@") 'er/expand-region)
 ;; (global-set-key (kbd "C-#") 'er/contract-region)
@@ -506,9 +516,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :commands (exec-path-from-shell-initialize)
   :ensure t)
 
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH"))
+;(when (memq window-system '(mac ns))
+;  (exec-path-from-shell-initialize)
+;  ;(exec-path-from-shell-copy-env "GOPATH")
+;  )
 
 ;; (add-hook 'ibuffer-hook
 ;;      (lambda ()
@@ -559,6 +570,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
            ("t" . proced)) ; top
 (global-set-key (kbd "s-l") 'launcher-map)
 
+;; * Major Modes
 ;; ** Paradox
 ;; package management
 ;; TODO: Should add to the key to the launcher map here.
@@ -566,9 +578,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :commands (paradox-list-packages))
 
 ;; ** Reddit
-(use-package nnredit
-  :ensure nil
-  :load-path "nnreddit")
+;; (use-package nnredit
+;;  :ensure nil
+;;  :load-path "nnreddit")
 
 ;; ** Cider
 ;; I don't use cider itself but use it's overlay functionality.
@@ -582,52 +594,61 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Inline overlays
 ;; From http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
-(use-package my/inline-overlay
-  :ensure nil
-  :init
-  (autoload 'cider--make-result-overlay "cider-overlays")
+; (use-package my/inline-overlay
+;   :ensure nil
+;   :init
+;   (autoload 'cider--make-result-overlay "cider-overlays")
 
-  (defun endless/eval-overlay (value point)
-    (cider--make-result-overlay (format "%S" value)
-      :where point
-      :duration 'command)
-    ;; Preserve the return value.
-    value)
+;   (defun endless/eval-overlay (value point)
+;     (cider--make-result-overlay (format "%S" value)
+;       :where point
+;       :duration 'command)
+;     ;; Preserve the return value.
+;     value)
 
-  (advice-add 'eval-region :around
-              (lambda (f beg end &rest r)
-                (endless/eval-overlay
-                 (apply f beg end r)
-                 end)))
+;   (advice-add 'eval-region :around
+;               (lambda (f beg end &rest r)
+;                 (endless/eval-overlay
+;                  (apply f beg end r)
+;                  end)))
 
-  (advice-add 'eval-last-sexp :filter-return
-              (lambda (r)
-                (endless/eval-overlay r (point))))
+;   (advice-add 'eval-last-sexp :filter-return
+;               (lambda (r)
+;                 (endless/eval-overlay r (point))))
 
-  (advice-add 'eval-defun :filter-return
-              (lambda (r)
-                (endless/eval-overlay
-                 r
-                 (save-excursion
-                   (end-of-defun)
-                   (point))))))
+;   (advice-add 'eval-defun :filter-return
+;               (lambda (r)
+;                 (endless/eval-overlay
+;                  r
+;                  (save-excursion
+;                    (end-of-defun)
+;                    (point))))))
 
 ;; ** Magit
-;; magit-gh-pulls is throwing errors.
-(use-package gh)
 
-(use-package magit-gh-pulls
-  :commands (turn-on-magit-gh-pulls))
+(use-package magit-popup)
+
+;; magit-gh-pulls is throwing errors.
+;; (use-package gh)
+
+;; (use-package magit-gh-pulls
+;;   :commands (turn-on-magit-gh-pulls))
 
 (use-package magit
   :ensure t
   :bind ("C-c i" . magit-status)
   :defines (magit-emacsclient-executable)
+  :custom
+  (magit-repository-directories `("~/src"))
   :config
   (if (eq system-type "darwin")
       (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
-  (setq magit-repository-directories `("~/src"))
   (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+
+(use-package magithub
+  :disabled
+  :after magit
+  :config (magithub-feature-autoinject t))
 
 ;; *** Gist
 (use-package gist
@@ -639,8 +660,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package git-messenger
   :ensure t
   :bind ("C-x v p" . git-messenger:popup-message)
-  :config
-  (setq git-messenger:show-detail t)
+  :custom
+  (git-messenger:show-detail t)
   ;;;;Where does magit-commit-mode come from?
   ;;(add-hook 'git-messenger:popup-buffer-hook 'magit-commit-mode)
   )
@@ -706,9 +727,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :if (display-graphic-p)
   :defer t
   :init (add-hook 'company-mode-hook 'company-quickhelp-mode)
-  :config
-  (setq company-quickhelp-delay 1
-        company-quickhelp-max-lines 10))
+  :custom
+  (company-quickhelp-delay 1)
+  (company-quickhelp-max-lines 10))
 
 ;; ** Desktop
 (use-package desktop
@@ -812,9 +833,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)
   (add-hook 'comint-output-filter-functions 'ansi-color-process-output)
   (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)
-  (local-set-key [home]        ; move to beginning of line, after prompt
+  (add-hook 'comint-output-filter-functions 'ansi-color-process-output)
+  (local-set-key [home]      ; move to beginning of line, after prompt
                  'comint-bol)
-  (local-set-key [up]          ; cycle backward through command history
+  (local-set-key [up]         ; cycle backward through command history
                  '(lambda () (interactive)
                     (if (comint-after-pmark-p)
                         (comint-previous-input 1)
@@ -825,6 +847,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
                         (comint-next-input 1)
                       (forward-line 1)))))
 
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-hook 'shell-mode-hook 'my-standard-comint-mode-hooks)
 
                                         ;(require 'rdebug)
@@ -839,6 +862,13 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;(load 'ensime-setup.e')
 
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
+
+(use-package better-shell
+  :ensure t
+  :general
+  (:keymaps 'jmb-base-keys-global-map "s" #'better-shell-remote-open)
+  (:keymaps 'jmb-base-keys-buffer-map "s" #'better-shell-shell))
+
 ;;     '(lambda ()
 ;;              (local-set-key [home]        ; move to beginning of line, after prompt
 ;;                            'comint-bol)
@@ -890,7 +920,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
           (windmove-find-other-window 'right))
         (shrink-window-horizontally arg)
       (enlarge-window-horizontally arg)))
-
+  
   (defun hydra-move-splitter-right (arg)
     "Move window splitter right."
     (interactive "p")
@@ -898,7 +928,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
           (windmove-find-other-window 'right))
         (enlarge-window-horizontally arg)
       (shrink-window-horizontally arg)))
-
+  
   (defun hydra-move-splitter-up (arg)
     "Move window splitter up."
     (interactive "p")
@@ -906,7 +936,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
           (windmove-find-other-window 'up))
         (enlarge-window arg)
       (shrink-window arg)))
-
+  
   (defun hydra-move-splitter-down (arg)
     "Move window splitter down."
     (interactive "p")
@@ -925,7 +955,6 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     ("J" hydra-move-splitter-down)
     ("K" hydra-move-splitter-up)
     ("L" hydra-move-splitter-right)
-
     ("3" (lambda ()
            (interactive)
            (split-window-right)
@@ -947,7 +976,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     ("q" nil "cancel"))
   (global-set-key (kbd "C-M-o") 'hydra-window/body)
   ;; (key-chord-define-global "jk" 'hydra-window/body)
-
+  
   ;; *** Navigation
   (defhydra hydra-navigate (:color amaranth)
     "navigate"
@@ -961,7 +990,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     ("n" narrow-to-region "narrow")
     ("q" nil "cancel"))
   ;;  (key-chord-define-global "jl" 'hydra-navigate/body)
-
+  
   ;; Rectangles
   (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
                                        :color pink
@@ -1002,7 +1031,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package avy
   :commands (avy-goto-word-0)
   :init
-  (define-key jmb-base-keys-buffer-map "j" #'avy-goto-word-0))
+  (define-key jmb-base-keys-buffer-map "j" #'avy-goto-word-0)
+  (define-key jmb-base-keys-buffer-map "k" #'avy-goto-line))
 
 ;; ** ace-window
 ;; Still not in the habit of using it.
@@ -1629,7 +1659,7 @@ end tell"
 (use-package ispell
   :commands (ispell-word)
   :init
-  (define-key jmb-base-keys-work-at-point-map (kbd "s") #'ispell-word))
+  (define-key jmb-base-keys-point-map (kbd "s") #'ispell-word))
 
 ;; ** Auto complete ISpell
 (use-package ac-ispell
@@ -1714,7 +1744,7 @@ end tell"
 (use-package bm
   :general
   (:keymaps 'jmb-base-keys-buffer-map "t"  'bm-previous "g" 'bm-next)
-  (:keymaps 'jmb-base-keys-work-at-point-map "b"  'bm-toggle))
+  (:keymaps 'jmb-base-keys-point-map "b"  'bm-toggle))
 
 (use-package helm-bm
   :general
@@ -1808,8 +1838,10 @@ end tell"
 (use-package schrute
   :diminish ""
   :config
-  (setf schrute-shortcuts-commands '((avy-goto-line   . (next-line previous-line))
-                                     (avy-goto-word-1 . (right-word left-word))))
+  (setf schrute-shortcuts-commands '(;; (avy-goto-line   . (next-line previous-line))
+                                     (avy-goto-word-1 . (right-word left-word))
+                                     (zap-to-char . (delete-char))
+                                     (zap-to-char . (lispy-delete))))
   (schrute-mode))
 
 ;; ** Highlight indent

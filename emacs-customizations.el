@@ -10,9 +10,10 @@
  '(ansi-color-for-comint-mode t)
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
- '(auth-source-debug nil)
  '(auth-source-save-behavior t)
- '(auth-sources (quote (macos-keychain-internet "~/.authinfo" "~/.netrc")))
+ '(auth-sources
+   (quote
+    ("~/.authinfo.gpg" macos-keychain-internet "~/.netrc")))
  '(auto-revert-verbose nil)
  '(autotest-use-ui t)
  '(beacon-blink-when-focused t)
@@ -46,10 +47,10 @@
  '(exec-path
    (quote
     ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin" "/usr/local/Cellar/go/1.2/libexec/bin" "/Users/Bellegarde/go_src/bin")))
- '(explicit-shell-file-name "/bin/bash")
  '(fci-rule-color "#383838")
  '(flycheck-completion-system (quote ido))
  '(flycheck-disabled-checkers (quote (emacs-lisp-checkdoc)))
+ '(flycheck-python-pycompile-executable "python3")
  '(flymake-gui-warnings-enabled nil)
  '(flymake-run-in-place nil)
  '(flymake-start-syntax-check-on-find-file nil)
@@ -210,7 +211,7 @@
     ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
  '(package-selected-packages
    (quote
-    (highlight-indent-guides schrute atomic-chrome overseer ace-link smart-mode-line circe alert popwin flycheck request ace-window avy gh magit helm-bm bm general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
+    (magithub better-shell highlight-indent-guides schrute atomic-chrome overseer ace-link smart-mode-line circe alert popwin flycheck request ace-window avy gh magit helm-bm bm general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
  '(paradox-automatically-star nil)
  '(paradox-execute-asynchronously t)
  '(paradox-github-token t)
@@ -218,6 +219,7 @@
  '(projectile-completion-system (quote helm))
  '(projectile-global-mode t)
  '(projectile-mode-line nil)
+ '(python-shell-interpreter "python3")
  '(rdebug-short-key-mode t)
  '(rdebug-track-do-tracking-p t)
  '(remember-annotation-functions (quote (org-remember-annotation)))
