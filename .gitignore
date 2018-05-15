@@ -25,4 +25,5 @@ org-clock-save.el
 /.cask/
 /semanticdb/
 /.mc-lists.el
-/magithub/cache
+/magithub/
+image-dired
