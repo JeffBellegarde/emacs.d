@@ -646,9 +646,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
 
 (use-package magithub
-  :disabled
+  :disabled t
   :after magit
   :config (magithub-feature-autoinject t))
+
+;(use-package ghub
+;  :after magit)
 
 ;; *** Gist
 (use-package gist
@@ -1837,8 +1840,9 @@ end tell"
 ;; Reminders when using inefficent key sequences
 (use-package schrute
   :diminish ""
+  :disabled t
   :config
-  (setf schrute-shortcuts-commands '(;; (avy-goto-line   . (next-line previous-line))
+  (setf schrute-shortcuts-commands '( ;; (avy-goto-line   . (next-line previous-line))
                                      (avy-goto-word-1 . (right-word left-word))
                                      (zap-to-char . (delete-char))
                                      (zap-to-char . (lispy-delete))))
