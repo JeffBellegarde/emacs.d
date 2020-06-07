@@ -55,7 +55,7 @@
    'ruby-end
    'use-package
    'yasnippet
-   'zenburn-theme
+   ;; 'zenburn-theme
    'general ;;provides general-chord
    ))
 
@@ -86,7 +86,10 @@
 
 (defun jmb-load-zenburn ()
      (load-theme 'zenburn t))
-(add-hook 'after-init-hook #'jmb-load-zenburn)
+
+(defun jmb-load-solarized-light ()
+  (load-theme 'solarized-light t))
+(add-hook 'after-init-hook #'jmb-load-solarized-light)
 
 ;; * Configuration
 
@@ -172,10 +175,16 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
        (add-hook ',leader-hook #',funcname))))
 
 ;; ** Disable show trailing whitespace.
-;; Utility function whow trailing-whitespace. Add to the appropriate mode hookds.
+;; Utility function whow trailing-whitespace. Add to the appropriate mode hooks.
 
 (defun jmb/turn-on-show-trailing-whitespace ()
   (setq show-trailing-whitespace t))
+
+;; Solarized theme does not seem to exist in melpa.
+(use-package solarized-theme
+  :ensure t
+  :custom
+  (solarized-high-contrast-mode-line nil))
 
 ;; ** Spinner
 (use-package spinner
