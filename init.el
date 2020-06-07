@@ -1698,6 +1698,7 @@ end tell"
   :diminish ""
   :config
   (which-key-mode)
+  (setq which-key-show-transient-maps t)
   (setq which-key-use-C-h-commands t
         which-key-idle-delay 0.5)
   (which-key-setup-side-window-right-bottom))
