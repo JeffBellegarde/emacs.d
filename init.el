@@ -104,6 +104,10 @@
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
 
+;; Recusive minibuffers.
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode t)
+
 ;; *** Rename current buffer file
 ;; From: http://whattheemacsd.com/file-defuns.el-01.html
 (defun rename-current-buffer-file ()
