@@ -10,66 +10,25 @@
 (defvar jmb-lisp-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path jmb-lisp-dir)
 
+;;  * Use straight for packages
+(setq straight-use-package-by-default t)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; * Init the package system
-(require 'package)
-;; Use https to access packages. (Your Editor is Malware)[https://glyph.twistedmatrix.com/2015/11/editor-malware.html]
-(setq package-archives nil)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-(unless (getenv "CI")
-  (require 'tls)
-  (setq tls-checktrust t)
-  ;; Uses python's certi installed with 'python -m pip install --user certifi'
-  (let ((trustfile
-         (replace-regexp-in-string
-          "\\\\" "/"
-          (replace-regexp-in-string
-           "\n" ""
-           (shell-command-to-string "python -m certifi")))))
-    (setq tls-program
-          (list
-           (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-                   (if (eq window-system 'w32) ".exe" "") trustfile)))
-    (setq gnutls-verify-error t)
-    (setq gnutls-trustfiles (list trustfile))))
-
-(package-initialize)
-
-;; ** Load a list of packages
-;; I want to remove things from this list and use use-package instead.
-;; Also inits use-package.
-(defvar jmb-required-packages
-  (list
-   'fish-mode
-   'flx-ido
-   ;;       'git-gutter-fringe
-   'gitconfig-mode
-   'gitignore-mode
-   'go-eldoc
-   'go-errcheck
-   ;;       'ibuffer-vc
-   'ido
-   'ido-vertical-mode
-   'rfringe
-   'ruby-end
-   'use-package
-   'yasnippet
-   ;; 'zenburn-theme
-   'general ;;provides general-chord
-   ))
-
-(dolist (package jmb-required-packages)
-  (when (not (package-installed-p package))
-    (package-refresh-contents)
-    (package-install package)))
-(eval-when-compile ;;Load use-package only when needed
-  (require 'use-package))
-(setq use-package-verbose t)
-(setq use-package-minimum-reported-time 0.01)
-(setq use-package-always-ensure t)
-(require 'diminish) ;;use-package dependencies
-(require 'bind-key)
+(straight-use-package 'diminish)
+(straight-use-package 'bind-key)
+(straight-use-package 'use-package)
+(straight-use-package 'general)
 (require 'general)
 
 ;; ** Customization
@@ -197,7 +156,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Prog mode
 ;; It's pretty rare to have a programming mode that wants whitespace at the end of a line.
 (use-package prog-mode
-  :ensure nil
+  :straight nil
   :config
   (add-hook 'prog-mode-hook #'jmb/turn-on-show-trailing-whitespace)
   ;; (defun my/linum-mode ()
@@ -225,7 +184,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Chords for use-package
 ;; Enables key chords
 (use-package use-package-chords
-  :ensure t
+  :straight t
   :config (key-chord-mode 1))
 
 (bind-chord "jk" jmb-base-keys-point-map jmb-base-keys-map)
@@ -254,7 +213,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :config
   (org-clock-persistence-insinuate)
   (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8018/plantuml.8018.jar")
-  :ensure t)
+  :straight t)
 
 ;; *** ob-restclient
 ;; Alows restclient in org-mode.
@@ -266,7 +225,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** orgstruct
 (use-package orgstruct-mode
-  :ensure nil
+  :straight nil
+  :disabled t
   :commands (orgstruct++-mode)
   :defines (orgstruct-heading-prefix-regexp)
   :preface
@@ -289,12 +249,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Deft
 (use-package deft
-  :ensure t
+  :straight t
   :bind ("C-c d" . deft))
 
 ;; ** Helm
 (use-package helm
-  :ensure t
+  :straight t
   :defines (helm-M-x-fuzzy-match helm-grep-default-command helm-grep-default-recurse-command)
   :bind (
          ("C-c h" . helm-command-prefix)
@@ -323,7 +283,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
   ;; *** Descbinds
   (use-package helm-descbinds
-    :ensure t
+    :straight t
     :defer t
     :bind ("C-h b" . helm-descbinds)
     :config
@@ -336,7 +296,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; *** swoop
 (use-package helm-swoop
-  :ensure t
+  :straight t
   :init
   (defun my-helm-swoop-not-at-point ()
     (interactive)
@@ -354,21 +314,21 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; *** ag
 ;; Funcationality enabled but not bound to anything yet.
 (use-package helm-ag
-  :ensure t
+  :straight t
   :commands (helm-ag helm-do-agg))
 
 ;; ** sr-speedbar
 ;; I also customize speedbar itself here.
 (use-package sr-speedbar
   :commands (sr-speedbar-toggle)
-  :ensure t
+  :straight t
   :config
   (setq speedbar-show-unknown-files t))
 
 ;; ** dired
 (use-package dired
   :commands (dired)
-  :ensure nil
+  :straight nil
   :config
   (defun my/dired-mode-hook ()
     (hl-line-mode t)
@@ -376,20 +336,20 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   (add-hook 'dired-mode-hook #'my/dired-mode-hook)
 
   (use-package dired+
-    :ensure t
+    :straight t
     :config
     (add-hook 'dired-mode-hook #'my/dired-mode-hook)))
 
 ;; ** Select and expand
 (use-package region-command-mode
-  :ensure nil
+  :straight nil
   :load-path "~/src/region-command-mode"
   :config
   (region-command-mode t))
 
 ;; ** expand-region
 (use-package expand-region
-  :ensure t
+  :straight t
   :commands (er/expand-region er/contract-region er--expand-region-1 er/clear-history)
   :init
   (defun my-er/clear-history ()
@@ -418,14 +378,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** ensime
 (use-package ensime
   :commands (ensime-scala-mode-hook)
-  :ensure t
+  :straight t
   :init (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
 
 ;; ** gomode
 (setenv "GOPATH" "/Users/Bellegarde/go_src")
 (setq exec-path (append exec-path '("/Users/Bellegarde/go_src/bin")))
 (use-package go-mode
-  :ensure t
+  :straight t
   :mode "\\.go\\'"
   :config
   (progn
@@ -457,7 +417,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; Conflicts with company.
 ;; Best to find a way to shift to the correct one for each mode.
 (use-package auto-complete
-  :ensure t
+  :straight t
   :disabled t
   :config
   (global-auto-complete-mode t))
@@ -466,7 +426,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;;What can I use to defer this?
 (use-package go-autocomplete
-  :ensure t)
+  :straight t)
 
 ;; ** git-gutter
 ;; git-gutter-fringe avoids conflicts with linum mode.
@@ -489,7 +449,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** guide-key
 ;; currently using which-key instead.
 (use-package guide-key
-  :ensure t
+  :straight t
   :disabled t
   :defer 2
   :config
@@ -499,7 +459,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Idle-highlight
 (use-package idle-highlight-mode
-  :ensure t
+  :straight t
   :commands (idle-highlight-mode))
 
 ;; ** Pry
@@ -514,7 +474,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** key-chord -- Automaticall brought in by use-package-chords
 (use-package key-chord
-  :ensure t
+  :straight t
   :disabled t
   :config (key-chord-mode 1))
 ;;(require 'key-chord)
@@ -523,29 +483,15 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;(key-chord-define-global "q]"     "\C-u5\C-x}")
 
 ;; (require 'ibuffer-vc)
-(require 'ruby-end)
+(use-package ruby-end)
 
 (use-package exec-path-from-shell
   :commands (exec-path-from-shell-initialize)
-  :ensure t)
+  :straight t)
 
-;(when (memq window-system '(mac ns))
-;  (exec-path-from-shell-initialize)
-;  ;(exec-path-from-shell-copy-env "GOPATH")
-;  )
-
-;; (add-hook 'ibuffer-hook
-;;      (lambda ()
-;;        (ibuffer-vc-set-filter-groups-by-vc-root)
-;;        (ibuffer-do-sort-by-alphabetic)))
-;; ido
-;;(require 'ido)
-;;(require 'ido-vertical-mode)
-;;(ido-vertical-mode 1)
-;;(flx-ido-mode 1)
 
 (use-package hungry-delete
-  :ensure t
+  :straight t
   :config
   (global-hungry-delete-mode))
 
@@ -587,12 +533,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Paradox
 ;; package management
 ;; TODO: Should add to the key to the launcher map here.
+;; Using straight now so no need for paradox
 (use-package paradox
+  :disabled t
   :commands (paradox-list-packages))
 
 ;; ** Reddit
 ;; (use-package nnredit
-;;  :ensure nil
+;;  :straight nil
 ;;  :load-path "nnreddit")
 
 ;; ** Cider
@@ -608,7 +556,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Inline overlays
 ;; From http://endlessparentheses.com/eval-result-overlays-in-emacs-lisp.html
 ; (use-package my/inline-overlay
-;   :ensure nil
+;   :straight nil
 ;   :init
 ;   (autoload 'cider--make-result-overlay "cider-overlays")
 
@@ -648,7 +596,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;;   :commands (turn-on-magit-gh-pulls))
 
 (use-package magit
-  :ensure t
+  :straight t
   :bind ("C-c i" . magit-status)
   :defines (magit-emacsclient-executable)
   :custom
@@ -656,7 +604,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :config
   (if (eq system-type "darwin")
       (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
-  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+  ;; (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+  )
 
 (use-package magithub
   :disabled t
@@ -674,7 +623,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; *** Git messenger
 (use-package git-messenger
-  :ensure t
+  :straight t
   :bind ("C-x v p" . git-messenger:popup-message)
   :custom
   (git-messenger:show-detail t)
@@ -696,7 +645,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; does not appear to be available in melpa.
 ;; Formally abandoned. Need to fina a replacement.
 (use-package ack-and-a-half
-  :ensure nil
+  :straight nil
   :commands (ack-and-a-half ack-and-a-half-same ack-and-a-half-find-file ack-and-a-half-find-file-same)
   :init
   (progn
@@ -789,7 +738,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Crystal
 (use-package crystal-mode
-  :ensure nil
+  :straight nil
   :mode "\\.cr$"
   :interpreter "crystal"
   :load-path "emacs-crystal-mode")
@@ -834,7 +783,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** visual-regexp
 (use-package visual-regexp
-  :ensure t
+  :straight t
   :bind (("C-c C-q" . vr/replace)
          ("C-c q" . vr/query-replace)
          ("C-c m" . vr/mc-mark)))
@@ -880,7 +829,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (add-hook 'gud-mode-hook 'my-standard-comint-mode-hooks)
 
 (use-package better-shell
-  :ensure t
+  :straight t
   :general
   (:keymaps 'jmb-base-keys-global-map "s" #'better-shell-remote-open)
   (:keymaps 'jmb-base-keys-buffer-map "s" #'better-shell-shell))
@@ -912,7 +861,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Hydra
 (use-package hydra
-  :ensure t
+  :straight t
   :bind ( ("C-M-o" . hydra-window/body)
           ("<f2>" . hydra-zoom/body)
           ("C-x SPC" . hydra-rectangle/body))
@@ -1053,7 +1002,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** ace-window
 ;; Still not in the habit of using it.
 (use-package ace-window
-  :ensure t
+  :straight t
   :commands (ace-window)
   :init
   (define-key jmb-base-keys-buffer-map " " #'ace-window)
@@ -1095,7 +1044,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** define-word
 (use-package define-word
   :commands (define-word)
-  :ensure t)
+  :straight t)
 
 (use-package request
   :commands (request))
@@ -1109,11 +1058,11 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
     "Update EWW buffer title with new page load."
     (message eww-current-title)
     (rename-buffer (format "*eww : %s *" eww-current-title) t))
-  :ensure t)
+  :straight t)
 
 ;; ** flycheck
 (use-package flycheck
-  :ensure t
+  :straight t
   :config
   (global-flycheck-mode 1)
   (setq flycheck-emacs-lisp-load-path  'inherit))
@@ -1121,7 +1070,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; don't know wht this is disabled? Maybe conflict with org?
 (use-package flycheck-tip
-  :ensure t
+  :straight t
   :disabled t
   :bind ("C-c C-n" . flycheck-tip-cycle)
   :config (setq flycheck-tip-avoid-show-func nil))
@@ -1136,12 +1085,12 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :mode "\\.swift\\'"
   :config
   (add-to-list flycheck-checkers 'swift)
-  :ensure t)
+  :straight t)
 
 ;; ** Wanderlust -- email
 ;; Stores read state locally isntead of in gmail. Not Used.
 (use-package wanderlust
-  :ensure t
+  :straight t
   :disabled t
   :init
   (setq elmo-maildir-folder-path "~/Maildir"
@@ -1196,7 +1145,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package docker)
 
 (use-package dockerfile-mode
-  :ensure t)
+  :straight t)
 
 (use-package docker-tramp)
 
@@ -1223,14 +1172,14 @@ end tell"
 (global-set-key (kbd "<f9>") 'compile)
 
 (use-package impatient-mode
-  :ensure t
+  :straight t
   :commands (impatient-mode))
 
 (use-package popwin)
 
 (use-package command-log-mode
   :commands command-log-mode
-  :ensure t)
+  :straight t)
 
 ;; ** Lisp stuff
 ;; *** paredit
@@ -1238,7 +1187,7 @@ end tell"
 (use-package paredit
   :disabled t
   :commands (enable-paredit-mode)
-  :ensure t
+  :straight t
   :init
   (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -1257,20 +1206,20 @@ end tell"
   (defun jmb-lispy/activate-lispy-mode ()
     (lispy-mode 1))
   (add-hook 'emacs-lisp-mode-hook #'jmb-lispy/activate-lispy-mode)
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  ;;Lispy rebinds M-i so put it back.
-  (defun jmb-lispy/rebind-to-helm-swoop ()
-    (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))
+  ;; (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  ;;Lispy rebinds M-i so put it back. I'm now using jk-i instead
+  ;; (defun jmb-lispy/rebind-to-helm-swoop ()
+  ;;   (bind-key "M-i" 'helm-swoop lispy-mode-map-lispy))
+  ;; (add-hook 'lispy-mode-hook #'jmb-lispy/rebind-to-helm-swoop)
   (defun jmb-lispy/elevate-command-region-keys ()
     (jmb--elevate-keymap 'region-command-active-mode))
-  (add-hook 'lispy-mode-hook #'jmb-lispy/rebind-to-helm-swoop)
   (add-hook 'lispy-mode-hook #'jmb-lispy/elevate-command-region-keys))
 
 (eldoc-mode)
 
 ;; ** StackExchange
 (use-package sx
-  :ensure t
+  :straight t
   :commands (sx-tab-all-questions))
 
 ;; ** elm
@@ -1282,7 +1231,7 @@ end tell"
 ;; ** Mu4e -- email
 ;; I don't like the view system.
 (use-package mu4e
-  :ensure nil
+  :straight nil
   :disabled t
   :commands (mu4e)
   :config
@@ -1327,7 +1276,7 @@ end tell"
 
 
 (use-package smtpmail
-  :ensure nil
+  :straight nil
   :config
   ;; (setq message-send-mail-function 'smtpmail-send-it
   ;;       starttls-use-gnutls t
@@ -1382,7 +1331,7 @@ end tell"
 
 (use-package eclim
   :disabled t
-  :ensure emacs-eclim
+  :straight emacs-eclim
   :config
   (require 'eclimd)
   (setq eclim-executable "/opt/eclipse/eclim"
@@ -1417,7 +1366,7 @@ end tell"
 ;; SHould probably enable this only where imenu is used.
 (use-package popup-imenu
   :bind ("C-<tab>" . popup-imenu)
-  :ensure t
+  :straight t
   :config
   (setq popup-imenu-position 'point)
   (define-key popup-isearch-keymap (kbd "C-<tab>") 'popup-isearch-cancel))
@@ -1425,7 +1374,7 @@ end tell"
 ;; ** super-save
 ;; Auto save buffers
 (use-package super-save
-  :ensure t
+  :straight t
   :functions 'super-save-initialize
   :config (super-save-initialize))
 
@@ -1665,7 +1614,7 @@ end tell"
 
 (use-package smart-mode-line
   :defer 2
-  :ensure t
+  :straight t
   :config
   (sml/setup))
 
@@ -1679,7 +1628,7 @@ end tell"
 
 ;; ** Auto complete ISpell
 (use-package ac-ispell
-  :ensure t
+  :straight t
   :commands (ac-ispell-ac-setup)
   :init (add-hook 'text-mode-hook 'ac-ispell-ac-setup)
   :config (ac-ispell-setup))
@@ -1689,7 +1638,7 @@ end tell"
 
 ;; Api docs for os x. Open a seperate app. Not sure if I like it yet.
 (use-package dash-at-point
-  :ensure t
+  :straight t
   :bind (("s-D"     . dash-at-point)
          ("C-c e"   . dash-at-point-with-docset)))
 
@@ -1697,7 +1646,7 @@ end tell"
 
 ;; An improved version of guide-key
 (use-package which-key
-  :ensure t
+  :straight t
   :defer 5
   :diminish ""
   :config
@@ -1712,7 +1661,7 @@ end tell"
 (use-package browse-kill-ring
   :disabled t
   :bind ("M-y" . browse-kill-ring)
-  :ensure t)
+  :straight t)
 
 
 
@@ -1778,7 +1727,7 @@ end tell"
 
 ;;(require 'vc)
 (use-package ibuffer-vc
-  :ensure t
+  :straight t
   :commands (ibuffer-vc-set-filter-groups-by-vc-root))
 
 (use-package ibuffer
@@ -1814,7 +1763,7 @@ end tell"
 (use-package elfeed
   :commands (elfeed)
   :disabled t
-  :ensure t
+  :straight t
   :config
   (progn
     ;;    (add-hood 'elfeed-search-mode-hook 'jmb-elfeed-start-auto-update)
@@ -1822,7 +1771,7 @@ end tell"
 (use-package elfeed-org
   :disabled t
   :commands (elfeed-org)
-  :ensure t)
+  :straight t)
 
 ;; ** Ediff
 ;; Restore window layout after an ediff session.
@@ -1868,7 +1817,7 @@ end tell"
 
 ;; * Edit Server
 (use-package edit-server
-  :ensure t
+  :straight t
   :defer 5
   :config (edit-server-start))
 
@@ -1884,6 +1833,30 @@ end tell"
     (insert reversed)))
 ;; ** Allow the narrow-to-region command.
 (put 'narrow-to-region 'disabled nil)
+
+;; ** Languages
+
+;; *** Python
+(use-package pyvenv
+  :disabled t
+  :straight t)
+
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
+
+(use-package company-jedi
+  :hook (python-mode . jedi:setup)
+  :commands jedi:install-server
+  :config
+  (setq jedi:complete-on-dot t)
+  (setq jedi:environment-root "/Users/Bellegarde/Library/Python/3.6"))
+
+;; (use-package lsp-python
+;;   :straight t
+;;   :init
+;;   (add-hook 'python-mode-hook #'lsp-python-enable))
 
 ;; * Finish loading
 (setq debug-on-error nil)
