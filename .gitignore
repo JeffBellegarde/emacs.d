@@ -27,3 +27,4 @@ org-clock-save.el
 /.mc-lists.el
 /magithub/
 image-dired
+/transient/history.el

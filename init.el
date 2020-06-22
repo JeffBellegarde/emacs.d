@@ -89,7 +89,7 @@
 
 (defun jmb-load-solarized-light ()
   (load-theme 'solarized-light t))
-(add-hook 'after-init-hook #'jmb-load-solarized-light)
+(add-hook 'after-init-hook 'jmb-load-solarized-light)
 
 ;; * Configuration
 

@@ -8,8 +8,6 @@
  '(ack-and-a-half-executable "ack")
  '(ack-and-a-half-prompt-for-directory t)
  '(ansi-color-for-comint-mode t)
- '(ansi-color-names-vector
-   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(auth-source-save-behavior t)
  '(auth-sources
    (quote
@@ -30,6 +28,8 @@
  '(comint-prompt-read-only t)
  '(comint-scroll-to-bottom-on-input t)
  '(command-log-mode-is-global t)
+ '(company-quickhelp-delay 1)
+ '(company-quickhelp-max-lines 10)
  '(cua-enable-modeline-indications t)
  '(custom-enabled-themes nil)
  '(custom-safe-themes t)
@@ -47,12 +47,13 @@
  '(exec-path
    (quote
     ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/Applications/Emacs.app/Contents/MacOS/libexec" "/Applications/Emacs.app/Contents/MacOS/bin" "/usr/local/bin" "/usr/local/Cellar/go/1.2/libexec/bin" "/Users/Bellegarde/go_src/bin")))
- '(fci-rule-color "#383838")
  '(flycheck-completion-system (quote ido))
  '(flycheck-disabled-checkers (quote (emacs-lisp-checkdoc)))
+ '(flycheck-python-flake8-executable "python3")
  '(flycheck-python-pycompile-executable "python3")
  '(flymake-gui-warnings-enabled nil)
  '(flymake-run-in-place nil)
+ '(flymake-start-on-flymake-mode nil)
  '(flymake-start-syntax-check-on-find-file nil)
  '(flymake-start-syntax-check-on-newline nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
@@ -60,6 +61,7 @@
    (quote
     (("github" :url "https://api.github.com" :remote-regexp "^\\(?:git@github\\.com:\\|\\(?:git\\|https?\\|ssh\\)://.*@?github\\.com/\\)\\(.*\\)/\\(.*\\)\\(?:\\.git\\)?"))))
  '(git-gutter:verbosity 2)
+ '(git-messenger:show-detail t t)
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-git-gutter-mode t)
@@ -154,6 +156,7 @@
  '(magit-repo-dirs
    (quote
     ("/Users/Bellegarde/src" "/Users/Bellegarde/.emacs.d")))
+ '(magit-repository-directories (quote ("~/src")) t)
  '(magit-revert-item-confirm nil)
  '(magit-save-some-buffers (quote dontask))
  '(magit-set-upstream-on-push (quote dontask))
@@ -161,9 +164,6 @@
  '(magit-stage-all-confirm nil)
  '(make-backup-files nil)
  '(minimap-window-location (quote right))
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(ns-tool-bar-display-mode (quote both) t)
  '(ns-tool-bar-size-mode nil t)
  '(org-agenda-dim-blocked-tasks t)
@@ -174,7 +174,6 @@
  '(org-babel-load-languages
    (quote
     ((emacs-lisp . t)
-     (sh . t)
      (dot . t)
      (plantuml . t)
      (restclient . t))))
@@ -211,15 +210,19 @@
     ((ruby-mode . "^[[:space:]]*it[[:space:]].*do\\\\|{$\\\\|^[[:space:]]*describe[[:space:]].*do$\\\\|^[[:space:]]*context.*do$\\\\|^[[:space:]]*module\\\\|^[[:space:]]*class\\\\|^[[:space:]]*def"))))
  '(package-selected-packages
    (quote
-    (magithub better-shell highlight-indent-guides schrute atomic-chrome overseer ace-link smart-mode-line circe alert popwin flycheck request ace-window avy gh magit helm-bm bm general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
+    (solarized-theme color-theme-solarized company-jedi racer rust-mode cargo company-lsp pipenv pyvenv pyenv lsp-python lsp-ui lsp-mode ghub magithub better-shell highlight-indent-guides schrute atomic-chrome overseer ace-link smart-mode-line circe alert popwin flycheck request ace-window avy gh magit helm-bm bm general zenburn-theme yari which-key wanderlust visual-regexp use-package-chords undo-tree typit travis tle sx swift-mode super-save sr-speedbar smart-mode-line-powerline-theme slack sicp scala-mode2 ruby-end rfringe projectile popup-imenu paredit paradox ob-restclient multiple-cursors mode-compile minimap magit-gh-pulls loccur lispy keyfreq keychain-environment ioccur impatient-mode ido-vertical-mode idle-highlight-mode ibuffer-vc hungry-delete helm-swoop helm-describe-modes helm-descbinds helm-company helm-ag guide-key god-mode go-errcheck go-eldoc go-autocomplete gitignore-mode github-notifier gitconfig-mode git-messenger gist fuzzy fringe-helper fold-this flycheck-tip flycheck-cask fish-mode facemenu+ eyedropper expand-region exec-path-from-shell esup ensime engine-mode emacs-eclim elm-mode elfeed-org el-mock edit-server dockerfile-mode docker dired-details+ dired+ diff-hl deft define-word dash-at-point dark-souls company-quickhelp command-log-mode cider browse-kill-ring beacon apples-mode aggressive-indent ack-and-a-half ace-jump-mode ac-ispell 2048-game)))
  '(paradox-automatically-star nil)
  '(paradox-execute-asynchronously t)
  '(paradox-github-token t)
+ '(pipenv-executable "/Users/Bellegarde/Library/Python/3.6/bin/pipenv")
  '(pomodoro-work-start-message "Back to work!")
  '(projectile-completion-system (quote helm))
  '(projectile-global-mode t)
  '(projectile-mode-line nil)
  '(python-shell-interpreter "python3")
+ '(racer-cmd "/Users/Bellegarde/.cargo/bin/racer" t)
+ '(racer-rust-src-path
+   "/Users/Bellegarde/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src" t)
  '(rdebug-short-key-mode t)
  '(rdebug-track-do-tracking-p t)
  '(remember-annotation-functions (quote (org-remember-annotation)))
@@ -267,7 +270,7 @@
  '(sr-speedbar-right-side nil)
  '(tab-width 2)
  '(tool-bar-mode nil)
- '(tramp-auto-save-directory "~/.tramp_tmp_dir")
+ '(tramp-auto-save-directory "~/.tramp_tmp_dir" nil (tramp))
  '(undo-tree-visualizer-diff nil)
  '(undo-tree-visualizer-relative-timestamps t)
  '(undo-tree-visualizer-timestamps nil)
@@ -275,30 +278,8 @@
  '(uniquify-ignore-buffers-re "^\\\\*")
  '(uniquify-separator "/")
  '(use-package-verbose t)
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t))
- '(tool-bar-mode nil)
+'(tool-bar-mode nil)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -306,6 +287,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Monaco"))))
  '(aw-mode-line-face ((t (:foreground "red"))))
+ '(bm-persistent-face ((t (:underline "#5F7F5F"))))
  '(cider-result-overlay-face ((t (:foreground "dark gray"))))
  '(diff-hl-change ((t (:background "#6CA0A3" :foreground "#6CA0A3"))))
  '(diff-hl-delete ((t (:background "#DCA3A3" :foreground "#DCA3A3"))))
