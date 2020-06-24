@@ -218,7 +218,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; *** ob-restclient
 ;; Alows restclient in org-mode.
 ;; This is intialized by putting 'restclient' in the variable `org-babel-load-languages' configured through customize.
-(use-package ob-restclient)
+;; Long init time. I don't really use org much So I haven't bothered fixing it.
+(use-package ob-restclient
+  :defer t)
 
 ;; *** Org protocol
 (require 'org-protocol)
@@ -1142,7 +1144,11 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 
 ;; ** docker
-(use-package docker)
+;; docker command is not found but the docker exectuable is installed.
+;; Assuming it's a path problem probably complicated by os x. Solve
+;; after moving to linux or when neeeded.
+(use-package docker
+  :commands docker)
 
 (use-package dockerfile-mode
   :straight t)
@@ -1275,7 +1281,10 @@ end tell"
   (setq mu4e-html2text-command 'mu4e-shr2text))
 
 
+;; * SMTP
+;; I'm not using emacs for mail so disabled.
 (use-package smtpmail
+  :disabled t
   :straight nil
   :config
   ;; (setq message-send-mail-function 'smtpmail-send-it
@@ -1789,7 +1798,10 @@ end tell"
 
 
 ;; ** Overseer
-(use-package overseer)
+;; Ruby test runner tool.
+;; Long init time. Disabled until I do ruby again or figure out where I want to bind it.
+(use-package overseer
+  :disabled t)
 
 ;; ** Atomic Chrome
 ;; Allows Editing between chome and emacs
