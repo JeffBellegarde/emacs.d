@@ -377,6 +377,10 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; (global-set-key (kbd "C-(") 'shrink-window)
 ;; (global-set-key (kbd "C-)") 'enlarge-window)
 
+;; **Yaml
+(use-package yaml-mode
+  :mode "\\.yml\\'")
+
 ;; ** ensime
 (use-package ensime
   :commands (ensime-scala-mode-hook)
