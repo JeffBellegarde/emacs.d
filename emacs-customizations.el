@@ -59,7 +59,6 @@
    '(("github" :url "https://api.github.com" :remote-regexp "^\\(?:git@github\\.com:\\|\\(?:git\\|https?\\|ssh\\)://.*@?github\\.com/\\)\\(.*\\)/\\(.*\\)\\(?:\\.git\\)?")))
  '(git-gutter:verbosity 2)
  '(git-messenger:show-detail t t)
- '(github-notifier-token "0259939cc0767bc32a6127c0b16f41721ad9aabc")
  '(global-auto-revert-mode t)
  '(global-auto-revert-non-file-buffers t)
  '(global-git-gutter-mode t)
