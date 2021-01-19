@@ -29,3 +29,7 @@ org-clock-save.el
 image-dired
 /transient/history.el
 /straight/
+/.python-environments/
+/eln-cache/
+/recentf
+/session.*
