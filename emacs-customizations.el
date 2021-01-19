@@ -144,7 +144,6 @@
  '(magit-process-popup-time 5)
  '(magit-remote-ref-format 'remote-slash-branch)
  '(magit-repo-dirs '("/Users/Bellegarde/src" "/Users/Bellegarde/.emacs.d"))
- '(magit-repository-directories '("~/src") t)
  '(magit-revert-item-confirm nil)
  '(magit-save-some-buffers 'dontask)
  '(magit-set-upstream-on-push 'dontask)

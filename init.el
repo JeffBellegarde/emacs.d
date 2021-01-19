@@ -607,7 +607,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
   :bind ("C-c i" . magit-status)
   :defines (magit-emacsclient-executable)
   :custom
-  (magit-repository-directories `("~/src"))
+  (magit-repository-directories `(("~/src" . 1)))
   :config
   (if (eq system-type "darwin")
       (setq magit-emacsclient-executable "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient"))
