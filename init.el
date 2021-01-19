@@ -706,11 +706,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Desktop
 (use-package desktop
   :functions 'desktop-owner
+  :custom
+  ;; Always save the desktop. No interaction.
+  (desktop-save t)
   :config
   (desktop-save-mode 1)
   (defun jmb-desktop-save ()
     (interactive)
-    ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
+    ;; Call desktop-save directly instead of desktop-save-in-desktop-dir to avoid printing a message
     (if (eq (desktop-owner) (emacs-pid))
         (desktop-save desktop-dirname)))
   (add-hook 'auto-save-hook 'jmb-desktop-save))
@@ -752,10 +755,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;;;(add-hook 'ruby-mode-hook 'minimap-create)
 
-;;(require `fish-mode)
-
-;;(setq exec-path (append exec-path (list (expand-file-name "/usr/local/Cellar/go/1.2/libexec/bin"))))
-;;(setq exec-path (append exec-path (list (expand-file-name "~/go_src/bin"))))
+;; ** Fish-mode
+(use-package fish-mode
+  :mode "\\.fish$")
 
 ;; ** Environment variables from fish
 (defun jmb/empty-string (str)
