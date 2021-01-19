@@ -1541,7 +1541,8 @@ end tell"
 (tool-bar-mode -1)
 (line-number-mode 1)
 (add-hook 'after-init-hook 'server-start)
-(add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
+;; This only works on os X
+;; (add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
 
 ;;mode-compile
 (autoload 'mode-compile "mode-compile"
