@@ -295,7 +295,9 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 (use-package helm-popup
   :after helm
+  :disabled t
   :straight nil
+  :ensure nil
   :init
   ;; my-helm-display-child-frame from https://gist.github.com/fuxialexander/5ad46671689d96a29f9865c1c0b42d10
   (defun my-helm-display-child-frame (buffer &optional resume)
@@ -327,6 +329,8 @@ configure frame size."
                  (no-special-glyphs . t)
                  (inhibit-double-buffering . t)
                  (tool-bar-lines . 0)
+                 (border-width . 5)
+                 (border-color . "blue")
                  (left . ,(- (car pos)
                              (* (frame-char-width)
                                 (if (< (- (point) (point-at-bol)) prmt-size)
@@ -347,7 +351,7 @@ configure frame size."
                            ;; Below point
                            (+ (cdr pos) line-height)))
                  (title . "Helm")
-                 (vertical-scroll-bars . t)
+                 (vertical-scroll-bars . right)
                  (menu-bar-lines . 0)
                  (fullscreen . nil)
                  (visible . ,(null helm-display-buffer-reuse-frame))
@@ -362,9 +366,9 @@ configure frame size."
                       (not (> (cdr pos) half-screen-size))))
         (helm-display-buffer-popup-frame buffer default-frame-alist))
       (helm-log-run-hook 'helm-window-configuration-hook)))
-   (setq helm-display-function 'my-helm-display-child-frame
-         helm-display-buffer-reuse-frame nil
-         helm-display-buffer-width 80))
+  (setq helm-display-function 'my-helm-display-child-frame
+        helm-display-buffer-reuse-frame t
+        helm-display-buffer-width 80))
 
 
 ;; *** Describe modes
