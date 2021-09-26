@@ -226,6 +226,13 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; *** Org protocol
 (require 'org-protocol)
 
+(use-package buttercup)
+
+;; Coverage for elisp
+;; Not used. I haven't gotten it to see the coverage results generated.
+(use-package coverage
+  :disabled t)
+
 ;; ** orgstruct
 (use-package orgstruct-mode
   :straight nil
