@@ -1399,7 +1399,10 @@ end tell"
   (setq message-kill-buffer-on-exit t))
 
 ;; ** github-notifier
+;; Fails a lot and puts the access token in cutomization.
+;; Don't really need it anyway.
 (use-package github-notifier
+  :disabled t
   :defer 10
   :config
   (setq github-notifier-mode-line
