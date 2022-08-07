@@ -748,6 +748,8 @@ configure frame size."
 
 ;; ** Undo Tree
 (use-package undo-tree
+  :custom
+  (undo-tree-history-directory-alist '("." . "~/.undo_tree"))
   :config
   ;; Keep region when undoing in region
   ;; From: http://whattheemacsd.com/my-misc.el-02.html
