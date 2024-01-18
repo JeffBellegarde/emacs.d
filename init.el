@@ -56,10 +56,6 @@
 ;; ** Low level stuff
 (setq tab-always-indent 'complete)
 (prefer-coding-system 'utf-8)
-;; Write backup files to own directory
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
 
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
@@ -749,7 +745,7 @@ configure frame size."
 ;; ** Undo Tree
 (use-package undo-tree
   :custom
-  (undo-tree-history-directory-alist '("." . "~/.undo_tree"))
+  (undo-tree-history-directory-alist '(("." . "~/.undo_tree")))
   :config
   ;; Keep region when undoing in region
   ;; From: http://whattheemacsd.com/my-misc.el-02.html
@@ -1623,7 +1619,6 @@ end tell"
 (setq ring-bell-function (lambda () (message "*beep*")))
 (transient-mark-mode 1)
 
-(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 ;; ** Startup test
