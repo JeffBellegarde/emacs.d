@@ -41,16 +41,6 @@
 (when (file-exists-p "~/private.el")
   (load "~/private.el"))
 
-;; * Theme
-;; Use after-init-hook to avoid loading until after the config is loaded.
-
-(defun jmb-load-zenburn ()
-     (load-theme 'zenburn t))
-
-(defun jmb-load-solarized-light ()
-  (load-theme 'solarized-light t))
-(add-hook 'after-init-hook 'jmb-load-solarized-light)
-
 ;; * Configuration
 
 ;; ** Low level stuff
@@ -143,8 +133,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; Solarized theme does not seem to exist in melpa.
 (use-package solarized-theme
   :ensure t
-  :custom
-  (solarized-high-contrast-mode-line nil))
+  :config
+  (load-theme 'solarized-light t) )
 
 ;; ** Spinner
 (use-package spinner
@@ -201,6 +191,7 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 
 ;; ** Org
 (use-package org
+  :disabled t
   :bind (
          ("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
@@ -261,13 +252,14 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 ;; ** Helm
 (use-package helm
   :straight t
+  ;; Experimenting with not using helm.
   :defines (helm-M-x-fuzzy-match helm-grep-default-command helm-grep-default-recurse-command)
   :bind (
          ("C-c h" . helm-command-prefix)
-         ("M-x" . helm-M-x)
-         ("C-x b" . helm-mini)
+         ;; ("M-x" . helm-M-x) ;;Use vertico instead
+         ;; ("C-x b" . helm-mini)
          ("C-h SPC" . helm-all-mark-rings)
-         ("C-x C-f" . helm-find-files)
+         ;; ("C-x C-f" . helm-find-files)
          ("M-y" . helm-show-kill-ring))
   :config
   (require 'helm-config)
@@ -1119,12 +1111,12 @@ configure frame size."
 ;; Assuming it's a path problem probably complicated by os x. Solve
 ;; after moving to linux or when neeeded.
 (use-package docker
+  :disabled t
   :commands docker)
 
 (use-package dockerfile-mode
+  :disabled t
   :straight t)
-
-(use-package docker-tramp)
 
 ;;(use-package uniquify)
 
@@ -1178,6 +1170,7 @@ end tell"
                (assoc keymap-name minor-mode-map-alist)))
 
 (use-package lispy
+  :disabled t
   :commands lispy-mode
   :init
   (defun jmb-lispy/activate-lispy-mode ()
@@ -1585,6 +1578,23 @@ end tell"
   (add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor))
 
 
+;; ** Minibuffer
+
+(use-package vertico
+  :ensure t
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-resize nil)
+  (vertico-mode 1))
+
+(use-package marginalia
+  ;; Either bind `marginalia-cycle` globally or only in the minibuffer
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
+
+  :init
+  (marginalia-mode))
+
 ;; ** Bookmarks
 
 (use-package bm
@@ -1677,6 +1687,7 @@ end tell"
 ;; ** Atomic Chrome
 ;; Allows Editing between chome and emacs
 (use-package atomic-chrome
+  :disabled t ;Not using chrome anymore.
   :defer 10
   :config
   (setq atomic-chrome-extension-type-list '(ghost-text))
@@ -1720,17 +1731,22 @@ end tell"
 ;; ** Languages
 
 ;; *** Python
+(use-package python-pytest
+  :straight t)
+
 (use-package pyvenv
   :disabled t
   :straight t)
 
 (use-package pipenv
+  :disabled t
   :hook (python-mode . pipenv-mode)
   :init
   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
 
 (use-package company-jedi
-  :hook (python-mode . jedi:setup)
+  ;; :hook (python-mode . jedi:setup)
+  :disabled t
   :commands jedi:install-server
   :config
   (setq jedi:complete-on-dot t)
@@ -1740,6 +1756,9 @@ end tell"
 ;;   :straight t
 ;;   :init
 ;;   (add-hook 'python-mode-hook #'lsp-python-enable))
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
 ;; * Finish loading
 (setq debug-on-error nil)
