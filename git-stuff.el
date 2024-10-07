@@ -1,6 +1,11 @@
 ;; * Git related stuff
 
 ;; ** Magit
+(use-package with-editor)
+
+;;(use-package magit-section)
+
+(use-package git-commit)
 
 (use-package magit-popup)
 

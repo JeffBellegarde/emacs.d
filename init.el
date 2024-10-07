@@ -134,7 +134,8 @@ This also handles frames, and windows. If it rearranges what is shown this is a 
 (use-package solarized-theme
   :ensure t
   :config
-  (load-theme 'solarized-light t) )
+  ;;(load-theme 'solarized-light t)
+  )
 
 ;; ** Spinner
 (use-package spinner
@@ -1405,13 +1406,6 @@ end tell"
 ;; This only works on os X
 ;; (add-hook 'edit-server-start-hook 'ns-raise-emacs-with-frame)
 
-;;mode-compile
-(autoload 'mode-compile "mode-compile"
-  "Command to compile current buffer file based on the major mode" t)
-(global-set-key "\C-cc" 'mode-compile)
-(autoload 'mode-compile-kill "mode-compile"
-  "Command to kill a compilation launched by `mode-compile'" t)
-(global-set-key "\C-ck" 'mode-compile-kill)
 (global-set-key "\C-z" 'undo)
 (autoload 'git-mergetool-emacsclient-ediff "git-ediff" "Run Ediff for git" t)
 (auto-compression-mode 1)
@@ -1727,6 +1721,8 @@ end tell"
     (insert reversed)))
 ;; ** Allow the narrow-to-region command.
 (put 'narrow-to-region 'disabled nil)
+
+(use-package transient)
 
 ;; ** Languages
 
